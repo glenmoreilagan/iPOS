@@ -143,9 +143,13 @@
             </a>
 					</li>
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="/useraccess">
-              <i class="align-middle" data-feather="user"></i> <span class="align-middle">User Access</span>
+						<a href="#settings" data-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Settings</span>
             </a>
+						<ul id="settings" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/useraccess">User Access</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Roles</a></li>
+						</ul>
 					</li>
 					<li class="sidebar-item">
 						<a href="#multi" data-toggle="collapse" class="sidebar-link collapsed">

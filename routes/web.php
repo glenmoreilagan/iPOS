@@ -10,14 +10,21 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::get('/items', [
-    'uses' => 'ItemController@itemList',
-	  'as' => 'list.item',
+  'uses' => 'ItemController@itemList',
+  'as' => 'list.item',
 ]);
 
 Route::get('/useraccess', function () {
-    return view('settings.useraccess.useraccess');
+  return view('settings.useraccess.useraccess');
+});
+
+Route::get('/roles', function () {
+  return view('settings.roles.roles');
 });
 
 Route::post('/items/newItem', [
