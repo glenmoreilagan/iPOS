@@ -38,14 +38,6 @@
 					<td>2011/07/25</td>
 					<td>$170,750</td>
 				</tr>
-				<tr>
-					<td>Ashton Cox</td>
-					<td>Junior Technical Author</td>
-					<td>San Francisco</td>
-					<td>66</td>
-					<td>2009/01/12</td>
-					<td>$86,000</td>
-				</tr>
 			</tbody>
 		</table>
 	</div>

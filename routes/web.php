@@ -31,3 +31,13 @@ Route::post('/items/newItem', [
   'uses' => 'ItemController@newItem',
   'as' => 'new.item',
 ]);
+
+Route::post('/getItems', [
+  'uses' => 'ItemController@getItems',
+  'as' => 'get.item',
+]);
+
+Route::post('/saveItem', [
+  'uses' => 'ItemController@saveItem',
+  'as' => 'save.item',
+]);

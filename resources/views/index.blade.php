@@ -15,6 +15,7 @@
 	<meta name="author" content="Bootlab">
 
 	<title>Items</title>
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- <link rel="canonical" href="calendar.html" /> -->
 	<link rel="shortcut icon" href="/img/favicon.ico">
@@ -39,13 +40,33 @@
         a.appendChild(r);
     })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
 </script><script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3ZYEKLQ68"></script>
-<script>
+{{-- <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
   gtag('config', 'G-Q3ZYEKLQ68');
-</script></head>
+</script> --}}
+
+<script type="text/javascript">
+	async function postData(url = '', data = {}) {
+	  const response = await fetch(url, {
+	    method: 'POST',
+	    mode: 'cors',
+	    cache: 'no-cache',
+	    credentials: 'same-origin',
+	    headers: {
+	      'Content-Type': 'application/json',
+	      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+	    },
+	    redirect: 'follow',
+	    referrerPolicy: 'no-referrer',
+	    body: JSON.stringify(data)
+	  });
+	  return response.json();
+	}
+</script>
+</head>
 <!--
   HOW TO USE: 
   data-theme: default (default), dark, light
@@ -312,8 +333,13 @@
 			$("#datatables-reponsive").DataTable({
 				responsive: true,
 				"dom": '<"top"f>rt<"bottom"ip><"clear">',
-				"pageLength": 25
+				"pageLength": 10,
+				"scrollY" : "250px",
+				"scrollX" : true,
+				"scrollCollapse" : true,
+				"fixedHeader" : true,
 			});
+
 			$(".select2").each(function() {
 				$(this)
 					.wrap("<div class=\"position-relative\"></div>")
