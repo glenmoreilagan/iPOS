@@ -159,9 +159,12 @@
 						</ul>
 					</li>
 					<li class="sidebar-item">
-						<a class="sidebar-link" href="/items">
-              <i class="align-middle" data-feather="calendar"></i> <span class="align-middle">Items</span>
+						<a href="#masterfile" data-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Masterfile</span>
             </a>
+						<ul id="masterfile" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/items">Items</a></li>
+						</ul>
 					</li>
 					<li class="sidebar-item">
 						<a href="#settings" data-toggle="collapse" class="sidebar-link collapsed">
@@ -330,15 +333,15 @@
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			// Datatables Responsive
-			$("#datatables-reponsive").DataTable({
-				responsive: true,
-				"dom": '<"top"f>rt<"bottom"ip><"clear">',
-				"pageLength": 10,
-				"scrollY" : "250px",
-				"scrollX" : true,
-				"scrollCollapse" : true,
-				"fixedHeader" : true,
-			});
+			// var table = $("#datatables-reponsive").DataTable({
+			// 	responsive: true,
+			// 	"dom": '<"top"f>rt<"bottom"ip><"clear">',
+			// 	"pageLength": 10,
+			// 	"scrollY" : "250px",
+			// 	"scrollX" : true,
+			// 	"scrollCollapse" : true,
+			// 	"fixedHeader" : true,
+			// });
 
 			$(".select2").each(function() {
 				$(this)

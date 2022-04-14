@@ -18,20 +18,18 @@
 		</div>
 	</div>
 	<div class="card-body">
-		@php
-			print_r($items)
-		@endphp
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Barcode - <sup>123</sup>
+					<label>Barcode <sup id="lblitemid"></sup>
+						{{-- <input name="itemid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input itemid" value="0"> --}}
 						<input name="barcode" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Barcode">
 					</label>
 					<label>Item Name
 						<input name="itemname" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Item Name">
 					</label>
 					<label>Default UOM
-						<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM">
+						<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="PCS">
 					</label>
 			  </div>
 			</div>
@@ -43,25 +41,33 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		let itemid = 0;
 		$("#btnSave").click((e) => {
 			e.preventDefault();
 
 			let items_info = $(".txtitem_infohead").serializeArray();
+			items_info.push({name: "itemid", value: itemid});
 
 			let ready_data_arr = [];
 			let ready_data_obj = {};
 			for(i in items_info) {
 				ready_data_obj[items_info[i].name] = items_info[i].value;
 			}
-
 			ready_data_arr.push(ready_data_obj);
 
-			postData('/saveItem', {data: ready_data_arr})
+			postData('/items/saveItem', {data: ready_data_arr})
 		  .then(data => {
-		    console.log(data);
-		  });
-		});
-
-
+		    // for (let i = 0; i < data.data.length; i++) {
+		    	$("#lblitemid").text(data.data[0].itemid);
+		    	itemid = data.data[0].itemid;
+		    	// $("input[name='itemid']").val(data.data[i].itemid);
+		    	$("input[name='itemname']").val(data.data[0].itemname);
+		    	$("input[name='barcode']").val(data.data[0].barcode);
+		    // }
+		    // console.log(itemid);
+		  }).catch((error) => {
+        console.log(error);
+	    });
+		}); // end #btnSave
 	});
 </script>

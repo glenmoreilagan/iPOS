@@ -1,0 +1,7 @@
+CREATE TABLE `items` (
+  `itemid` int(11) NOT NULL AUTO_INCREMENT,
+  `itemname` varchar(100) NOT NULL DEFAULT ' ',
+  `barcode` varchar(100) NOT NULL DEFAULT ' ',
+  `uomid` int(10) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`itemid`,`barcode`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=latin1
