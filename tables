@@ -1,7 +1,18 @@
-CREATE TABLE `items` (
+DROP TABLE IF EXISTS `samp`.`tblitems`;
+CREATE TABLE  `samp`.`tblitems` (
   `itemid` int(11) NOT NULL AUTO_INCREMENT,
   `itemname` varchar(100) NOT NULL DEFAULT ' ',
   `barcode` varchar(100) NOT NULL DEFAULT ' ',
   `uomid` int(10) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`itemid`,`barcode`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=latin1
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
+
+DROP TABLE IF EXISTS `samp`.`tbluom`;
+CREATE TABLE  `samp`.`tbluom` (
+  `uomid` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `itemid` int(11) NOT NULL DEFAULT '0',
+  `uom` varchar(50) NOT NULL DEFAULT ' ',
+  `cost` decimal(10,6) NOT NULL DEFAULT '0.000000',
+  `amt` decimal(10,6) NOT NULL DEFAULT '0.000000',
+  PRIMARY KEY (`uomid`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;

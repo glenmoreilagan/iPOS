@@ -46,8 +46,8 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button></td>
-	    			<td></td>
+	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+    				</td>
 	    		</tr>`,
 	    		data[i].barcode, 
 	    		data[i].itemname,
@@ -59,14 +59,11 @@
 	    console.log(error);
 	  });
 
-	  $(document).on("click", "#item-list.btnviewItem", (event) => {
-	  		// let itemid = $("button.btnviewItem").attr('id');
-		  	console.log(event.currentTarget.attributes);
-		  	console.log($(this).attr('id'));
-
-
-	  	// window.location = `/items/item/${itemid}`;
+	  $(document).on("click", "#item-list .btnviewItem", (e) => {
+	  	let itemid = e.currentTarget.attributes[0].nodeValue;
+	  	window.location = `/items/item/${itemid}`;
 	  });
+
 
 	});
 </script>

@@ -41,6 +41,11 @@ Route::group(['prefix' => 'items'], function () {
     'as' => 'get.item',
   ]);
 
+  Route::post('getUom', [
+    'uses' => 'ItemController@getUom',
+    'as' => 'get.uom',
+  ]);
+
   Route::post('saveItem', [
     'uses' => 'ItemController@saveItem',
     'as' => 'save.item',
