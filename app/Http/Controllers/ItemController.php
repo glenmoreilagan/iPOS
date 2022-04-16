@@ -113,4 +113,42 @@ class ItemController extends Controller
 	    return ['status' => $status, 'msg' => $msg, 'data' => $items];
   	}
   }
+
+  public function saveUom(Request $req) {
+  	$reqs = $req->all();
+
+  	foreach ($reqs as $key => $value) {
+  		$msg = "";
+	  	$status = false;
+  		$uomid = 0;
+  		if($value['uomid'] == 0) {
+		    $uomid = DB::table('tbluom')->insertGetId([
+		    	'itemid' => $value['itemid'],
+		    	'uom' => $value['uom'],
+		    	'cost' => $value['cost'],
+		    	'amt' => $value['amt']
+		    ]);
+		    $msg = "Insert Success!";
+		    $status = true;
+  		} else {
+  			DB::table('tbluom')
+  			->where([
+  				['itemid', '=', $value['itemid']],
+  				['uomid', '=', $value['uomid']]
+  			])
+  			->update([
+		    	'uom' => $value['uom'],
+		    	'cost' => $value['cost'],
+		    	'amt' => $value['amt'],
+		    ]);
+
+		    $uomid = $value['uomid'];
+		    $msg = "Update Success!";
+		    $status = true;
+	  	}
+
+	  	$uomid = $this->fetchUom($reqs, $uomid);
+	    return ['status' => $status, 'msg' => $msg, 'data' => $uomid];
+	  }
+	}
 }
