@@ -26,12 +26,10 @@ class ItemController extends Controller
   	if($id != 0) {
   		$raw_items = $this->fetchItems($reqs, $id);
 
-  		foreach ($raw_items as $key => $value) {
-  			$items["itemid"] = $id;
-  			$items["barcode"] = $value->barcode;
-  			$items["itemname"] = $value->itemname;
-  			$items["uomid"] = $value->uomid;
-  		}
+			$items["itemid"] = $id;
+			$items["barcode"] = $raw_items->barcode;
+			$items["itemname"] = $raw_items->itemname;
+			$items["uomid"] = $raw_items->uomid;
   	}
   	return view('masterfile.items.items', ['items'=>[$items]]);
   }
@@ -50,9 +48,11 @@ class ItemController extends Controller
   	}
 
   	if (!empty($filter)) {
-	  	$items = DB::table('tblitems')->where([$filter])->get();
+	  	$items = DB::table('tblitems')->where([$filter])->first();
   	} else {
-  		$items = DB::table('tblitems')->get();
+  		$items = DB::table('tblitems')
+  		->select('itemid', 'itemname', 'barcode', 'uomid')
+  		->get();
   	}
 
   	return $items;

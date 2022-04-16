@@ -1,11 +1,14 @@
 <head>
 	<style type="text/css">
 		.headbtns > button {
-			width: 100px;
+			width: 150px;
 		}
 		.tab-primary .tab-content, .tab-title {
 			background: #ffffff !important;
     	color: #6c757d !important;
+		}
+		.uom-list-tab .nav-tabs .nav-link {
+			padding: 5px 10px 5px 10px !important;
 		}
 	</style>
 </head>
@@ -18,9 +21,9 @@
 		<div class="headbtns">
 			<form method="POST" class="form-horizontal" role="form" action="/items/item">
 				{{ csrf_field() }}
-				<button class="btn btn-primary"><i class="far fa-save"></i> New</button>
-				<button class="btn btn-primary" id="btnSave">Save</button>
-				<button class="btn btn-primary">Delete</button>
+				<button class="btn btn-primary" id="btnNew"><i data-feather="file-plus"></i> New</button>
+				<button class="btn btn-primary" id="btnSave"><i data-feather="save"></i> Save</button>
+				<button class="btn btn-primary" id="btnDelete"><i data-feather="trash"></i> Delete</button>
 			</form>
 		</div>
 	</div>
@@ -35,21 +38,30 @@
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Barcode <sup id="lblitemid">{{ $itemid }}</sup>
+					<label>Barcode <sup id="lblitemid">{{ $itemid }}</sup></label>
+					<div class="input-group">
 						<input name="itemid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input itemid" value="{{ $itemid }}">
 						<input name="barcode" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Barcode" value="{{ $barcode }}">
-					</label>
-					<label>Item Name
+					</div>
+
+					<label>Item Name</label>
+					<div class="input-group">
 						<input name="itemname" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Item Name" value="{{ $itemname }}">
-					</label>
-					<label>Default UOM
-						<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uomid }}">
-					</label>
+					</div>
+
+					<label>Default UOM</label>
+					<div class="input-group">
+							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uomid }}" readonly>
+							<span class="input-group-append">
+	            	<button class="btn btn-primary" id="lookupUom"><i data-feather="menu"></i></button>
+	          </span>
+					</div>
+
 			  </div>
 			</div>
 		</div>
 
-		<div class="tab tab-primary">
+		<div class="tab tab-primary uom-list-tab mt-5">
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">UOM</a></li>
 				<li class="nav-item"><a class="nav-link" href="#tab-2" data-toggle="tab" role="tab">TAB1</a></li>
@@ -93,9 +105,9 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
-		var table = $("#uom-list-table, newtable").DataTable({
+		var uomtable = $("#uom-list-table").DataTable({
 			responsive: true,
-			"dom": '<"top"f>rt<"bottom"ip><"clear">',
+			"dom": '<"top">rt<"bottom"ip><"clear">',
 			"pageLength": 10,
 			"scrollY" : "250px",
 			"scrollX" : true,
@@ -134,7 +146,7 @@
 		    		</tr>`,
 		    	]);
 		    }
-		    table.clear().rows.add(ready_data).draw();
+		    uomtable.clear().rows.add(ready_data).draw();
 		  }).catch((error) => {
 		    console.log(error);
 		  });
