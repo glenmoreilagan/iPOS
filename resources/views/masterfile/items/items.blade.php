@@ -53,7 +53,7 @@
 					<div class="input-group">
 							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uomid }}" readonly>
 							<span class="input-group-append">
-	            	<button class="btn btn-primary" id="lookupUom"><i data-feather="menu"></i></button>
+	            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
 	          </span>
 					</div>
 
@@ -100,15 +100,18 @@
 		</div>
 	</div>
 </div>
+
+@include('../lookups/uom-lookup')
 @endsection
 
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
+		let input_itemid = $("input[name='itemid']").val();
 		var uomtable = $("#uom-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top">rt<"bottom"ip><"clear">',
-			"pageLength": 10,
+			"pageLength": 25,
 			"scrollY" : "250px",
 			"scrollX" : true,
 			"scrollCollapse" : true,
@@ -117,31 +120,30 @@
 
 		const load_uom = (data) => {
 			postData('/items/getUom', {data})
-		  .then(data => {
-		    // console.log(data);
+		  .then(res => {
 		    let td = '';
 		    let ready_data = [];
-		    for(let i in data) {
-		    	ready_data.push([
+		    for(let i in res) {
+	    		ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${data[i].uomid}" id="row-${data[i].uomid}" class="btn btn-primary btnSaveUom"><i class="far fa-eye"></i></button>
-		    				<button rowkey="${data[i].uomid}" id="row-${data[i].uomid}" class="btn btn-danger btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn btn-primary btnSaveUom"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn btn-danger btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<input type="text" name="uom" id="uomrow-${data[i].uomid}" class="form-control" value="${data[i].uom}"">
+		    				<input type="text" name="uom" id="uomrow-${res[i].uomid}" class="form-control" value="${res[i].uom}"">
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<input type="text" name="uom" id="costrow-${data[i].uomid}" class="form-control" value="${data[i].cost}"">
+		    				<input type="text" name="uom" id="costrow-${res[i].uomid}" class="form-control" value="${res[i].cost}"">
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<input type="text" name="uom" id="amtrow-${data[i].uomid}" class="form-control" value="${data[i].amt}"">
+		    				<input type="text" name="uom" id="amtrow-${res[i].uomid}" class="form-control" value="${res[i].amt}"">
 		    			</td>
 		    		</tr>`,
 		    	]);
@@ -152,7 +154,7 @@
 		  });
 		}
 
-		load_uom({itemid: $("input[name='itemid']").val()});
+		load_uom({itemid : input_itemid});
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();
@@ -182,7 +184,6 @@
 		}); // end #btnSave
 
 		
-
 		$(document).on("click", "#uom-list .btnSaveUom", (e) => {
 	  	let uomid = e.currentTarget.attributes[0].nodeValue;
 	  	let uom = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).val();
@@ -197,5 +198,7 @@
 			}
 	  	console.log(uom_data);
 	  });
+
+
 	});
 </script>
