@@ -38,6 +38,7 @@
 			"scrollX" : true,
 			"scrollCollapse" : true,
 			"fixedHeader" : true,
+			"ordering": false
 		});
 
 		// this function is to maximize width of the datatable in modal

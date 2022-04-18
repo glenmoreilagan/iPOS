@@ -10,6 +10,9 @@
 		.uom-list-tab .nav-tabs .nav-link {
 			padding: 5px 10px 5px 10px !important;
 		}
+		.hide-me {
+			display: none;
+		}
 	</style>
 </head>
 @extends('index')
@@ -29,11 +32,13 @@
 	</div>
 	<div class="card-body">
 		@php
+			// echo "<pre>";
 			// print_r($items);
 			$itemid = isset($items[0]["itemid"]) ? $items[0]["itemid"] : 0;
 			$itemname = isset($items[0]["itemname"]) ? $items[0]["itemname"] : '';
 			$barcode = isset($items[0]["barcode"]) ? $items[0]["barcode"] : '';
 			$uomid = isset($items[0]["uomid"]) ? $items[0]["uomid"] : 0;
+			$uom = isset($items[0]["uom"]) ? $items[0]["uom"] : '';
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
@@ -51,7 +56,7 @@
 
 					<label>Default UOM</label>
 					<div class="input-group">
-							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uomid }}" readonly>
+							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uom }}">
 							<span class="input-group-append">
 	            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
 	          </span>
@@ -110,12 +115,13 @@
 		let input_itemid = $("input[name='itemid']").val();
 		var uomtable = $("#uom-list-table").DataTable({
 			responsive: true,
-			"dom": '<"top">rt<"bottom"ip><"clear">',
+			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 25,
 			"scrollY" : "250px",
 			"scrollX" : true,
 			"scrollCollapse" : true,
 			"fixedHeader" : true,
+			"ordering": false
 		});
 
 		const load_uom = (data) => {
@@ -133,6 +139,7 @@
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
+		    				<span class="hide-me">${res[i].uom}</span>
 		    				<input type="text" name="uom" id="uomrow-${res[i].uomid}" class="form-control" value="${res[i].uom}"">
 		    			</td>
 		    		</tr>`,
@@ -191,12 +198,20 @@
 	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(3) #amtrow-${uomid}`).val();
 
 	  	let uom_data = {
+	  		itemid : input_itemid,
 	  		uomid : uomid,
 				uom : uom,
 				cost : cost,
 				amt : amt
 			}
-	  	console.log(uom_data);
+
+			postData('/items/saveUom', {data: uom_data})
+		  .then(res => {
+				load_uom({itemid:input_itemid});
+		  }).catch((error) => {
+        console.log(error);
+	    });
+	  	// console.log(uom_data);
 	  });
 
 

@@ -27,9 +27,10 @@ class ItemController extends Controller
   		$raw_items = $this->fetchItems($reqs, $id);
 
 			$items["itemid"] = $id;
-			$items["barcode"] = $raw_items->barcode;
-			$items["itemname"] = $raw_items->itemname;
-			$items["uomid"] = $raw_items->uomid;
+			$items["barcode"] = $raw_items[0]->barcode;
+			$items["itemname"] = $raw_items[0]->itemname;
+			$items["uomid"] = $raw_items[0]->uomid;
+			$items["uom"] = $raw_items[0]->uom;
   	}
   	return view('masterfile.items.items', ['items'=>[$items]]);
   }
@@ -44,14 +45,20 @@ class ItemController extends Controller
   private function fetchItems($req, $id = 0) {
   	$filter = [];
   	if($id != 0) {
-  		$filter = ['itemid', '=', $id];
+  		$filter = ['tblitems.itemid', '=', $id];
   	}
 
   	if (!empty($filter)) {
-	  	$items = DB::table('tblitems')->where([$filter])->first();
+	  	$items = DB::table('tblitems')
+	  	->select('tblitems.itemid', 'tblitems.itemname', 'tblitems.barcode', 'tblitems.uomid', 'tbluom.uom')
+  		->leftJoin('tbluom', 'tbluom.uomid', '=', 'tblitems.uomid')
+  		->where([$filter])
+	  	->get();
   	} else {
   		$items = DB::table('tblitems')
-  		->select('itemid', 'itemname', 'barcode', 'uomid')
+  		->select('tblitems.itemid', 'tblitems.itemname', 'tblitems.barcode', 'tblitems.uomid',
+  		'tbluom.uom')
+  		->leftJoin('tbluom', 'tbluom.uomid', '=', 'tblitems.uomid')
   		->get();
   	}
 
@@ -147,8 +154,8 @@ class ItemController extends Controller
 		    $status = true;
 	  	}
 
-	  	$uomid = $this->fetchUom($reqs, $uomid);
-	    return ['status' => $status, 'msg' => $msg, 'data' => $uomid];
+	  	$uom = $this->fetchUom($reqs, $uomid);
+	    return ['status' => $status, 'msg' => $msg, 'data' => $uom];
 	  }
 	}
 }

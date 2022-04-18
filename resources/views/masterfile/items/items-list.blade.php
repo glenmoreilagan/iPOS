@@ -51,7 +51,7 @@
 	    		</tr>`,
 	    		data[i].barcode, 
 	    		data[i].itemname,
-	    		data[i].uomid,
+	    		data[i].uom,
 	    	]);
 	    }
 	    table.clear().rows.add(ready_data).draw();
