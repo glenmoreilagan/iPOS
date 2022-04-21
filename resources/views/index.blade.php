@@ -14,7 +14,7 @@
 	<meta name="description" content="Responsive Bootstrap 4 Admin &amp; Dashboard Template">
 	<meta name="author" content="Bootlab">
 
-	<title>Items</title>
+	<title>@yield('title')</title>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- <link rel="canonical" href="calendar.html" /> -->
@@ -64,6 +64,21 @@
 	    body: JSON.stringify(data)
 	  });
 	  return response.json();
+	}
+
+	const notify = (data) => {
+		var message = data.message
+		var type = "success"; // success or danger
+		if(data.status === false) type = "danger";
+		var duration = 2500;
+		var ripple = false;
+		var dismissible = true;
+		var positionX = "left";
+		var positionY = "top";
+		window.notyf.open({
+			type, message, duration, ripple, dismissible,
+			position: { x: positionX, y: positionY }
+		});
 	}
 </script>
 </head>
@@ -164,6 +179,16 @@
             </a>
 						<ul id="masterfile" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="/items">Items</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/suppliers">Suppliers</a></li>
+						</ul>
+					</li>
+					<li class="sidebar-item">
+						<a href="#inventory" data-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Inventory</span>
+            </a>
+						<ul id="inventory" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/is">Inventory Setup</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/ir">Inventory Receiving</a></li>
 						</ul>
 					</li>
 					<li class="sidebar-item">

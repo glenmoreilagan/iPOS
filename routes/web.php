@@ -29,33 +29,59 @@ Route::get('/roles', function () {
 
 
 
-
 Route::group(['prefix' => 'items'], function () {
+  $ItemC = "ItemController";
+
   Route::get('/', [
-    'uses' => 'ItemController@itemList', 'as' => 'list.item',
+    'uses' => "$ItemC@itemList", 'as' => 'list.item',
   ]);
 
   Route::post('getItems', [
-    'uses' => 'ItemController@getItems', 'as' => 'get.item',
+    'uses' => "$ItemC@getItems", 'as' => 'get.item',
   ]);
 
   Route::post('getUom', [
-    'uses' => 'ItemController@getUom', 'as' => 'get.uom',
+    'uses' => "$ItemC@getUom", 'as' => 'get.uom',
   ]);
 
   Route::post('saveItem', [
-    'uses' => 'ItemController@saveItem', 'as' => 'save.item',
+    'uses' => "$ItemC@saveItem", 'as' => 'save.item',
   ]);
 
   Route::post('saveUom', [
-    'uses' => 'ItemController@saveUom', 'as' => 'save.uom',
+    'uses' => "$ItemC@saveUom", 'as' => 'save.uom',
   ]);
 
   Route::match(['GET', 'POST'], 'item', [
-    'uses' => 'ItemController@newItem', 'as' => 'new.item',
+    'uses' => "$ItemC@newItem", 'as' => 'new.item',
   ]);
 
   Route::get('item/{itemid}', [
-    'uses' => 'ItemController@newItem', 'as' => 'edit.item',
+    'uses' => "$ItemC@newItem", 'as' => 'edit.item',
+  ]);
+});
+
+
+Route::group(['prefix' => 'suppliers'], function () {
+  $SupplierC = "SupplierController";
+
+  Route::get('/', [
+    'uses' => "$SupplierC@supplierList", 'as' => 'list.supplier',
+  ]);
+
+  Route::post('getSuppliers', [
+    'uses' => "$SupplierC@getSuppliers", 'as' => 'get.supplier',
+  ]);
+
+  Route::match(['GET', 'POST'], 'supplier', [
+    'uses' => "$SupplierC@newSupplier", 'as' => 'new.supplier',
+  ]);
+
+  Route::get('supplier/{supplierid}', [
+    'uses' => "$SupplierC@newSupplier", 'as' => 'edit.supplier',
+  ]);
+
+  Route::post('saveSupplier', [
+    'uses' => "$SupplierC@saveSupplier", 'as' => 'save.supplier',
   ]);
 });

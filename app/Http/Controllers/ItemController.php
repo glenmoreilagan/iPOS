@@ -96,19 +96,18 @@ class ItemController extends Controller
   		if($value['itemid'] == 0) {
 		    $itemid = DB::table('tblitems')->insertGetId([
 		    	'barcode' => $value['barcode'],
-		    	'itemname' => $value['itemname'],
-		    	'uomid' => 1
+		    	'itemname' => $value['itemname']
 		    ]);
+
+        $uomid = DB::table('tbluom')->insertGetId(['itemid' => $itemid, 'uom' => $value['uom']]);
+        DB::table('tblitems')->where('itemid', $itemid)->update(['uomid' => $uomid]);
+
 		    $msg = "Insert Success!";
 		    $status = true;
   		} else {
   			DB::table('tblitems')
   			->where('itemid', $value['itemid'])
-  			->update([
-		    	'barcode' => $value['barcode'],
-		    	'itemname' => $value['itemname'],
-		    	'uomid' => 1
-		    ]);
+        ->update(['barcode' => $value['barcode'],'itemname' => $value['itemname']]);
 
 		    $itemid = $value['itemid'];
 		    $msg = "Update Success!";

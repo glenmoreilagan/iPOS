@@ -17,9 +17,10 @@
 </head>
 @extends('index')
 
+@section('title', 'Items')
 @section('content')
 <h1 class="h3 mb-3">ITEMS</h1>
-<div class="card">
+<div class="card mb-3">
 	<div class="card-header">
 		<div class="headbtns">
 			<form method="POST" class="form-horizontal" role="form" action="/items/item">
@@ -38,7 +39,7 @@
 			$itemname = isset($items[0]["itemname"]) ? $items[0]["itemname"] : '';
 			$barcode = isset($items[0]["barcode"]) ? $items[0]["barcode"] : '';
 			$uomid = isset($items[0]["uomid"]) ? $items[0]["uomid"] : 0;
-			$uom = isset($items[0]["uom"]) ? $items[0]["uom"] : '';
+			$uom = isset($items[0]["uom"]) ? $items[0]["uom"] : 'PCS';
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
@@ -56,6 +57,7 @@
 
 					<label>Default UOM</label>
 					<div class="input-group">
+							<input name="uomid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="{{ $uomid }}">
 							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uom }}">
 							<span class="input-group-append">
 	            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
@@ -65,8 +67,14 @@
 			  </div>
 			</div>
 		</div>
+	</div>
+</div>
 
-		<div class="tab tab-primary uom-list-tab mt-5">
+<div class="card mb-3">
+	{{-- <div class="card-header">
+	</div> --}}
+	<div class="card-body">
+		<div class="tab tab-primary uom-list-tab">
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">UOM</a></li>
 				<li class="nav-item"><a class="nav-link" href="#tab-2" data-toggle="tab" role="tab">TAB1</a></li>
@@ -165,8 +173,13 @@
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();
-			let items_info = $(".txtitem_infohead").serializeArray();
 
+			if($("input[name='barcode']").val() == "" || $("input[name='itemname']").val() == "") {
+				alert("REQUIRED");
+				return;
+			}
+
+			let items_info = $(".txtitem_infohead").serializeArray();
 			let ready_data_arr = [];
 			let ready_data_obj = {};
 			for(i in items_info) {
@@ -181,10 +194,14 @@
 		    	$("input[name='itemid']").val(data.data[0].itemid);
 		    	$("input[name='itemname']").val(data.data[0].itemname);
 		    	$("input[name='barcode']").val(data.data[0].barcode);
+		    	$("input[name='uomid']").val(data.data[0].uomid);
+		    	$("input[name='uom']").val(data.data[0].uom);
 		    // }
 		    // console.log(itemid);
 
 				load_uom({itemid:data.data[0].itemid});
+
+				notify({status : data.status, message : data.msg})
 		  }).catch((error) => {
         console.log(error);
 	    });

@@ -1,26 +1,26 @@
 @extends('../index')
 
-@section('title', 'Items')
+@section('title', 'Suppliers')
 @section('content')
-<h1 class="h3 mb-3">ITEMS</h1>
+<h1 class="h3 mb-3">SUPPLIERS</h1>
 <div class="card">
 	<div class="card-header">
-		<form method="POST" class="form-horizontal" role="form" action="/items/item">
+		<form method="POST" class="form-horizontal" role="form" action="/suppliers/supplier">
 			{{ csrf_field() }}
 			<button class="btn btn-primary"><i class="far fa-save"></i> New</button>
 		</form>
 	</div>
 	<div class="card-body">
-		<table id="items-list-table" class="table table-striped" style="width:100%">
+		<table id="supplier-list-table" class="table table-striped" style="width:100%">
 			<thead>
 				<tr>
 					<th>Action</th>
-					<th>Barcode</th>
-					<th>Itemname</th>
-					<th>UOM</th>
+					<th>Supplier Code</th>
+					<th>Supplier Name</th>
+					<th>Address</th>
 				</tr>
 			</thead>
-			<tbody id="item-list"></tbody>
+			<tbody id="supplier-list"></tbody>
 		</table>
 	</div>
 </div>
@@ -28,7 +28,7 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
-		var table = $("#items-list-table, newtable").DataTable({
+		var table = $("#supplier-list-table, newtable").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 10,
@@ -38,7 +38,7 @@
 			"fixedHeader" : true,
 		});
 
-		postData('/items/getItems', {})
+		postData('/suppliers/getSuppliers', {})
 	  .then(data => {
 	    // console.log(data);
 	    let td = '';
@@ -47,12 +47,12 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+	    				<button rowkey="${data[i].clientid}" id="row-${data[i].clientid}" class="btn btn-primary btn-sm btnviewSupplier"><i class="far fa-eye"></i></button>
     				</td>
 	    		</tr>`,
-	    		data[i].barcode, 
-	    		data[i].itemname,
-	    		data[i].uom,
+	    		data[i].code, 
+	    		data[i].name,
+	    		data[i].address,
 	    	]);
 	    }
 	    table.clear().rows.add(ready_data).draw();
@@ -60,9 +60,9 @@
 	    console.log(error);
 	  });
 
-	  $(document).on("click", "#item-list .btnviewItem", (e) => {
+	  $(document).on("click", "#supplier-list .btnviewSupplier", (e) => {
 	  	let itemid = e.currentTarget.attributes[0].nodeValue;
-	  	window.location = `/items/item/${itemid}`;
+	  	window.location = `/suppliers/supplier/${itemid}`;
 	  });
 
 
