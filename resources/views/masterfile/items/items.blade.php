@@ -49,18 +49,16 @@
 						<input name="itemid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input itemid" value="{{ $itemid }}">
 						<input name="barcode" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Barcode" value="{{ $barcode }}">
 					</div>
-
 					<label>Item Name</label>
 					<div class="input-group">
 						<input name="itemname" type="text" class="form-control txtitem_infohead" id="" placeholder="Input Item Name" value="{{ $itemname }}">
 					</div>
-
 					<label>Default UOM</label>
 					<div class="input-group">
-							<input name="uomid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="{{ $uomid }}">
-							<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uom }}">
-							<span class="input-group-append">
-	            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
+						<input name="uomid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="{{ $uomid }}">
+						<input name="uom" type="text" class="form-control txtitem_infohead" id="" placeholder="Input UOM" value="{{ $uom }}">
+						<span class="input-group-append">
+            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
 	          </span>
 					</div>
 
@@ -88,7 +86,6 @@
 							<tr>
 								<th>Action</th>
 								<th>UOM</th>
-								<th>Cost</th>
 								<th>Amount</th>
 							</tr>
 						</thead>
@@ -153,12 +150,7 @@
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<input type="text" name="uom" id="costrow-${res[i].uomid}" class="form-control" value="${res[i].cost}"">
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-		    				<input type="text" name="uom" id="amtrow-${res[i].uomid}" class="form-control" value="${res[i].amt}"">
+		    				<input type="text" name="amt" id="amtrow-${res[i].uomid}" class="form-control" value="${res[i].amt}"">
 		    			</td>
 		    		</tr>`,
 		    	]);
@@ -198,10 +190,10 @@
 		    	$("input[name='uom']").val(data.data[0].uom);
 		    // }
 		    // console.log(itemid);
-
 				load_uom({itemid:data.data[0].itemid});
 
 				notify({status : data.status, message : data.msg})
+		    // window.location = `/items/item/${data.data[0].itemid}`;
 		  }).catch((error) => {
         console.log(error);
 	    });
@@ -211,16 +203,9 @@
 		$(document).on("click", "#uom-list .btnSaveUom", (e) => {
 	  	let uomid = e.currentTarget.attributes[0].nodeValue;
 	  	let uom = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).val();
-	  	let cost = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(2) #costrow-${uomid}`).val();
 	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(3) #amtrow-${uomid}`).val();
 
-	  	let uom_data = {
-	  		itemid : input_itemid,
-	  		uomid : uomid,
-				uom : uom,
-				cost : cost,
-				amt : amt
-			}
+	  	let uom_data = {itemid : input_itemid, uomid : uomid, uom : uom, amt : amt}
 
 			postData('/items/saveUom', {data: uom_data})
 		  .then(res => {

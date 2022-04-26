@@ -85,3 +85,12 @@ Route::group(['prefix' => 'suppliers'], function () {
     'uses' => "$SupplierC@saveSupplier", 'as' => 'save.supplier',
   ]);
 });
+
+
+Route::group(['prefix' => 'IS'], function () {
+  $InvetoryC = "InventoryController";
+
+  Route::get('/', [
+    'uses' => "$InvetoryC@inventorySetupList", 'as' => 'list.IS',
+  ]);
+});

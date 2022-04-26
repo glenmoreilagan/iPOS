@@ -109,16 +109,16 @@
         </a>
 
 				<ul class="sidebar-nav">
-					<li class="sidebar-item">
+					{{-- <li class="sidebar-item">
 						<a href="#dashboards" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
             </a>
 						<ul id="dashboards" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="dashboard-default.html">Default</a></li>
 						</ul>
-					</li>
+					</li> --}}
 
-					<li class="sidebar-item">
+					{{-- <li class="sidebar-item">
 						<a href="#ui" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="grid"></i> <span class="align-middle">UI Elements</span>
             </a>
@@ -134,8 +134,9 @@
 							<li class="sidebar-item"><a class="sidebar-link" href="ui-tabs.html">Tabs</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="ui-typography.html">Typography</a></li>
 						</ul>
-					</li>
-					<li class="sidebar-item">
+					</li> --}}
+
+					{{-- <li class="sidebar-item">
 						<a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
             </a>
@@ -144,13 +145,15 @@
 							<li class="sidebar-item"><a class="sidebar-link" href="forms-basic-inputs.html">Basic Inputs</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="forms-input-groups.html">Input Groups</a></li>
 						</ul>
-					</li>
-					<li class="sidebar-item">
+					</li> --}}
+
+					{{-- <li class="sidebar-item">
 						<a class="sidebar-link" href="tables-bootstrap.html">
               <i class="align-middle" data-feather="list"></i> <span class="align-middle">Tables</span>
             </a>
-					</li>
-					<li class="sidebar-item">
+					</li> --}}
+
+					{{-- <li class="sidebar-item">
 						<a href="#form-plugins" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Form Plugins</span>
             </a>
@@ -160,8 +163,9 @@
 							<li class="sidebar-item"><a class="sidebar-link" href="forms-validation.html">Validation</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="forms-wizard.html">Wizard</a></li>
 						</ul>
-					</li>
-					<li class="sidebar-item">
+					</li> --}}
+
+					{{-- <li class="sidebar-item">
 						<a href="#datatables" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="list"></i> <span class="align-middle">DataTables</span>
             </a>
@@ -172,10 +176,11 @@
 							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-multi.html">Multi Selection</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-ajax.html">Ajax Sourced Data</a></li>
 						</ul>
-					</li>
+					</li> --}}
+
 					<li class="sidebar-item">
 						<a href="#masterfile" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Masterfile</span>
+              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Masterfile</span>
             </a>
 						<ul id="masterfile" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="/items">Items</a></li>
@@ -184,16 +189,16 @@
 					</li>
 					<li class="sidebar-item">
 						<a href="#inventory" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Inventory</span>
+              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Inventory</span>
             </a>
 						<ul id="inventory" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/is">Inventory Setup</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/IS">Inventory Setup</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="/ir">Inventory Receiving</a></li>
 						</ul>
 					</li>
 					<li class="sidebar-item">
 						<a href="#settings" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Settings</span>
+              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Settings</span>
             </a>
 						<ul id="settings" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="/useraccess">User Access</a></li>

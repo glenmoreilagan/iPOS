@@ -38,15 +38,13 @@
 						<input name="clientid" type="hidden" class="form-control txtsupplier_infohead" id="" placeholder="Input clientid" value="{{ $clientid }}">
 						<input name="code" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Code" value="{{ $code }}">
 					</div>
-
 					<label>Supplier Name</label>
 					<div class="input-group">
 						<input name="name" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Name" value="{{ $name }}">
 					</div>
-
 					<label>Address</label>
 					<div class="input-group">
-						<textarea name="address" class="form-control txtsupplier_infohead" id="" placeholder="Input Address">{{ $address }}</textarea>
+						<textarea name="address" class="form-control txtsupplier_infohead" id="" rows="3" placeholder="Input Address">{{ $address }}</textarea>
 					</div>
 
 			  </div>
@@ -98,6 +96,7 @@
 		    // }
 		    // console.log(clientid);
 				notify({status : data.status, message : data.msg})
+		    // window.location = `/suppliers/supplier/${data.data[0].clientid}`;
 		  }).catch((error) => {
         console.log(error);
 	    });

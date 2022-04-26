@@ -13,7 +13,6 @@
 						<tr>
 							<th>Action</th>
 							<th>UOM</th>
-							<th>Cost</th>
 							<th>Amount</th>
 						</tr>
 					</thead>
@@ -30,7 +29,7 @@
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", (e) => {
 		let input_itemid = $("input[name='itemid']").val();
-		var uomlookup_table = $("#uom-lookup-list-table").DataTable({
+		let uomlookup_table = $("#uom-lookup-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 10,
@@ -62,12 +61,7 @@
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				${res[i].uom}
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-		    				${res[i].cost}
+		    				<span id="uomrow-${res[i].uomid}">${res[i].uom}</span>
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
@@ -89,6 +83,14 @@
 	  	load_uom({itemid : input_itemid}, 'lookup-uom');
 	  });
 
+	  $(document).on("click", "#uom-lookup-list .btnSelectUom", (e) => {
+	  	let uomid = e.currentTarget.attributes[0].nodeValue;
+	  	let uom = $("#uom-lookup-list .btnSelectUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).text();
+
+	  	$("input[name='uomid']").val(uomid);
+    	$("input[name='uom']").val(uom);
+    	$("#lookupUom").modal('hide');
+	  });
 	});
 
 </script>
