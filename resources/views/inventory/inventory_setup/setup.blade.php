@@ -7,13 +7,13 @@
 </head>
 @extends('index')
 
-@section('title', 'Suppliers')
+@section('title', 'Inventory Setup')
 @section('content')
-<h1 class="h3 mb-3">SUPPLIERS</h1>
+<h1 class="h3 mb-3">INVENTORY SETUP</h1>
 <div class="card mb-3">
 	<div class="card-header">
 		<div class="headbtns">
-			<form method="POST" class="form-horizontal" role="form" action="/suppliers/supplier">
+			<form method="POST" class="form-horizontal" role="form" action="/IS/setup">
 				{{ csrf_field() }}
 				<button class="btn btn-primary" id="btnNew"><i data-feather="file-plus"></i> New</button>
 				<button class="btn btn-primary" id="btnSave"><i data-feather="save"></i> Save</button>
@@ -33,18 +33,18 @@
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Supplier Code <sup id="lblclientid">{{ $clientid }}</sup></label>
+					<label>Document # <sup id="lbltxid">{{ $clientid }}</sup></label>
 					<div class="input-group">
-						<input name="clientid" type="hidden" class="form-control txtsupplier_infohead" id="" placeholder="Input clientid" value="{{ $clientid }}">
-						<input name="code" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Code" value="{{ $code }}">
+						<input name="clientid" type="hidden" class="form-control txtsupplier_infohead" id="" placeholder="Input clientid" value="0">
+						<input name="code" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Code" value="0">
 					</div>
-					<label>Supplier Name</label>
+					<label>Supplier</label>
 					<div class="input-group">
-						<input name="name" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Name" value="{{ $name }}">
-					</div>
-					<label>Address</label>
-					<div class="input-group">
-						<textarea name="address" class="form-control txtsupplier_infohead" id="" rows="3" placeholder="Input Address">{{ $address }}</textarea>
+						<input name="supplierid" type="hidden" class="form-control txtsetup_infohead" id="" placeholder="Input UOMID" value="0">
+						<input name="supplier" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Supplier" value="0">
+						<span class="input-group-append">
+            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupSupplier" id="btnlookupSupplier"><i data-feather="menu"></i></button>
+	          </span>
 					</div>
 
 			  </div>
@@ -52,6 +52,8 @@
 		</div>
 	</div>
 </div>
+
+@include('../lookups/supplier-lookup')
 @endsection
 
 <script type="text/javascript">
@@ -87,7 +89,7 @@
 			postData('/suppliers/saveSupplier', {data: ready_data_arr})
 		  .then(data => {
 		    // for (let i = 0; i < data.data.length; i++) {
-		    	$("#lblclientid").text(data.data[0].clientid);
+		    	$("#lbltxid").text(data.data[0].clientid);
 		    	$("input[name='clientid']").val(data.data[0].clientid);
 		    	$("input[name='name']").val(data.data[0].name);
 		    	$("input[name='code']").val(data.data[0].code);

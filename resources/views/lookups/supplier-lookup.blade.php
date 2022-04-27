@@ -1,22 +1,22 @@
-<div class="modal fade" id="lookupUom" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="lookupSupplier" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
 	<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">LOOKUP UOM</h5>
+				<h5 class="modal-title">LOOKUP SUPPLIER</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
 			</div>
 			<div class="modal-body m-3">
-				<table id="uom-lookup-list-table" class="table table-striped" style="width:100%">
+				<table id="supplier-lookup-list-table" class="table table-striped" style="width:100%">
 					<thead>
 						<tr>
 							<th>Action</th>
-							<th>UOM</th>
-							<th>Amount</th>
+							<th>Code</th>
+							<th>Name</th>
 						</tr>
 					</thead>
-					<tbody id="uom-lookup-list"></tbody>
+					<tbody id="supplier-lookup-list"></tbody>
 				</table>
 			</div>
 			<div class="modal-footer">
@@ -28,8 +28,8 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", (e) => {
-		let input_itemid = $("input[name='itemid']").val();
-		let uomlookup_table = $("#uom-lookup-list-table").DataTable({
+		// let input_clientid = $("input[name='clientid']").val();
+		let supplierlookup_table = $("#supplier-lookup-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 10,
@@ -44,11 +44,11 @@
 		// if you encounter not filled whole width
 		// https://stackoverflow.com/questions/36543622/datatables-in-bootstrap-modal-width
 		$(document).on('shown.bs.modal', (e) => {
-		   uomlookup_table.columns.adjust();
+		   supplierlookup_table.columns.adjust();
 		});
 
-		const load_uom = (data) => {
-			postData('/items/getUom', {data})
+		const load_supplier = () => {
+			postData('/suppliers/getSuppliers', {})
 		  .then(res => {
 		    let td = '';
 		    let ready_data = [];
@@ -56,40 +56,40 @@
 	    		ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn btn-primary btnSelectUom"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${res[i].clientid}" id="row-${res[i].clientid}" class="btn btn-primary btnSelectSupplier"><i class="far fa-eye"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="uomrow-${res[i].uomid}">${res[i].uom}</span>
+		    				<span id="supprow-${res[i].clientid}">${res[i].code}</span>
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				${res[i].amt}
+		    				${res[i].name}
 		    			</td>
 		    		</tr>`,
 		    	]);
 		    }
-		    uomlookup_table.clear().rows.add(ready_data).draw();
+		    supplierlookup_table.clear().rows.add(ready_data).draw();
 		  }).catch((error) => {
 		    console.log(error);
 		  });
 		}
 
-		$("#btnlookupUom").click((e) => {
+		$("#btnlookupSupplier").click((e) => {
 	  	e.preventDefault();
 
-	  	load_uom({itemid : $("input[name='itemid']").val()});
+	  	load_supplier();
 	  });
 
-	  $(document).on("click", "#uom-lookup-list .btnSelectUom", (e) => {
-	  	let uomid = e.currentTarget.attributes[0].nodeValue;
-	  	let uom = $("#uom-lookup-list .btnSelectUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).text();
+	  $(document).on("click", "#supplier-lookup-list .btnSelectSupplier", (e) => {
+	  	let clientid = e.currentTarget.attributes[0].nodeValue;
+	  	let name = $("#supplier-lookup-list .btnSelectSupplier").closest('tr').find(`td:eq(1) #supprow-${clientid}`).text();
 
-	  	$("input[name='uomid']").val(uomid);
-    	$("input[name='uom']").val(uom);
-    	$("#lookupUom").modal('hide');
+	  	$("input[name='supplierid']").val(clientid);
+    	$("input[name='supplier']").val(name);
+    	$("#lookupSupplier").modal('hide');
 	  });
 	});
 

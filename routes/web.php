@@ -91,6 +91,10 @@ Route::group(['prefix' => 'IS'], function () {
   $InvetoryC = "InventoryController";
 
   Route::get('/', [
-    'uses' => "$InvetoryC@inventorySetupList", 'as' => 'list.IS',
+    'uses' => "$InvetoryC@setupList", 'as' => 'list.IS',
+  ]);
+
+  Route::match(['GET', 'POST'], 'setup', [
+    'uses' => "$InvetoryC@getSetup", 'as' => 'list.setup',
   ]);
 });

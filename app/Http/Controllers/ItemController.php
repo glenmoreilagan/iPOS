@@ -24,8 +24,9 @@ class ItemController extends Controller
   	$items = [];
 
   	if($id != 0) {
-  		$raw_items = $this->item_class->getItem($reqs, $id);
-      $items["itemid"] = $id;
+  		$raw_items = $this->item_class->getItem($id);
+
+      $items["itemid"] = $raw_items[0]->itemid;
       $items["barcode"] = $raw_items[0]->barcode;
       $items["itemname"] = $raw_items[0]->itemname;
       $items["uomid"] = $raw_items[0]->uomid;
@@ -37,7 +38,6 @@ class ItemController extends Controller
   public function getItems(Request $req) {
   	$reqs = $req->all();
     $items = $this->item_class->getItem();
-
     return $items;
   }
 
@@ -46,6 +46,7 @@ class ItemController extends Controller
     $items = $this->item_class->setItem($reqs);
     return ['status' => $items['status'], 'msg' => $items['msg'], 'data' => $items['data']];
   }
+
 
 
   public function getUom(Request $req) {
@@ -81,7 +82,7 @@ class ItemController extends Controller
 		    $uomid = DB::table('tbluom')->insertGetId([
 		    	'itemid' => $value['itemid'],
 		    	'uom' => $value['uom'],
-		    	'cost' => $value['cost'],
+		    	// 'cost' => $value['cost'],
 		    	'amt' => $value['amt']
 		    ]);
 		    $msg = "Insert Success!";
@@ -94,7 +95,7 @@ class ItemController extends Controller
   			])
   			->update([
 		    	'uom' => $value['uom'],
-		    	'cost' => $value['cost'],
+		    	// 'cost' => $value['cost'],
 		    	'amt' => $value['amt'],
 		    ]);
 

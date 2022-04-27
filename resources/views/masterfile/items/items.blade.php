@@ -117,7 +117,6 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
-		let input_itemid = $("input[name='itemid']").val();
 		var uomtable = $("#uom-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
@@ -130,6 +129,7 @@
 		});
 
 		const load_uom = (data) => {
+			let input_itemid = $("input[name='itemid']").val();
 			postData('/items/getUom', {data})
 		  .then(res => {
 		    let td = '';
@@ -161,7 +161,7 @@
 		  });
 		}
 
-		load_uom({itemid : input_itemid});
+		load_uom({itemid : $("input[name='itemid']").val()});
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();
@@ -201,9 +201,10 @@
 
 		
 		$(document).on("click", "#uom-list .btnSaveUom", (e) => {
+			let input_itemid = $("input[name='itemid']").val();
 	  	let uomid = e.currentTarget.attributes[0].nodeValue;
 	  	let uom = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).val();
-	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(3) #amtrow-${uomid}`).val();
+	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(2) #amtrow-${uomid}`).val();
 
 	  	let uom_data = {itemid : input_itemid, uomid : uomid, uom : uom, amt : amt}
 

@@ -5,8 +5,16 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Supplier;
+
 class SupplierController extends Controller
 {
+  public $supplier_class;
+
+  public function __construct() {
+    $this->supplier_class = new Supplier;
+  }
+
   public function supplierList() {
   	return view('masterfile.suppliers.suppliers-list');
 	}
@@ -16,9 +24,9 @@ class SupplierController extends Controller
   	$supplier = [];
 
   	if($id != 0) {
-  		$raw_supplier = $this->fetchSuppliers($reqs, $id);
+  		$raw_supplier = $this->supplier_class->getSupplier($id);
 
-			$supplier["clientid"] = $id;
+			$supplier["clientid"] = $raw_supplier[0]->clientid;
 			$supplier["code"] = $raw_supplier[0]->code;
 			$supplier["name"] = $raw_supplier[0]->name;
 			$supplier["address"] = $raw_supplier[0]->address;
@@ -28,66 +36,13 @@ class SupplierController extends Controller
 
   public function getSuppliers(Request $req) {
   	$reqs = $req->all();
-    $items = $this->fetchSuppliers($reqs, 0);
-
+    $items = $this->supplier_class->getSupplier();
     return $items;
-  }
-
-  private function fetchSuppliers($req, $id = 0) {
-  	$filter = [];
-  	if($id != 0) {
-  		$filter = ['tblclient.clientid', '=', $id];
-  	}
-
-  	if (!empty($filter)) {
-	  	$supplier = DB::table('tblclient')
-	  	->select('tblclient.clientid', 'tblclient.code', 'tblclient.name', 'tblclient.address',
-	  	'tblclient.issupplier', 'tblclient.status')
-  		->where([$filter])
-	  	->get();
-  	} else {
-  		$supplier = DB::table('tblclient')
-  		->select('tblclient.clientid', 'tblclient.code', 'tblclient.name', 'tblclient.address',
-	  	'tblclient.issupplier', 'tblclient.status')
-  		->get();
-  	}
-
-  	return $supplier;
   }
 
   public function saveSupplier(Request $req) {
   	$reqs = $req->all();
-  	foreach ($reqs["data"] as $key => $value) {
-	  	$msg = "";
-	  	$status = false;
-  		$clientid = 0;
-  		if($value['clientid'] == 0) {
-		    $clientid = DB::table('tblclient')->insertGetId([
-		    	'code' => $value['code'],
-		    	'name' => $value['name'],
-		    	'address' => $value['address'],
-		    ]);
-
-		    $msg = "Insert Success!";
-		    $status = true;
-  		} else {
-  			DB::table('tblclient')
-  			->where('clientid', $value['clientid'])
-        ->update([
-        	'code' => $value['code'],
-        	'name' => $value['name'],
-        	'address' => $value['address']
-        ]);
-
-		    $clientid = $value['clientid'];
-		    $msg = "Update Success!";
-		    $status = true;
-  		}
-
-
-	    $items = $this->fetchSuppliers($reqs, $clientid);
-	    return ['status' => $status, 'msg' => $msg, 'data' => $items];
-  	}
+  	$items = $this->supplier_class->setSupplier($reqs);
+    return ['status' => $items['status'], 'msg' => $items['msg'], 'data' => $items['data']];
   }
-
 }

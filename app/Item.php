@@ -30,7 +30,7 @@ class Item extends Model
 
   		$save_item = $this->saveItem();
 
-  		if (!$save_item) {
+  		if (!$save_item['status']) {
 		    return ['status' => false, 'msg' => "Error!", 'data' => []];
   		}
 
@@ -38,8 +38,9 @@ class Item extends Model
   	}
   }
 
-  public function getItem() {
+  public function getItem($id = 0) {
   	$filter = [];
+  	$this->itemid = $id;
   	if($this->itemid != 0) {
   		$filter = ['tblitems.itemid', '=', $this->itemid];
   	}
@@ -78,12 +79,11 @@ class Item extends Model
 			->where('itemid', $this->itemid)
       ->update(['barcode' => $this->barcode,'itemname' => $this->itemname]);
 
-      $itemid = $this->itemid;
       $msg = "Update Success!";
 	    $status = true;
   	}
 
-  	$items = $this->getItem();
+  	$items = $this->getItem($this->itemid);
   	return ['status' => $status, 'msg' => $msg, 'data' => $items];
   }
 }

@@ -81,6 +81,23 @@
 		});
 	}
 </script>
+
+<style type="text/css">
+	div.dataTables_wrapper div.dataTables_filter label {
+		/*font-weight: 400 !important;
+    white-space: nowrap !important;
+    text-align: left !important;*/
+    width: 100% !important;
+	}
+	div.dataTables_wrapper div.dataTables_filter {
+		text-align: left !important;
+	}
+	div.dataTables_wrapper div.dataTables_filter input {
+	  margin-left: 0em !important;
+	  display: block !important;
+		width: 100% !important;
+	}
+</style>
 </head>
 <!--
   HOW TO USE: 

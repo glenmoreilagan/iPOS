@@ -5,7 +5,7 @@
 <h1 class="h3 mb-3">INVENTORY SETUP</h1>
 <div class="card">
 	<div class="card-header">
-		<form method="POST" class="form-horizontal" role="form" action="/items/item">
+		<form method="POST" class="form-horizontal" role="form" action="/IS/setup">
 			{{ csrf_field() }}
 			<button class="btn btn-primary"><i class="far fa-save"></i> New</button>
 		</form>

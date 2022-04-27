@@ -7,7 +7,11 @@ use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
-  public function inventorySetupList() {
+  public function setupList() {
   	return view('inventory.inventory_setup.is-list');
+	}
+
+	public function getSetup() {
+  	return view('inventory.inventory_setup.setup');
 	}
 }
