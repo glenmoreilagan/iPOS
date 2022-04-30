@@ -66,7 +66,7 @@
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				${res[i].name}
+		    				<span id="supprow-${res[i].clientid}">${res[i].name}</span>
 		    			</td>
 		    		</tr>`,
 		    	]);
@@ -85,10 +85,11 @@
 
 	  $(document).on("click", "#supplier-lookup-list .btnSelectSupplier", (e) => {
 	  	let clientid = e.currentTarget.attributes[0].nodeValue;
-	  	let name = $("#supplier-lookup-list .btnSelectSupplier").closest('tr').find(`td:eq(1) #supprow-${clientid}`).text();
+	  	let name = $("#supplier-lookup-list .btnSelectSupplier").closest('tr').find(`td:eq(2) #supprow-${clientid}`).text();
 
 	  	$("input[name='supplierid']").val(clientid);
     	$("input[name='supplier']").val(name);
+    	$("input[name='supplier']").attr('supplierid', clientid);
     	$("#lookupSupplier").modal('hide');
 	  });
 	});

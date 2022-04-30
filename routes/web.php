@@ -10,6 +10,11 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// header('Access-Control-Allow-Origin: *');
+// header('Access-Control-Allow-Methods: POST, GET');
+// header('Access-Control-Allow-Headers: glen-key, Authorization, Content-Type');
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -31,6 +36,10 @@ Route::get('/roles', function () {
 
 Route::group(['prefix' => 'items'], function () {
   $ItemC = "ItemController";
+
+  Route::post('/getPic', function() {
+    
+  });
 
   Route::get('/', [
     'uses' => "$ItemC@itemList", 'as' => 'list.item',
@@ -62,29 +71,37 @@ Route::group(['prefix' => 'items'], function () {
 });
 
 
-Route::group(['prefix' => 'suppliers'], function () {
-  $SupplierC = "SupplierController";
 
-  Route::get('/', [
-    'uses' => "$SupplierC@supplierList", 'as' => 'list.supplier',
-  ]);
+Route::group(['prefix' => 'suppliers', 'middleware' => ['sampleware']], function () {
+  $SupplierC = "SupplierController";
 
   Route::post('getSuppliers', [
     'uses' => "$SupplierC@getSuppliers", 'as' => 'get.supplier',
   ]);
 
-  Route::match(['GET', 'POST'], 'supplier', [
-    'uses' => "$SupplierC@newSupplier", 'as' => 'new.supplier',
-  ]);
-
-  Route::get('supplier/{supplierid}', [
-    'uses' => "$SupplierC@newSupplier", 'as' => 'edit.supplier',
-  ]);
-
   Route::post('saveSupplier', [
     'uses' => "$SupplierC@saveSupplier", 'as' => 'save.supplier',
   ]);
+
+  Route::match(['GET', 'POST'], '/supplier', [
+    'uses' => "$SupplierC@newSupplier", 'as' => 'new.supplier',
+  ]);
+
+  Route::get('/', [
+    'uses' => "$SupplierC@supplierList", 'as' => 'list.supplier',
+  ]);
+
+  Route::get('/supplier/{supplierid}', [
+    'uses' => "$SupplierC@newSupplier", 'as' => 'edit.supplier',
+  ]);
 });
+
+
+
+
+
+
+
 
 
 Route::group(['prefix' => 'IS'], function () {
@@ -95,6 +112,14 @@ Route::group(['prefix' => 'IS'], function () {
   ]);
 
   Route::match(['GET', 'POST'], 'setup', [
-    'uses' => "$InvetoryC@getSetup", 'as' => 'list.setup',
+    'uses' => "$InvetoryC@newSetup", 'as' => 'new.setup',
+  ]);
+
+  Route::get('/IS/{txid}', [
+    'uses' => "$InvetoryC@newSetup", 'as' => 'edit.setup',
+  ]);
+
+  Route::post('saveSetup', [
+    'uses' => "$InvetoryC@saveSetup", 'as' => 'save.setup',
   ]);
 });

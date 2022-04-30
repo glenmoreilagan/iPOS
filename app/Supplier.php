@@ -29,13 +29,13 @@ class Supplier extends Model
   		}
 
   		$save_supplier = $this->saveSupplier();
-
   		if (!$save_supplier['status']) {
 		    return ['status' => false, 'msg' => "Error!", 'data' => []];
   		}
-
-	    return ['status' => $save_supplier['status'], 'msg' => $save_supplier['msg'], 'data' => $save_supplier['data']];
   	}
+
+    $suppliers = $this->getSupplier($this->clientid);
+    return ['status' => true, 'msg' => "Saving Success!", 'data' => $suppliers];
   }
 
 	public function getSupplier($id = 0) {
@@ -46,13 +46,13 @@ class Supplier extends Model
   	}
 
   	if (!empty($filter)) {
-	  	$supplier = DB::table('tblclient')
+	  	$supplier = DB::table($this->tblclient)
 	  	->select('tblclient.clientid', 'tblclient.code', 'tblclient.name', 'tblclient.address',
 	  	'tblclient.issupplier', 'tblclient.status')
   		->where([$filter])
 	  	->get();
   	} else {
-  		$supplier = DB::table('tblclient')
+  		$supplier = DB::table($this->tblclient)
   		->select('tblclient.clientid', 'tblclient.code', 'tblclient.name', 'tblclient.address',
 	  	'tblclient.issupplier', 'tblclient.status')
   		->get();
@@ -79,7 +79,6 @@ class Supplier extends Model
 	    $status = true;
   	}
 
-  	$suppliers = $this->getSupplier($this->clientid);
-  	return ['status' => $status, 'msg' => $msg, 'data' => $suppliers];
+  	return ['status' => $status, 'msg' => $msg];
   }
 }

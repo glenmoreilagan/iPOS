@@ -19,6 +19,7 @@
 
 @section('title', 'Items')
 @section('content')
+
 <h1 class="h3 mb-3">ITEMS</h1>
 <div class="card mb-3">
 	<div class="card-header">

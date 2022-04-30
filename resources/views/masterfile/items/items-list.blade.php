@@ -2,6 +2,10 @@
 
 @section('title', 'Items')
 @section('content')
+
+{{-- <img id="displayPic" src="">
+<button id="btnGetpic">GET PIC</button> --}}
+
 <h1 class="h3 mb-3">ITEMS</h1>
 <div class="card">
 	<div class="card-header">
@@ -65,6 +69,18 @@
 	  	window.location = `/items/item/${itemid}`;
 	  });
 
+	  // $("#btnGetpic").on("click", () => {
+	  // 	// alert();
+		 //  $.ajax({
+		 //  	method : "GET",
+		 //  	url : "https://dog.ceo/api/breeds/image/random",
+		 //  	dataType : "JSON",
+		 //  	success:function(res) {
+		 //  		$("#displayPic").attr('src', res.message);
+		 //  		console.log(res.message);
+		 //  	}
+		 //  });
+	  // })
 
 	});
 </script>

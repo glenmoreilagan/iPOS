@@ -24,24 +24,23 @@
 	<div class="card-body">
 		@php
 			// echo "<pre>";
-			// print_r($supplier);
-			$clientid = isset($supplier[0]["clientid"]) ? $supplier[0]["clientid"] : 0;
-			$code = isset($supplier[0]["code"]) ? $supplier[0]["code"] : '';
-			$name = isset($supplier[0]["name"]) ? $supplier[0]["name"] : '';
-			$address = isset($supplier[0]["address"]) ? $supplier[0]["address"] : '';
+			// print_r($head);
+			$docno = isset($head[0]["docno"]) ? $head[0]["docno"] : "";
+			// $code = isset($supplier[0]["code"]) ? $supplier[0]["code"] : '';
+			// $name = isset($supplier[0]["name"]) ? $supplier[0]["name"] : '';
+			// $address = isset($supplier[0]["address"]) ? $supplier[0]["address"] : '';
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Document # <sup id="lbltxid">{{ $clientid }}</sup></label>
+					<label>Document # <sup id="lbltxid">{{ 0 }}</sup></label>
 					<div class="input-group">
-						<input name="clientid" type="hidden" class="form-control txtsupplier_infohead" id="" placeholder="Input clientid" value="0">
-						<input name="code" type="text" class="form-control txtsupplier_infohead" id="" placeholder="Input Supplier Code" value="0">
+						<input name="txid" type="hidden" class="form-control txtsetup_infohead" id="" placeholder="Input txid" value="0">
+						<input name="docnum" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Document #" value="{{ $docno }}">
 					</div>
 					<label>Supplier</label>
 					<div class="input-group">
-						<input name="supplierid" type="hidden" class="form-control txtsetup_infohead" id="" placeholder="Input UOMID" value="0">
-						<input name="supplier" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Supplier" value="0">
+						<input name="supplier" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Supplier" value="">
 						<span class="input-group-append">
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupSupplier" id="btnlookupSupplier"><i data-feather="menu"></i></button>
 	          </span>
@@ -78,23 +77,25 @@
 				return;
 			}
 
-			let suppliers_info = $(".txtsupplier_infohead").serializeArray();
+			let txtsetup_info = $(".txtsetup_infohead").serializeArray();
 			let ready_data_arr = [];
 			let ready_data_obj = {};
-			for(i in suppliers_info) {
-				ready_data_obj[suppliers_info[i].name] = suppliers_info[i].value;
+
+			ready_data_obj['supplierid'] = $("input[name='supplier']").attr('supplierid');
+			for(i in txtsetup_info) {
+				ready_data_obj[txtsetup_info[i].name] = txtsetup_info[i].value;
 			}
 			ready_data_arr.push(ready_data_obj);
 
-			postData('/suppliers/saveSupplier', {data: ready_data_arr})
+			postData('/IS/saveSetup', {data: ready_data_arr})
 		  .then(data => {
+		  	console.log(data);
 		    // for (let i = 0; i < data.data.length; i++) {
 		    	$("#lbltxid").text(data.data[0].clientid);
-		    	$("input[name='clientid']").val(data.data[0].clientid);
-		    	$("input[name='name']").val(data.data[0].name);
-		    	$("input[name='code']").val(data.data[0].code);
-		    	$("input[name='name']").val(data.data[0].name);
-		    	$("input[name='address']").val(data.data[0].address);
+		    	$("input[name='txid']").val(data.data[0].txid);
+		    	$("input[name='docnum']").val(data.data[0].docnum);
+		    	$("input[name='supplier']").attr('supplierid', data.data[0].clientid);
+		    	$("input[name='supplier']").val(data.data[0].supplier);
 		    // }
 		    // console.log(clientid);
 				notify({status : data.status, message : data.msg})

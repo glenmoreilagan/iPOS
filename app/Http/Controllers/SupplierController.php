@@ -16,6 +16,7 @@ class SupplierController extends Controller
   }
 
   public function supplierList() {
+    // setcookie("GLEN-KEY", md5(123), time() + 2 * 24 * 60 * 60);
   	return view('masterfile.suppliers.suppliers-list');
 	}
 

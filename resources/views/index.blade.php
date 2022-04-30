@@ -49,6 +49,21 @@
 </script> --}}
 
 <script type="text/javascript">
+	const getCookie = (cname) => {
+	  let name = cname + "=";
+	  let ca = document.cookie.split(';');
+	  for(let i = 0; i < ca.length; i++) {
+	    let c = ca[i];
+	    while (c.charAt(0) == ' ') {
+	      c = c.substring(1);
+	    }
+	    if (c.indexOf(name) == 0) {
+	      return c.substring(name.length, c.length);
+	    }
+	  }
+	  return "";
+	}
+
 	async function postData(url = '', data = {}) {
 	  const response = await fetch(url, {
 	    method: 'POST',
@@ -57,7 +72,8 @@
 	    credentials: 'same-origin',
 	    headers: {
 	      'Content-Type': 'application/json',
-	      "X-CSRF-Token": $('meta[name="csrf-token"]').attr('content')
+	      'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+	      // 'GLEN-KEY' : getCookie('GLEN-KEY')
 	    },
 	    redirect: 'follow',
 	    referrerPolicy: 'no-referrer',
