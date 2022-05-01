@@ -1,18 +1,6 @@
 <head>
 	<style type="text/css">
-		.headbtns > button {
-			width: 150px;
-		}
-		.tab-primary .tab-content, .tab-title {
-			background: #ffffff !important;
-    	color: #6c757d !important;
-		}
-		.uom-list-tab .nav-tabs .nav-link {
-			padding: 5px 10px 5px 10px !important;
-		}
-		.hide-me {
-			display: none;
-		}
+		
 	</style>
 </head>
 @extends('index')

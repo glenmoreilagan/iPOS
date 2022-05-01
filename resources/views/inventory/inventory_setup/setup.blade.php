@@ -1,8 +1,5 @@
 <head>
 	<style type="text/css">
-		.headbtns > button {
-			width: 150px;
-		}
 	</style>
 </head>
 @extends('index')
@@ -25,28 +22,66 @@
 		@php
 			// echo "<pre>";
 			// print_r($head);
-			$docno = isset($head[0]["docno"]) ? $head[0]["docno"] : "";
-			// $code = isset($supplier[0]["code"]) ? $supplier[0]["code"] : '';
-			// $name = isset($supplier[0]["name"]) ? $supplier[0]["name"] : '';
-			// $address = isset($supplier[0]["address"]) ? $supplier[0]["address"] : '';
+			$txid = isset($head[0]["txid"]) ? $head[0]["txid"] : 0;
+			$docnum = isset($head[0]["docnum"]) ? $head[0]["docnum"] : "";
+			$supplierid = isset($head[0]["supplierid"]) ? $head[0]["supplierid"] : 0;
+			$supplier = isset($head[0]["supplier"]) ? $head[0]["supplier"] : '';
+			$dateid = isset($head[0]["dateid"]) ? $head[0]["dateid"] : '';
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Document # <sup id="lbltxid">{{ 0 }}</sup></label>
+					<label>Document # <sup id="lbltxid">{{ $txid }}</sup></label>
 					<div class="input-group">
-						<input name="txid" type="hidden" class="form-control txtsetup_infohead" id="" placeholder="Input txid" value="0">
-						<input name="docnum" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Document #" value="{{ $docno }}">
+						<input name="txid" type="hidden" class="form-control txtsetup_infohead" id="" placeholder="Input txid" value="{{ $txid }}">
+						<input name="docnum" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Document #" value="{{ $docnum }}">
 					</div>
 					<label>Supplier</label>
 					<div class="input-group">
-						<input name="supplier" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Supplier" value="">
+						<input name="supplier" type="text" class="form-control txtsetup_infohead" id="" placeholder="Input Supplier" value="{{ $supplier }}" supplierid="{{ $supplierid }}" readonly>
 						<span class="input-group-append">
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupSupplier" id="btnlookupSupplier"><i data-feather="menu"></i></button>
 	          </span>
 					</div>
-
 			  </div>
+			</div>
+			<div class="col-md-3">
+			  <div class="mb-3">
+			  	<label>Date</label>
+			  	<div class="input-group">
+						<input name="dateid" type="date" class="form-control txtsetup_infohead" id="" value="{{ $dateid }}">
+					</div>
+			  </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="card mb-3">
+	{{-- <div class="card-header">
+	</div> --}}
+	<div class="card-body">
+		<div class="tab tab-primary uom-list-tab">
+			<ul class="nav nav-tabs" role="tablist">
+				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">STOCK</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab-1" role="tabpanel">
+					{{-- <h4 class="tab-title">UOM</h4> --}}
+					<table id="uom-list-table" class="table table-striped" style="width:100%">
+						<thead>
+							<tr>
+								<th>Action</th>
+								<th>Barcode</th>
+								<th>Itemname</th>
+								<th>UOM</th>
+								<th>Quantity</th>
+								<th>Cost</th>
+							</tr>
+						</thead>
+						<tbody id="uom-list"></tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>

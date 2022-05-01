@@ -11,6 +11,7 @@ class Inventory extends Model
 	protected $tblstock = "tbl_inv_stock";
 
 	public $txid = 0;
+	public $doc = "IS";
 	public $docnum = "";
 	public $clientid = 0;
 	public $dateid = null;
@@ -24,12 +25,12 @@ class Inventory extends Model
   		if($this->txid == 0) {
   			$this->clientid = $value['supplierid'];
   			$this->docnum = $value['docnum'];
-  			// $this->yref = $value['yref'];
+  			$this->dateid = $value['dateid'];
   		} else {
   			$this->txid = $value['txid'];
   			$this->clientid = $value['supplierid'];
   			$this->docnum = $value['docnum'];
-  			// $this->yref = $value['yref'];
+  			$this->dateid = $value['dateid'];
   		}
 
   		$save_head = $this->saveHead();
@@ -47,18 +48,28 @@ class Inventory extends Model
   	$filter = [];
   	$this->txid = $id;
   	if($this->txid != 0) {
-  		$filter = ['head.txid', '=', $this->txid];
+  		$filter = [
+  			['head.txid', '=', $this->txid]
+  		];
   	}
+
+  	$selectqry = [
+  		'head.txid', 
+	  	'head.docnum', 
+	  	'head.clientid', 
+	  	'supp.name as supplier', 
+	  	'head.dateid'
+	  ];
 
   	if (!empty($filter)) {
 	  	$supplier = DB::table($this->tblhead .' as head')
-	  	->select('head.txid', 'head.docnum', 'head.clientid', 'supp.name as supplier')
+	  	->select($selectqry)
   		->leftJoin('tblclient as supp', 'supp.clientid', '=', 'head.clientid')
-  		->where([$filter])
+  		->where($filter)
 	  	->get();
   	} else {
   		$supplier = DB::table($this->tblhead .' as head')
-  		->select('head.txid', 'head.docnum', 'head.clientid', 'supp.name as supplier')
+  		->select($selectqry)
   		->leftJoin('tblclient as supp', 'supp.clientid', '=', 'head.clientid')
   		->get();
   	}
@@ -73,12 +84,14 @@ class Inventory extends Model
   		$this->txid = DB::table($this->tblhead)
   		->insertGetId([
   			'txid' => $this->txid, 
+  			'doc' => $this->doc,
   			'docnum' => $this->docnum, 
   			'clientid' => $this->clientid, 
   			'dateid' => $this->dateid,
   			'yref' => $this->yref,
   			'oref' => $this->oref,
   			'rem' => $this->rem,
+  			'dateid' => $this->dateid,
   		]);
 
 	    $msg = "Insert Success!";
@@ -87,13 +100,12 @@ class Inventory extends Model
   		DB::table($this->tblhead)
 			->where('txid', $this->txid)
       ->update([
-      	'txid' => $this->txid, 
-  			'docnum' => $this->docnum, 
   			'clientid' => $this->clientid, 
   			'dateid' => $this->dateid,
   			'yref' => $this->yref,
   			'oref' => $this->oref,
   			'rem' => $this->rem,
+  			'dateid' => $this->dateid,
       ]);
 
       $msg = "Update Success!";

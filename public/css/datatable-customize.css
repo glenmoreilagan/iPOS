@@ -1,0 +1,39 @@
+	div.dataTables_wrapper div.dataTables_filter label {
+		/*font-weight: 400 !important;
+    white-space: nowrap !important;
+    text-align: left !important;*/
+    width: 100% !important;
+	}
+	div.dataTables_wrapper div.dataTables_filter {
+		text-align: left !important;
+	}
+	div.dataTables_wrapper div.dataTables_filter input {
+	  margin-left: 0em !important;
+	  display: block !important;
+		width: 100% !important;
+	}
+
+	table.table.table-striped.dataTable.no-footer {
+    font-size: 12px !important;
+	}
+	
+	td.dataTables_empty {
+    font-size: 14px !important;
+	}
+
+	.headbtns > button {
+		width: 150px;
+	}
+	.tab {
+		margin-bottom: 0 !important;
+	}
+	.tab-primary .tab-content, .tab-title {
+		background: #ffffff !important;
+  	color: #6c757d !important;
+	}
+	.uom-list-tab .nav-tabs .nav-link {
+		padding: 5px 10px 5px 10px !important;
+	}
+	.hide-me {
+		display: none;
+	}

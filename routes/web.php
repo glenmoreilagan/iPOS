@@ -71,7 +71,6 @@ Route::group(['prefix' => 'items'], function () {
 });
 
 
-
 Route::group(['prefix' => 'suppliers', 'middleware' => ['sampleware']], function () {
   $SupplierC = "SupplierController";
 
@@ -97,13 +96,6 @@ Route::group(['prefix' => 'suppliers', 'middleware' => ['sampleware']], function
 });
 
 
-
-
-
-
-
-
-
 Route::group(['prefix' => 'IS'], function () {
   $InvetoryC = "InventoryController";
 
@@ -115,11 +107,15 @@ Route::group(['prefix' => 'IS'], function () {
     'uses' => "$InvetoryC@newSetup", 'as' => 'new.setup',
   ]);
 
-  Route::get('/IS/{txid}', [
+  Route::get('setup/{txid}', [
     'uses' => "$InvetoryC@newSetup", 'as' => 'edit.setup',
   ]);
 
   Route::post('saveSetup', [
     'uses' => "$InvetoryC@saveSetup", 'as' => 'save.setup',
+  ]);
+
+  Route::post('getSetup', [
+    'uses' => "$InvetoryC@getSetup", 'as' => 'get.setup',
   ]);
 });

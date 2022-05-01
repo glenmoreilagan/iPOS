@@ -1,8 +1,5 @@
 <head>
 	<style type="text/css">
-		.headbtns > button {
-			width: 150px;
-		}
 	</style>
 </head>
 @extends('index')

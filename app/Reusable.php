@@ -11,8 +11,20 @@ class Reusable extends Model
   	$pref = "IS";
   	$length = "00000";
   	$txid = DB::table('tbl_inv_head')->select('txid')->orderBy('txid', 'desc')->first();
-  	$txid = $txid->txid + 1;
-  	$docno = $pref.$length.$txid;
-  	return $docno;
+
+  	if (!empty($txid)) {
+	  	$txid = $txid->txid + 1;
+  	} else {
+	  	$txid = 1;
+  	}
+
+  	$docnum = $pref.$length.$txid;
+  	return $docnum;
+  }
+
+  public function currTimeStamp() {
+  	date_default_timezone_set('Asia/Manila');
+
+  	return date('Y-m-d');
   }
 }

@@ -29,6 +29,7 @@
 	<!-- BEGIN SETTINGS -->
 	<!-- Remove this after purchasing -->
 	<link class="js-stylesheet" href="/css/css/light.css" rel="stylesheet"/>
+	<link class="js-stylesheet" href="/css/datatable-customize.css" rel="stylesheet"/>
 	<!-- END SETTINGS -->
 <script>
     (function(h,o,t,j,a,r){
@@ -64,7 +65,7 @@
 	  return "";
 	}
 
-	async function postData(url = '', data = {}) {
+	const postData = async (url = '', data = {}) => {
 	  const response = await fetch(url, {
 	    method: 'POST',
 	    mode: 'cors',
@@ -97,23 +98,6 @@
 		});
 	}
 </script>
-
-<style type="text/css">
-	div.dataTables_wrapper div.dataTables_filter label {
-		/*font-weight: 400 !important;
-    white-space: nowrap !important;
-    text-align: left !important;*/
-    width: 100% !important;
-	}
-	div.dataTables_wrapper div.dataTables_filter {
-		text-align: left !important;
-	}
-	div.dataTables_wrapper div.dataTables_filter input {
-	  margin-left: 0em !important;
-	  display: block !important;
-		width: 100% !important;
-	}
-</style>
 </head>
 <!--
   HOW TO USE: 

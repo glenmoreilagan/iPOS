@@ -11,16 +11,16 @@
 		</form>
 	</div>
 	<div class="card-body">
-		<table id="items-list-table" class="table table-striped" style="width:100%">
+		<table id="is-list-table" class="table table-striped" style="width:100%">
 			<thead>
 				<tr>
 					<th>Action</th>
-					<th>Client Code</th>
-					<th>Clientname</th>
-					<th>Address</th>
+					<th>Docno</th>
+					<th>Supplier</th>
+					<th>Date</th>
 				</tr>
 			</thead>
-			<tbody id="item-list"></tbody>
+			<tbody id="is-list"></tbody>
 		</table>
 	</div>
 </div>
@@ -28,7 +28,7 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
-		var table = $("#items-list-table, newtable").DataTable({
+		var table = $("#is-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 10,
@@ -38,7 +38,7 @@
 			"fixedHeader" : true,
 		});
 
-		postData('/items/getItems', {})
+		postData('/IS/getSetup', {})
 	  .then(data => {
 	    // console.log(data);
 	    let td = '';
@@ -47,12 +47,12 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+	    				<button rowkey="${data[i].txid}" id="row-${data[i].txid}" class="btn btn-primary btn-sm btnview"><i class="far fa-eye"></i></button>
     				</td>
 	    		</tr>`,
-	    		data[i].barcode, 
-	    		data[i].itemname,
-	    		data[i].uom,
+	    		data[i].docnum,
+	    		data[i].supplier,
+	    		data[i].dateid,
 	    	]);
 	    }
 	    table.clear().rows.add(ready_data).draw();
@@ -60,9 +60,9 @@
 	    console.log(error);
 	  });
 
-	  $(document).on("click", "#item-list .btnviewItem", (e) => {
-	  	let itemid = e.currentTarget.attributes[0].nodeValue;
-	  	window.location = `/items/item/${itemid}`;
+	  $(document).on("click", "#is-list .btnview", (e) => {
+	  	let txid = e.currentTarget.attributes[0].nodeValue;
+	  	window.location = `/IS/setup/${txid}`;
 	  });
 
 

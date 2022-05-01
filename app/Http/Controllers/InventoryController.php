@@ -23,18 +23,30 @@ class InventoryController extends Controller
 	}
 
 	public function newSetup(Request $req, $id = 0) {
+		$data = [];
 		if ($id != 0) {
-			# code...
+			$is_data = $this->inventory_class->getHead($id);
+			array_push($data, [
+				"txid" => $is_data[0]->txid,
+				"docnum" => $is_data[0]->docnum,
+				"supplierid" => $is_data[0]->clientid,
+				"supplier" => $is_data[0]->supplier,
+				"dateid" => $is_data[0]->dateid
+			]);
 		} else {
-			$data = [];
-			$docno = $this->reuse_class->newInventoryDocno();
-			$data = [
-				['docno' => $docno]
-			];
-	  	return view('inventory.inventory_setup.setup', ['head' => $data]);
-		}
+			$docnum = $this->reuse_class->newInventoryDocno();
+			$dateid = $this->reuse_class->currTimeStamp();
 
+			array_push($data, ['docnum' => $docnum, 'dateid' => $dateid]);
+		}
+  	return view('inventory.inventory_setup.setup', ['head' => $data]);
 	}
+
+	public function getSetup(Request $req) {
+  	$reqs = $req->all();
+    $items = $this->inventory_class->getHead();
+    return $items;
+  }
 
 	public function saveSetup(Request $req) {
   	$reqs = $req->all();
