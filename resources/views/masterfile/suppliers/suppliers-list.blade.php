@@ -7,7 +7,7 @@
 	<div class="card-header">
 		<form method="POST" class="form-horizontal" role="form" action="/suppliers/supplier">
 			{{ csrf_field() }}
-			<button class="btn btn-primary"><i class="far fa-save"></i> New</button>
+			<button class="btn btn-primary"><i data-feather="file-plus"></i> New</button>
 		</form>
 	</div>
 	<div class="card-body">

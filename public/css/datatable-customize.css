@@ -31,7 +31,8 @@
 		background: #ffffff !important;
   	color: #6c757d !important;
 	}
-	.uom-list-tab .nav-tabs .nav-link {
+	.uom-list-tab .nav-tabs .nav-link,
+	.stock-list-tab .nav-tabs .nav-link {
 		padding: 5px 10px 5px 10px !important;
 	}
 	.hide-me {

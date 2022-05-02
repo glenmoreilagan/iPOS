@@ -118,4 +118,16 @@ Route::group(['prefix' => 'IS'], function () {
   Route::post('getSetup', [
     'uses' => "$InvetoryC@getSetup", 'as' => 'get.setup',
   ]);
+
+  Route::post('getItems', [
+    'uses' => "$InvetoryC@getItems", 'as' => 'get.item',
+  ]);
+
+  Route::post('addItem', [
+    'uses' => "$InvetoryC@addItem", 'as' => 'add.stockitem',
+  ]);
+
+  Route::post('loadStock', [
+    'uses' => "$InvetoryC@loadStock", 'as' => 'load.stockitem',
+  ]);
 });

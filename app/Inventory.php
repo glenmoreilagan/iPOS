@@ -114,4 +114,40 @@ class Inventory extends Model
 
   	return ['status' => $status, 'msg' => $msg];
 	}
+
+	public function getStock($id = 0) {
+  	$filter = [];
+  	$this->txid = $id;
+  	if($this->txid != 0) {
+  		$filter = [
+  			['stock.txid', '=', $this->txid]
+  		];
+  	}
+
+  	$selectqry = [
+  		'stock.txid', 
+  		'stock.line', 
+	  	'stock.itemid',
+	  	'item.barcode',
+	  	'item.itemname',
+	  	'stock.uomid',
+	  	'stock.qty',
+	  	'stock.cost',
+	  ];
+
+  	if (!empty($filter)) {
+	  	$supplier = DB::table($this->tblstock .' as stock')
+	  	->select($selectqry)
+  		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
+  		->where($filter)
+	  	->get();
+  	} else {
+  		$supplier = DB::table($this->tblstock .' as stock')
+  		->select($selectqry)
+  		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
+  		->get();
+  	}
+
+  	return $supplier;
+  }
 }

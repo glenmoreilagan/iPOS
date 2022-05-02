@@ -92,7 +92,7 @@
 		    	$("input[name='address']").val(data.data[0].address);
 		    // }
 		    // console.log(clientid);
-				notify({status : data.status, message : data.msg})
+				notify({status : data.status, message : data.msg});
 		    // window.location = `/suppliers/supplier/${data.data[0].clientid}`;
 		  }).catch((error) => {
         console.log(error);

@@ -7,15 +7,18 @@ use Illuminate\Support\Facades\DB;
 
 use App\Inventory;
 use App\Reusable;
+use App\Item;
 
 class InventoryController extends Controller
 {
 	public $inventory_class;
 	public $reuse_class;
+	public $item_class;
 
 	public function __construct() {
     $this->inventory_class = new Inventory;
     $this->reuse_class = new Reusable;
+    $this->item_class = new Item;
   }
 
   public function setupList() {
@@ -54,4 +57,36 @@ class InventoryController extends Controller
 
   	return $setHead;
 	}
+
+	public function getItems(Request $req) {
+  	$reqs = $req->all();
+    $items = $this->item_class->getItem();
+    return $items;
+  }
+
+  public function addItem(Request $req) {
+  	$reqs = $req->all();
+
+  	foreach ($reqs['data'] as $key => $value) {
+	    $items = $this->item_class->getItem($value);
+	    $newline = $this->reuse_class->newInventoryLine() + 1;
+  		$r_items = [
+  			'txid' => $reqs['txid'],
+  			'line' => $newline,
+  			'itemid' => $items[0]->itemid,
+  		];
+
+  		DB::table('tbl_inv_stock')->insert($r_items);
+  	}
+
+    // $stock = $this->inventory_class->getStock($reqs['txid']);
+    return ['status' => true, 'msg' => 'Add Item Success!'];
+  }
+
+  public function loadStock(Request $req) {
+  	$reqs = $req->all();
+
+  	$stock = $this->inventory_class->getStock($reqs['txid']);
+    return $stock;
+  }
 }

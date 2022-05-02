@@ -61,14 +61,16 @@
 	{{-- <div class="card-header">
 	</div> --}}
 	<div class="card-body">
-		<div class="tab tab-primary uom-list-tab">
+		<div class="tab tab-primary stock-list-tab">
 			<ul class="nav nav-tabs" role="tablist">
 				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">STOCK</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab-1" role="tabpanel">
-					{{-- <h4 class="tab-title">UOM</h4> --}}
-					<table id="uom-list-table" class="table table-striped" style="width:100%">
+					<div class="tab-buttons-headder mb-3">
+						<button class="btn btn-primary" data-toggle="modal" data-target="#lookupItem" id="btnlookupItem"><i data-feather="plus"></i> New</button>
+					</div>
+					<table id="stock-list-table" class="table table-striped" style="width:100%">
 						<thead>
 							<tr>
 								<th>Action</th>
@@ -79,7 +81,7 @@
 								<th>Cost</th>
 							</tr>
 						</thead>
-						<tbody id="uom-list"></tbody>
+						<tbody id="stock-list"></tbody>
 					</table>
 				</div>
 			</div>
@@ -88,12 +90,13 @@
 </div>
 
 @include('../lookups/supplier-lookup')
+@include('../lookups/item-lookup')
 @endsection
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
 		// let input_clientid = $("input[name='clientid']").val();
-		var uomtable = $("#uom-list-table").DataTable({
+		const stocktable = $("#stock-list-table").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 25,
@@ -103,6 +106,117 @@
 			"fixedHeader" : true,
 			"ordering": false
 		});
+
+		const itemlookup_table = $("#item-lookup-list-table").DataTable({
+			responsive: true,
+			"dom": '<"top"f>rt<"bottom"ip><"clear">',
+			"pageLength": 50,
+			"scrollY" : "250px",
+			"scrollX" : true,
+			"scrollCollapse" : true,
+			"fixedHeader" : true,
+			"ordering": false
+		});
+
+		$(document).on('shown.bs.modal', (e) => {
+		  itemlookup_table.columns.adjust();
+		});
+
+		const load_item = () => {
+			postData('/IS/getItems', {})
+		  .then(res => {
+		    let td = '';
+		    let ready_data = [];
+		    for(let i in res) {
+	    		ready_data.push([
+		    		`<tr>
+		    			<td>
+		    				<input class="lookup-item-row" type="checkbox" name="id[]" value="${res[i].itemid}">
+	    				</td>
+		    		</tr>`,
+		    		// `<tr>
+		    		// 	<td>
+		    		// 		<button rowkey="${res[i].itemid}" id="row-${res[i].itemid}" class="btn btn-primary btnSelectItem"><i class="far fa-eye"></i></button>
+	    			// 	</td>
+		    		// </tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="supprow-${res[i].itemid}">${res[i].barcode}</span>
+		    			</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="supprow-${res[i].itemid}">${res[i].itemname}</span>
+		    			</td>
+		    		</tr>`,
+		    	]);
+		    }
+		    itemlookup_table.clear().rows.add(ready_data).draw();
+		  }).catch((error) => {
+		    console.log(error);
+		  });
+		}
+
+		const load_stock = (txid) => {
+			postData('/IS/loadStock', {txid:txid})
+		  .then(res => {
+		  	// console.log(res);
+		    let td = '';
+		    let ready_data = [];
+		    for(let i in res) {
+	    		ready_data.push([
+		    		`<tr>
+		    			<td>
+		    				<button rowkey="${res[i].itemid}" id="row-${res[i].itemid}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
+		    				<button rowkey="${res[i].itemid}" id="row-${res[i].itemid}" class="btn btn-danger btnSaveStockItem"><i class="far fa-trash-alt"></i></button>
+	    				</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="stock-item-row-${res[i].itemid}">${res[i].barcode}</span>
+		    			</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="stock-item-row-${res[i].itemid}">${res[i].itemname}</span>
+		    			</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="stock-item-row-${res[i].itemid}">${res[i].uomid}</span>
+		    			</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="stock-item-row-${res[i].itemid}">${res[i].qty}</span>
+		    			</td>
+		    		</tr>`,
+		    		`<tr>
+		    			<td>
+		    				<span id="stock-item-row-${res[i].itemid}">${res[i].cost}</span>
+		    			</td>
+		    		</tr>`
+		    	]);
+		    }
+		    stocktable.clear().rows.add(ready_data).draw();
+		  }).catch((error) => {
+		    console.log(error);
+		  });
+		}
+
+		const add_item = (data, txid) => {
+			postData('/IS/addItem', {data:data, txid:txid})
+		  .then(res => {
+		  	if (res.status) {
+			  	load_stock(txid);
+			  	notify({status : res.status, message : res.msg});
+		  	}
+		  }).catch((error) => {
+		    console.log(error);
+		  });
+		}
+
+		load_stock($("input[name='txid']").val());
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();
@@ -138,7 +252,37 @@
 		  }).catch((error) => {
         console.log(error);
 	    });
-		}); // end #btnSave
+		});
+
+		// Handle click on "Select all" control
+		$('#select-all-item').on('click', function() {
+		   // Get all rows with search applied
+		   var rows = itemlookup_table.rows({ 'search': 'applied' }).nodes();
+		   // Check/uncheck checkboxes for all rows in the table
+		   $('input[type="checkbox"]', rows).prop('checked', this.checked);
+		});
+
+		let checkedItemId = [];
+		$("#btnAddItemAccept").on("click", function() {
+			// Iterate over all checkboxes in the table
+		  itemlookup_table.$('.lookup-item-row').each(function() {
+	      // If checkbox doesn't exist in DOM
+	      // if(!$.contains(document, this)){
+	        // If checkbox is checked
+         	if(this.checked) {
+         		checkedItemId.push(this.value);
+         	}
+		    // }
+		  });
+		  add_item(checkedItemId, $("input[name='txid']").val());
+		  checkedItemId = [];
+		});
+
+		$("#btnlookupItem").click((e) => {
+	  	e.preventDefault();
+
+	  	load_item();
+	  });
 
 	});
 </script>
