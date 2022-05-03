@@ -69,7 +69,7 @@ class InventoryController extends Controller
 
   	foreach ($reqs['data'] as $key => $value) {
 	    $items = $this->item_class->getItem($value);
-	    $newline = $this->reuse_class->newInventoryLine() + 1;
+	    $newline = $this->reuse_class->newInventoryLine($reqs['txid']);
   		$r_items = [
   			'txid' => $reqs['txid'],
   			'line' => $newline,

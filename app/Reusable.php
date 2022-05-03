@@ -28,9 +28,12 @@ class Reusable extends Model
   	return date('Y-m-d');
   }
 
-  public function newInventoryLine() {
-  	$line = DB::table('tbl_inv_stock')->select('line')->orderBy('txid', 'desc')->first();
+  public function newInventoryLine($txid) {
+  	$line = DB::table('tbl_inv_stock')
+  	->select('line')
+  	->where('txid', '=', $txid)
+  	->orderBy('line', 'desc')->first();
 
-  	return empty($line) ? 0 : $line->line;
+  	return empty($line) ? 1 : $line->line + 1;
   }
 }

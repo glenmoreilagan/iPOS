@@ -131,19 +131,23 @@ class Inventory extends Model
 	  	'item.barcode',
 	  	'item.itemname',
 	  	'stock.uomid',
-	  	'stock.qty',
-	  	'stock.cost',
 	  ];
 
   	if (!empty($filter)) {
 	  	$supplier = DB::table($this->tblstock .' as stock')
 	  	->select($selectqry)
+	  	// selectRaw to set array bindings
+	  	// selectRaw as added select fields from db
+	  	->selectRaw('FORMAT(stock.qty, ?) as qty, FORMAT(stock.cost, ?) as cost', [3, 4])
   		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
   		->where($filter)
 	  	->get();
   	} else {
   		$supplier = DB::table($this->tblstock .' as stock')
   		->select($selectqry)
+  		// selectRaw to set array bindings
+	  	// selectRaw as added select fields from db
+  		->selectRaw('FORMAT(stock.qty, ?) as qty, FORMAT(stock.cost, ?) as cost', [3, 4])
   		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
   		->get();
   	}

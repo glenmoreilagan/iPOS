@@ -1,5 +1,8 @@
 <head>
 	<style type="text/css">
+		.txtnumber {
+			width: 15px;
+		}
 	</style>
 </head>
 @extends('index')
@@ -73,12 +76,12 @@
 					<table id="stock-list-table" class="table table-striped" style="width:100%">
 						<thead>
 							<tr>
-								<th>Action</th>
-								<th>Barcode</th>
-								<th>Itemname</th>
-								<th>UOM</th>
-								<th>Quantity</th>
-								<th>Cost</th>
+								<th style="width: 100px;">Action</th>
+								<th style="width: 100px;">Barcode</th>
+								<th style="width: 150px;">Itemname</th>
+								<th style="width: 50px;">UOM</th>
+								<th style="width: 100px;">Quantity</th>
+								<th style="width: 100px;">Cost</th>
 							</tr>
 						</thead>
 						<tbody id="stock-list"></tbody>
@@ -104,7 +107,7 @@
 			"scrollX" : true,
 			"scrollCollapse" : true,
 			"fixedHeader" : true,
-			"ordering": false
+			"ordering": false,
 		});
 
 		const itemlookup_table = $("#item-lookup-list-table").DataTable({
@@ -167,33 +170,33 @@
 	    		ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${res[i].itemid}" id="row-${res[i].itemid}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
-		    				<button rowkey="${res[i].itemid}" id="row-${res[i].itemid}" class="btn btn-danger btnSaveStockItem"><i class="far fa-trash-alt"></i></button>
+		    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
+		    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-danger btnDeleteStockItem"><i class="far fa-trash-alt"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="stock-item-row-${res[i].itemid}">${res[i].barcode}</span>
+		    				<span id="stock-barcode-row-${res[i].line}">${res[i].barcode}</span>
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="stock-item-row-${res[i].itemid}">${res[i].itemname}</span>
+		    				<span id="stock-itemname-row-${res[i].line}">${res[i].itemname}</span>
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="stock-item-row-${res[i].itemid}">${res[i].uomid}</span>
+		    				<span id="stock-uomid-row-${res[i].line}">${res[i].uomid}</span>
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="stock-item-row-${res[i].itemid}">${res[i].qty}</span>
+			    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="stock-row-class form-control text-right" value="${res[i].qty}"">
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<span id="stock-item-row-${res[i].itemid}">${res[i].cost}</span>
+			    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="stock-row-class form-control text-right" value="${res[i].cost}"">
 		    			</td>
 		    		</tr>`
 		    	]);
@@ -240,7 +243,7 @@
 		  .then(data => {
 		  	console.log(data);
 		    // for (let i = 0; i < data.data.length; i++) {
-		    	$("#lbltxid").text(data.data[0].clientid);
+		    	$("#lbltxid").text(data.data[0].txid);
 		    	$("input[name='txid']").val(data.data[0].txid);
 		    	$("input[name='docnum']").val(data.data[0].docnum);
 		    	$("input[name='supplier']").attr('supplierid', data.data[0].clientid);
@@ -275,6 +278,7 @@
 		    // }
 		  });
 		  add_item(checkedItemId, $("input[name='txid']").val());
+		  $("#btnlookupItem").modal('hide');
 		  checkedItemId = [];
 		});
 
@@ -282,6 +286,20 @@
 	  	e.preventDefault();
 
 	  	load_item();
+	  });
+
+	  $(document).on("click", "#stock-list .btnSaveStockItem", (e) => {
+	  	let row = e.currentTarget.attributes[0].nodeValue;
+	  	let qty = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(4) #stock-qty-row-${row}`).val();
+	  	let amt = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(5) #stock-cost-row-${row}`).val();
+	  });
+
+	  $(document).on("change", ".stock-row-class", (e) => {
+	  	let row = e.currentTarget.id;
+	  	// $(`#${row}`).closest('tr').css('background-color', 'red');
+	  	$(`#${row}`).css('background-color', '#C7E8CE');
+	  	$(`#${row}`).addClass('isedited');
+
 	  });
 
 	});
