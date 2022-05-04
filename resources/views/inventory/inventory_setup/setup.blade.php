@@ -3,6 +3,10 @@
 		.txtnumber {
 			width: 15px;
 		}
+
+		.stock-row-class.isedited {
+			background-color: #C7E8CE;
+		}
 	</style>
 </head>
 @extends('index')
@@ -191,12 +195,12 @@
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-			    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="stock-row-class form-control text-right" value="${res[i].qty}"">
+			    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-			    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="stock-row-class form-control text-right" value="${res[i].cost}"">
+			    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
 		    			</td>
 		    		</tr>`
 		    	]);
@@ -250,7 +254,7 @@
 		    	$("input[name='supplier']").val(data.data[0].supplier);
 		    // }
 		    // console.log(clientid);
-				notify({status : data.status, message : data.msg})
+				notify({status : data.status, message : data.msg});
 		    // window.location = `/suppliers/supplier/${data.data[0].clientid}`;
 		  }).catch((error) => {
         console.log(error);
@@ -289,17 +293,40 @@
 	  });
 
 	  $(document).on("click", "#stock-list .btnSaveStockItem", (e) => {
+	  	let txid = $("input[name='txid']").val();
 	  	let row = e.currentTarget.attributes[0].nodeValue;
-	  	let qty = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(4) #stock-qty-row-${row}`).val();
-	  	let amt = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(5) #stock-cost-row-${row}`).val();
+	  	let qty = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(4) #stock-qty-row-${row}`);
+	  	let cost = $("#stock-list .btnSaveStockItem").closest('tr').find(`td:eq(5) #stock-cost-row-${row}`);
+
+	  	let stockdata_arr = [];
+	  	let stockdata_obj = {};
+
+	  	stockdata_obj['txid'] = txid;
+	  	stockdata_obj['line'] = row;
+	  	if (qty.hasClass('isedited')) {
+		  	stockdata_obj['qty'] = qty.val();
+	  	}
+
+	  	if(cost.hasClass('isedited')) {
+		  	stockdata_obj['cost'] = cost.val();
+	  	}
+	  	stockdata_arr.push(stockdata_obj);
+
+	  	$(`.key-${row}`).removeClass('isedited');
+
+			postData('/IS/saveStock', {data: stockdata_arr})
+		  .then(res => {
+		  	console.log(res);
+				notify({status : res.status, message : res.msg});
+		    // window.location = `/suppliers/supplier/${data.data[0].clientid}`;
+		  }).catch((error) => {
+        console.log(error);
+	    });
 	  });
 
 	  $(document).on("change", ".stock-row-class", (e) => {
 	  	let row = e.currentTarget.id;
-	  	// $(`#${row}`).closest('tr').css('background-color', 'red');
-	  	$(`#${row}`).css('background-color', '#C7E8CE');
 	  	$(`#${row}`).addClass('isedited');
-
 	  });
 
 	});

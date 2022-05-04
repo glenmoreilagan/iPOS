@@ -130,4 +130,8 @@ Route::group(['prefix' => 'IS'], function () {
   Route::post('loadStock', [
     'uses' => "$InvetoryC@loadStock", 'as' => 'load.stockitem',
   ]);
+
+  Route::post('saveStock', [
+    'uses' => "$InvetoryC@saveStock", 'as' => 'save.stock',
+  ]);
 });

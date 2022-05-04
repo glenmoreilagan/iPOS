@@ -5,10 +5,16 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
+use App\Reusable;
+use App\Item;
+
 class Inventory extends Model
 {
   protected $tblhead = "tbl_inv_head";
 	protected $tblstock = "tbl_inv_stock";
+	
+	private $item_class;
+	private $reuse_class;
 
 	public $txid = 0;
 	public $doc = "IS";
@@ -18,6 +24,16 @@ class Inventory extends Model
 	public $yref = "";
 	public $oref = "";
 	public $rem = "";
+	
+	public $line = "";
+	public $itemid = "";
+	public $qty = 0;
+	public $cost = 0;
+
+	public function __construct() {
+    $this->reuse_class = new Reusable;
+    $this->item_class = new Item;
+  }
 
 	public function setHead($data) {
 		foreach ($data["data"] as $key => $value) {
@@ -35,7 +51,7 @@ class Inventory extends Model
 
   		$save_head = $this->saveHead();
 
-  		if (!$save_head['status']) {
+  		if (!$save_head) {
 		    return ['status' => false, 'msg' => "Error!", 'data' => []];
   		}
 
@@ -112,7 +128,7 @@ class Inventory extends Model
 	    $status = true;
   	}
 
-  	return ['status' => $status, 'msg' => $msg];
+  	return $status;
 	}
 
 	public function getStock($id = 0) {
@@ -153,5 +169,57 @@ class Inventory extends Model
   	}
 
   	return $supplier;
+  }
+
+  public function setItemstock($data) {
+  	foreach ($data['data'] as $key => $value) {
+	    $items = $this->item_class->getItem($value);
+	    $newline = $this->reuse_class->newInventoryLine($data['txid']);
+
+			$this->txid = $data['txid'];
+			$this->line = $newline;
+			$this->itemid = $items[0]->itemid;
+
+  		$item_stock = $this->saveItemstock();
+
+  		if(!$item_stock) {
+		  	return ['status' => false, 'msg' => 'Error!'];
+  		}
+  	}
+
+  	return ['status' => true, 'msg' => 'Saving Success!'];
+  }
+
+  private function saveItemstock() {
+  	$insert_item = DB::table('tbl_inv_stock')->insert([
+  		'txid' => $this->txid,
+  		'line' => $this->line,
+  		'itemid' => $this->itemid
+  	]);
+
+		if (!$insert_item) {
+	    return false;
+		}
+
+		return true;
+  }
+
+  public function setStockLine($data) {
+  	foreach ($data['data'] as $key => $value) {
+	    $items = $this->item_class->getItem($value);
+	    $newline = $this->reuse_class->newInventoryLine($data['txid']);
+
+			$this->txid = $data['txid'];
+			$this->line = $newline;
+			$this->itemid = $items[0]->itemid;
+
+  		$item_stock = $this->saveItemstock();
+
+  		if(!$item_stock) {
+		  	return ['status' => false, 'msg' => 'Error!'];
+  		}
+  	}
+
+  	return ['status' => true, 'msg' => 'Saving Success!'];
   }
 }

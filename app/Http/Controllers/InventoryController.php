@@ -11,9 +11,9 @@ use App\Item;
 
 class InventoryController extends Controller
 {
-	public $inventory_class;
-	public $reuse_class;
-	public $item_class;
+	private $inventory_class;
+	private $reuse_class;
+	private $item_class;
 
 	public function __construct() {
     $this->inventory_class = new Inventory;
@@ -42,12 +42,14 @@ class InventoryController extends Controller
 
 			array_push($data, ['docnum' => $docnum, 'dateid' => $dateid]);
 		}
+
   	return view('inventory.inventory_setup.setup', ['head' => $data]);
 	}
 
 	public function getSetup(Request $req) {
   	$reqs = $req->all();
     $items = $this->inventory_class->getHead();
+    
     return $items;
   }
 
@@ -61,32 +63,28 @@ class InventoryController extends Controller
 	public function getItems(Request $req) {
   	$reqs = $req->all();
     $items = $this->item_class->getItem();
+
     return $items;
   }
 
   public function addItem(Request $req) {
   	$reqs = $req->all();
+  	$stock = $this->inventory_class->setItemstock($reqs);
 
-  	foreach ($reqs['data'] as $key => $value) {
-	    $items = $this->item_class->getItem($value);
-	    $newline = $this->reuse_class->newInventoryLine($reqs['txid']);
-  		$r_items = [
-  			'txid' => $reqs['txid'],
-  			'line' => $newline,
-  			'itemid' => $items[0]->itemid,
-  		];
-
-  		DB::table('tbl_inv_stock')->insert($r_items);
-  	}
-
-    // $stock = $this->inventory_class->getStock($reqs['txid']);
     return ['status' => true, 'msg' => 'Add Item Success!'];
   }
 
   public function loadStock(Request $req) {
   	$reqs = $req->all();
-
   	$stock = $this->inventory_class->getStock($reqs['txid']);
+
     return $stock;
+  }
+
+  public function saveStock(Request $req) {
+  	$reqs = $req->all();
+  	$stock = $this->inventory_class->setStockLine($reqs);
+
+  	return ['status' => true, 'msg' => 'Saving Success!', 'data' => $stock];
   }
 }
