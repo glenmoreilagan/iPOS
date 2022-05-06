@@ -29,13 +29,15 @@ class InventoryController extends Controller
 		$data = [];
 		if ($id != 0) {
 			$is_data = $this->inventory_class->getHead($id);
-			array_push($data, [
-				"txid" => $is_data[0]->txid,
-				"docnum" => $is_data[0]->docnum,
-				"supplierid" => $is_data[0]->clientid,
-				"supplier" => $is_data[0]->supplier,
-				"dateid" => $is_data[0]->dateid
-			]);
+			if(!empty($is_data)) {
+				array_push($data, [
+					"txid" => $is_data[0]->txid,
+					"docnum" => $is_data[0]->docnum,
+					"supplierid" => $is_data[0]->clientid,
+					"supplier" => $is_data[0]->supplier,
+					"dateid" => $is_data[0]->dateid
+				]);
+			}
 		} else {
 			$docnum = $this->reuse_class->newInventoryDocno();
 			$dateid = $this->reuse_class->currTimeStamp();
@@ -69,9 +71,9 @@ class InventoryController extends Controller
 
   public function addItem(Request $req) {
   	$reqs = $req->all();
-  	$stock = $this->inventory_class->setItemstock($reqs);
+  	$stock = $this->inventory_class->setItemstock($reqs, 'additem');
 
-    return ['status' => true, 'msg' => 'Add Item Success!'];
+    return ['status' => true, 'msg' => 'Add Item Success!', 'data' => $stock];
   }
 
   public function loadStock(Request $req) {
@@ -83,7 +85,7 @@ class InventoryController extends Controller
 
   public function saveStock(Request $req) {
   	$reqs = $req->all();
-  	$stock = $this->inventory_class->setStockLine($reqs);
+  	$stock = $this->inventory_class->setItemstock($reqs, 'saveitem');
 
   	return ['status' => true, 'msg' => 'Saving Success!', 'data' => $stock];
   }

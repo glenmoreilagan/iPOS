@@ -114,7 +114,7 @@ class Inventory extends Model
 	    $status = true;
   	} else {
   		DB::table($this->tblhead)
-			->where('txid', $this->txid)
+			->where([['txid', '=', $this->txid]])
       ->update([
   			'clientid' => $this->clientid, 
   			'dateid' => $this->dateid,
@@ -131,13 +131,20 @@ class Inventory extends Model
   	return $status;
 	}
 
-	public function getStock($id = 0) {
+	public function getStock($txid = 0, $line = 0) {
   	$filter = [];
-  	$this->txid = $id;
+  	$this->txid = $txid;
+  	$this->line = $line;
+
   	if($this->txid != 0) {
-  		$filter = [
-  			['stock.txid', '=', $this->txid]
-  		];
+  		// $filter = [
+  		// 	['stock.txid', '=', $this->txid]
+  		// ];
+  		array_push($filter, ['stock.txid', '=', $this->txid]);
+  	}
+
+  	if ($this->line != 0) {
+  		array_push($filter, ['stock.line', '=', $this->line]);
   	}
 
   	$selectqry = [
@@ -150,7 +157,7 @@ class Inventory extends Model
 	  ];
 
   	if (!empty($filter)) {
-	  	$supplier = DB::table($this->tblstock .' as stock')
+	  	$stock = DB::table($this->tblstock .' as stock')
 	  	->select($selectqry)
 	  	// selectRaw to set array bindings
 	  	// selectRaw as added select fields from db
@@ -159,7 +166,7 @@ class Inventory extends Model
   		->where($filter)
 	  	->get();
   	} else {
-  		$supplier = DB::table($this->tblstock .' as stock')
+  		$stock = DB::table($this->tblstock .' as stock')
   		->select($selectqry)
   		// selectRaw to set array bindings
 	  	// selectRaw as added select fields from db
@@ -168,58 +175,68 @@ class Inventory extends Model
   		->get();
   	}
 
-  	return $supplier;
+  	return $stock;
   }
 
-  public function setItemstock($data) {
+  public function setItemstock($data, $action) {
   	foreach ($data['data'] as $key => $value) {
-	    $items = $this->item_class->getItem($value);
-	    $newline = $this->reuse_class->newInventoryLine($data['txid']);
+	    if ($action == "additem") {
+	    	$items = $this->item_class->getItem($value);
+		    $itemid = !empty($items[0]->itemid) ? $items[0]->itemid : 0;
+				$this->txid = $data['txid'];
+				$this->itemid = $itemid;
+	    }
 
-			$this->txid = $data['txid'];
-			$this->line = $newline;
-			$this->itemid = $items[0]->itemid;
+	    if ($action == "saveitem") {
+	    	$qty = isset($value['qty']) ? $value['qty'] : 0;
+		    $cost = isset($value['cost']) ? $value['cost'] : 0;
+		    $txid = $value['txid'];
+				$this->line = $value['line'];
+				$this->txid = $txid;
+				$this->qty = $qty;
+				$this->cost = $cost;
+	    }
 
-  		$item_stock = $this->saveItemstock();
+  		$item_stock = $this->saveItemstockLine();
 
   		if(!$item_stock) {
-		  	return ['status' => false, 'msg' => 'Error!'];
+		  	return ['status' => false, 'msg' => 'Error!', 'data' => []];
   		}
   	}
 
-  	return ['status' => true, 'msg' => 'Saving Success!'];
+  	$stock = $this->getStock($this->txid, $this->line);
+  	return ['status' => true, 'msg' => 'Saving Success!', 'data' => $stock];
   }
 
-  private function saveItemstock() {
-  	$insert_item = DB::table('tbl_inv_stock')->insert([
-  		'txid' => $this->txid,
-  		'line' => $this->line,
-  		'itemid' => $this->itemid
-  	]);
+  private function saveItemstockLine() {
+  	$status = false;
+  	$msg = "";
 
-		if (!$insert_item) {
-	    return false;
-		}
+  	if($this->line == 0) {
+  		$newline = $this->reuse_class->newInventoryLine($this->txid);
+	  	DB::table($this->tblstock)->insert([
+	  		'txid' => $this->txid,
+	  		'line' => $newline,
+	  		'itemid' => $this->itemid
+	  	]);
+	  	$msg = "Insert Success!";
+	  	$status = true;
+  	} else {
+  		$qty = $this->qty;
+  		$cost = $this->cost;
 
-		return true;
-  }
-
-  public function setStockLine($data) {
-  	foreach ($data['data'] as $key => $value) {
-	    $items = $this->item_class->getItem($value);
-	    $newline = $this->reuse_class->newInventoryLine($data['txid']);
-
-			$this->txid = $data['txid'];
-			$this->line = $newline;
-			$this->itemid = $items[0]->itemid;
-
-  		$item_stock = $this->saveItemstock();
-
-  		if(!$item_stock) {
-		  	return ['status' => false, 'msg' => 'Error!'];
-  		}
+  		DB::table($this->tblstock)
+			->where([
+				['txid', '=', $this->txid], 
+				['line', '=', $this->line]
+			])
+      ->update([
+  			'qty' => $qty,
+  			'cost' => $cost
+      ]);
+      $msg = "Update Success!";
+      $status = true;
   	}
-
-  	return ['status' => true, 'msg' => 'Saving Success!'];
+		return $status;
   }
 }

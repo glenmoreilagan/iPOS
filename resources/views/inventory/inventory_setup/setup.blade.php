@@ -165,50 +165,52 @@
 		}
 
 		const load_stock = (txid) => {
-			postData('/IS/loadStock', {txid:txid})
-		  .then(res => {
-		  	// console.log(res);
-		    let td = '';
-		    let ready_data = [];
-		    for(let i in res) {
-	    		ready_data.push([
-		    		`<tr>
-		    			<td>
-		    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
-		    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-danger btnDeleteStockItem"><i class="far fa-trash-alt"></i></button>
-	    				</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-		    				<span id="stock-barcode-row-${res[i].line}">${res[i].barcode}</span>
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-		    				<span id="stock-itemname-row-${res[i].line}">${res[i].itemname}</span>
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-		    				<span id="stock-uomid-row-${res[i].line}">${res[i].uomid}</span>
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-			    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
-		    			</td>
-		    		</tr>`,
-		    		`<tr>
-		    			<td>
-			    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
-		    			</td>
-		    		</tr>`
-		    	]);
-		    }
-		    stocktable.clear().rows.add(ready_data).draw();
-		  }).catch((error) => {
-		    console.log(error);
-		  });
+			if (txid != 0) {
+				postData('/IS/loadStock', {txid:txid})
+			  .then(res => {
+			  	// console.log(res);
+			    let td = '';
+			    let ready_data = [];
+			    for(let i in res) {
+		    		ready_data.push([
+			    		`<tr>
+			    			<td>
+			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
+			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-danger btnDeleteStockItem"><i class="far fa-trash-alt"></i></button>
+		    				</td>
+			    		</tr>`,
+			    		`<tr>
+			    			<td>
+			    				<span id="stock-barcode-row-${res[i].line}">${res[i].barcode}</span>
+			    			</td>
+			    		</tr>`,
+			    		`<tr>
+			    			<td>
+			    				<span id="stock-itemname-row-${res[i].line}">${res[i].itemname}</span>
+			    			</td>
+			    		</tr>`,
+			    		`<tr>
+			    			<td>
+			    				<span id="stock-uomid-row-${res[i].line}">${res[i].uomid}</span>
+			    			</td>
+			    		</tr>`,
+			    		`<tr>
+			    			<td>
+				    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
+			    			</td>
+			    		</tr>`,
+			    		`<tr>
+			    			<td>
+				    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
+			    			</td>
+			    		</tr>`
+			    	]);
+			    }
+			    stocktable.clear().rows.add(ready_data).draw();
+			  }).catch((error) => {
+			    console.log(error);
+			  });
+			}
 		}
 
 		const add_item = (data, txid) => {
@@ -217,6 +219,7 @@
 		  	if (res.status) {
 			  	load_stock(txid);
 			  	notify({status : res.status, message : res.msg});
+			  	$("#lookupItem").modal('hide');
 		  	}
 		  }).catch((error) => {
 		    console.log(error);
@@ -303,22 +306,17 @@
 
 	  	stockdata_obj['txid'] = txid;
 	  	stockdata_obj['line'] = row;
-	  	if (qty.hasClass('isedited')) {
-		  	stockdata_obj['qty'] = qty.val();
-	  	}
+	  	qty.hasClass('isedited') ? stockdata_obj['qty'] = qty.val() : false;
+	  	cost.hasClass('isedited') ? stockdata_obj['cost'] = cost.val() : false;
 
-	  	if(cost.hasClass('isedited')) {
-		  	stockdata_obj['cost'] = cost.val();
-	  	}
 	  	stockdata_arr.push(stockdata_obj);
-
-	  	$(`.key-${row}`).removeClass('isedited');
 
 			postData('/IS/saveStock', {data: stockdata_arr})
 		  .then(res => {
-		  	console.log(res);
+		  	qty.val(res.data.data[0].qty);
+		  	cost.val(res.data.data[0].cost);
 				notify({status : res.status, message : res.msg});
-		    // window.location = `/suppliers/supplier/${data.data[0].clientid}`;
+				$(`.key-${row}`).removeClass('isedited');
 		  }).catch((error) => {
         console.log(error);
 	    });
@@ -328,6 +326,5 @@
 	  	let row = e.currentTarget.id;
 	  	$(`#${row}`).addClass('isedited');
 	  });
-
 	});
 </script>

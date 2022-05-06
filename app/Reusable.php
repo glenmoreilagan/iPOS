@@ -36,4 +36,11 @@ class Reusable extends Model
 
   	return empty($line) ? 1 : $line->line + 1;
   }
+
+  public function newBarcode() {
+  	$barcode = "IT00000";
+  	$itemid = DB::table('tblitems')->select('itemid')->orderBy('itemid', 'desc')->first();
+
+  	return empty($itemid) ? $barcode."1" : $barcode.($itemid->itemid + 1);
+  }
 }

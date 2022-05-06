@@ -6,13 +6,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 use App\Item;
+use App\Reusable;
 
 class ItemController extends Controller
 {
 	public $item_class;
+  public $reuse_class;
 
 	public function __construct() {
 		$this->item_class = new Item;
+    $this->reuse_class = new Reusable;
 	}
 
 	public function itemList() {
@@ -31,7 +34,9 @@ class ItemController extends Controller
       $items["itemname"] = $raw_items[0]->itemname;
       $items["uomid"] = $raw_items[0]->uomid;
       $items["uom"] = $raw_items[0]->uom;
-  	}
+  	} else {
+      $items['barcode'] = $this->reuse_class->newBarcode();
+    }
   	return view('masterfile.items.items', ['items'=>[$items]]);
   }
 
