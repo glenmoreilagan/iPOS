@@ -1,6 +1,8 @@
 <head>
 	<style type="text/css">
-		
+		.uom-row-class.isedited {
+			background-color: #C7E8CE;
+		}
 	</style>
 </head>
 @extends('index')
@@ -134,12 +136,12 @@
 		    		`<tr>
 		    			<td>
 		    				<span class="hide-me">${res[i].uom}</span>
-		    				<input type="text" name="uom" id="uomrow-${res[i].uomid}" class="form-control" value="${res[i].uom}"">
+		    				<input type="text" name="uom" id="uomrow-${res[i].uomid}" class="key-${res[i].uomid} uom-row-class form-control" value="${res[i].uom}"">
 		    			</td>
 		    		</tr>`,
 		    		`<tr>
 		    			<td>
-		    				<input type="text" name="amt" id="amtrow-${res[i].uomid}" class="form-control" value="${res[i].amt}"">
+		    				<input type="text" name="amt" id="amtrow-${res[i].uomid}" class="key-${res[i].uomid} uom-row-class form-control" value="${res[i].amt}"">
 		    			</td>
 		    		</tr>`,
 		    	]);
@@ -191,19 +193,27 @@
 		
 		$(document).on("click", "#uom-list .btnSaveUom", (e) => {
 			let input_itemid = $("input[name='itemid']").val();
-	  	let uomid = e.currentTarget.attributes[0].nodeValue;
-	  	let uom = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(1) #uomrow-${uomid}`).val();
-	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(2) #amtrow-${uomid}`).val();
+	  	let row = e.currentTarget.attributes[0].nodeValue;
+	  	let uom = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(1) #uomrow-${row}`);
+	  	let amt = $("#uom-list .btnSaveUom").closest('tr').find(`td:eq(2) #amtrow-${row}`);
 
-	  	let uom_data = {itemid : input_itemid, uomid : uomid, uom : uom, amt : amt}
+	  	let uom_data = {itemid : input_itemid, uomid : row, uom : uom.val(), amt : amt.val()};
 
 			postData('/items/saveUom', {data: uom_data})
 		  .then(res => {
-				load_uom({itemid:input_itemid});
+				// load_uom({itemid:input_itemid});
+				uom.val(res.data[0].uom);
+		  	amt.val(res.data[0].amt);
+				notify({status : res.status, message : res.msg});
+				$(`.key-${row}`).removeClass('isedited');
 		  }).catch((error) => {
         console.log(error);
 	    });
-	  	// console.log(uom_data);
+	  });
+
+	  $(document).on("change", ".uom-row-class", (e) => {
+	  	let row = e.currentTarget.id;
+	  	$(`#${row}`).addClass('isedited');
 	  });
 
 

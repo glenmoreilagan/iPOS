@@ -70,12 +70,12 @@
 	<div class="card-body">
 		<div class="tab tab-primary stock-list-tab">
 			<ul class="nav nav-tabs" role="tablist">
-				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">STOCK</a></li>
+				<li class="nav-item"><a class="nav-link active" href="#tab-1" data-toggle="tab" role="tab">INVENTORY TAB</a></li>
 			</ul>
 			<div class="tab-content">
 				<div class="tab-pane active" id="tab-1" role="tabpanel">
 					<div class="tab-buttons-headder mb-3">
-						<button class="btn btn-primary" data-toggle="modal" data-target="#lookupItem" id="btnlookupItem"><i data-feather="plus"></i> New</button>
+						<button class="btn btn-primary" id="btnlookupItem"><i data-feather="plus"></i> Add Item</button>
 					</div>
 					<table id="stock-list-table" class="table table-striped" style="width:100%">
 						<thead>
@@ -232,7 +232,7 @@
 			e.preventDefault();
 
 			if($("input[name='code']").val() == "" || $("input[name='name']").val() == "") {
-				alert("REQUIRED");
+				notify({status : false, message : "Required!"});
 				return;
 			}
 
@@ -292,6 +292,13 @@
 		$("#btnlookupItem").click((e) => {
 	  	e.preventDefault();
 
+	  	let txid = $("input[name='txid']").val();
+
+	  	if(txid == 0) {
+	  		notify({status : false, message : "Please save transaction first!"});
+	  		return false;
+	  	}
+	  	$("#lookupItem").modal('show');
 	  	load_item();
 	  });
 

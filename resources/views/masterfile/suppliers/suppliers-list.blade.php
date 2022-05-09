@@ -61,6 +61,9 @@
 	  });
 
 	  $(document).on("click", "#supplier-list .btnviewSupplier", (e) => {
+	  	// e.currentTarget.attributes[0].nodeValue;
+	  	// is the 1st element of the html tag. 
+	  	// this result is the value of rowkey="${data[i].clientid}
 	  	let itemid = e.currentTarget.attributes[0].nodeValue;
 	  	window.location = `/suppliers/supplier/${itemid}`;
 	  });

@@ -135,3 +135,14 @@ Route::group(['prefix' => 'IS'], function () {
     'uses' => "$InvetoryC@saveStock", 'as' => 'save.stock',
   ]);
 });
+
+Route::group(['prefix' => 'POS'], function () {
+  $posC = "PosController";
+  Route::get('/', [
+    'uses' => "$posC@index", 'as' => 'index.pos',
+  ]);
+
+  Route::get('/addCart', [
+    'uses' => "$posC@addCart", 'as' => 'add.cart',
+  ]);
+});
