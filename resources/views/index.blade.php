@@ -30,6 +30,7 @@
 	<!-- Remove this after purchasing -->
 	<link class="js-stylesheet" href="/css/css/light.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/datatable-customize.css" rel="stylesheet"/>
+	<link class="js-stylesheet" href="/css/all.css" rel="stylesheet"/>
 	<style type="text/css">
 		body[data-theme=light] .sidebar-brand svg {
 		  fill: #fff !important;

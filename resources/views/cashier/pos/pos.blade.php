@@ -101,6 +101,10 @@
 		.badge {
 			font-size: 10px !important;
 		}
+		
+		.btn-action {
+			height: calc(1.51875rem + 2px);
+		}
 
 	</style>
 </head>
@@ -166,11 +170,10 @@
 									<input type="text" class="form-control form-control-sm center-text qty" value="99">
 								</td>
 								<td class="cart-total-td min-width center-text">
-									<button class="btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+									<button class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
+									<button class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 								</td>
 							</tr>
-							<table style="width: 100%;">
 							<tr class="border-bottom">
 								<td class="cart-itemname-td max-width">
 									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
@@ -184,62 +187,8 @@
 									<input type="text" class="form-control form-control-sm center-text qty" value="99">
 								</td>
 								<td class="cart-total-td min-width center-text">
-									<button class="btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
-								</td>
-							</tr>
-							<table style="width: 100%;">
-							<tr class="border-bottom">
-								<td class="cart-itemname-td max-width">
-									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
-									<br>
-									<span class="default-font-size">P 75.00</span>
-									<br>
-									{{-- <span class="default-font-size bold-text">P 100.00</span> --}}
-									<span class="badge badge-info">P 100.00</span>
-								</td>
-								<td class="cart-qty-td" style="width: 20%;">
-									<input type="text" class="form-control form-control-sm center-text qty" value="99">
-								</td>
-								<td class="cart-total-td min-width center-text">
-									<button class="btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
-								</td>
-							</tr>
-							<table style="width: 100%;">
-							<tr class="border-bottom">
-								<td class="cart-itemname-td max-width">
-									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
-									<br>
-									<span class="default-font-size">P 75.00</span>
-									<br>
-									{{-- <span class="default-font-size bold-text">P 100.00</span> --}}
-									<span class="badge badge-info">P 100.00</span>
-								</td>
-								<td class="cart-qty-td" style="width: 20%;">
-									<input type="text" class="form-control form-control-sm center-text qty" value="99">
-								</td>
-								<td class="cart-total-td min-width center-text">
-									<button class="btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
-								</td>
-							</tr>
-							<table style="width: 100%;">
-							<tr class="border-bottom">
-								<td class="cart-itemname-td max-width">
-									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
-									<br>
-									<span class="default-font-size">P 75.00</span>
-									<br>
-									{{-- <span class="default-font-size bold-text">P 100.00</span> --}}
-									<span class="badge badge-info">P 100.00</span>
-								</td>
-								<td class="cart-qty-td" style="width: 20%;">
-									<input type="text" class="form-control form-control-sm center-text qty" value="99">
-								</td>
-								<td class="cart-total-td min-width center-text">
-									<button class="btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+									<button class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
+									<button class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 								</td>
 							</tr>
 						</table>
@@ -313,12 +262,22 @@
 			let uomid = e.currentTarget.attributes[1].nodeValue;;
 			let amt = e.currentTarget.attributes[2].nodeValue;;
 
-			let ready_to_cart = {
+			let ready_to_cart_arr = [];
+
+			let ready_to_cart_obj = {
 				itemid : itemid,
 				uomid : uomid,
 				amt : amt
 			};
-			console.log(ready_to_cart);
+
+			ready_to_cart_arr.push(ready_to_cart_obj);
+
+			postData('/POS/addCart', {data: ready_to_cart_arr})
+		  .then(res => {
+				notify({status : res.status, message : res.msg});
+		  }).catch((error) => {
+        console.log(error);
+	    });
 		});
 	})
 </script>

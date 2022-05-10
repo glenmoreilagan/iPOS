@@ -22,7 +22,7 @@ class Reusable extends Model
   	return $docnum;
   }
 
-  public function currTimeStamp() {
+  public function currDateToday() {
   	date_default_timezone_set('Asia/Manila');
 
   	return date('Y-m-d');
@@ -64,4 +64,37 @@ class Reusable extends Model
 
   	return $items;
   }
+
+  public function getNewOrderNum() {
+  	$prefix = "OR00000";
+  	$curr_date_today = $this->currDateToday();
+  	$order_num = $this->getfieldvalue("tblordernum", "orid", "userid=1 and added_date='$curr_date_today'");
+
+  	if($order_num == "") {
+  		$order_num = 1;
+  	}
+
+  	$new_or_num = $prefix.$order_num;
+  	return $new_or_num;
+  }
+
+  public function getfieldvalue($table, $field, $condition, $params = [], $sort = '') {
+		if ($sort != '') {
+			$qry = 'select ' . $field . ' as value from ' . $table . ' where ' . $condition . ' order by ' . $sort . ' limit 1';
+		} else {
+			$qry = 'select ' . $field . ' as value from ' . $table . ' where ' . $condition . ' limit 1';
+		}
+
+		return $this->datareader($qry, $params);
+	}
+
+	public function datareader($qry, $params = []) 	{
+		$data = DB::select($qry, $params);
+		
+		if (!empty($data)) {
+			return $data[0]->value;
+		} else {
+			return '';
+		}
+	} //end
 }

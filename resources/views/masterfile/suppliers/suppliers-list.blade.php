@@ -47,7 +47,7 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].clientid}" id="row-${data[i].clientid}" class="btn btn-primary btn-sm btnviewSupplier"><i class="far fa-eye"></i></button>
+	    				<button rowkey="${data[i].clientid}" id="row-${data[i].clientid}" class="btn-action btn btn-primary btn-sm btnviewSupplier"><i class="far fa-eye"></i></button>
     				</td>
 	    		</tr>`,
 	    		data[i].code, 

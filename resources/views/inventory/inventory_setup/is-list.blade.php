@@ -47,7 +47,7 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].txid}" id="row-${data[i].txid}" class="btn btn-primary btn-sm btnview"><i class="far fa-eye"></i></button>
+	    				<button rowkey="${data[i].txid}" id="row-${data[i].txid}" class="btn-action btn btn-primary btn-sm btnview"><i class="far fa-eye"></i></button>
     				</td>
 	    		</tr>`,
 	    		data[i].docnum,

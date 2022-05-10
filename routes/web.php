@@ -142,7 +142,7 @@ Route::group(['prefix' => 'POS'], function () {
     'uses' => "$posC@index", 'as' => 'index.pos',
   ]);
 
-  Route::get('/addCart', [
+  Route::post('/addCart', [
     'uses' => "$posC@addCart", 'as' => 'add.cart',
   ]);
 });

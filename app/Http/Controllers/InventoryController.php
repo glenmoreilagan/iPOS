@@ -40,7 +40,7 @@ class InventoryController extends Controller
 			}
 		} else {
 			$docnum = $this->reuse_class->newInventoryDocno();
-			$dateid = $this->reuse_class->currTimeStamp();
+			$dateid = $this->reuse_class->currDateToday();
 
 			array_push($data, ['docnum' => $docnum, 'dateid' => $dateid]);
 		}

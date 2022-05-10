@@ -129,8 +129,8 @@
 	    		ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn btn-primary btnSaveUom"><i class="far fa-eye"></i></button>
-		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn btn-danger btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-primary btnSaveUom"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-danger btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		`<tr>

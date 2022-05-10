@@ -51,7 +51,7 @@
 	    	ready_data.push([
 	    		`<tr>
 	    			<td>
-	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
     				</td>
 	    		</tr>`,
 	    		data[i].barcode, 
