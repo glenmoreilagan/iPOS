@@ -50,4 +50,29 @@ class PosController extends Controller
 
   	return ['status' => true, 'msg' => 'Add to Cart Success!'];
   }
+
+  public function loadCart(Request $req) {
+  	$selectqry = [
+  		'cart.txid', 
+	  	'cart.ordernum', 
+	  	'cart.itemid', 
+	  	'cart.uomid', 
+	  	'cart.userid', 
+	  	'cart.added_date',
+	  	'item.itemname',
+	  	'uom.uom'
+	  ];
+		
+		$cart = DB::table('tblcart as cart')
+  	->select($selectqry)
+  	->selectRaw('FORMAT(cart.qty, ?) as qty, FORMAT(cart.amt, ?) as amt, FORMAT(cart.total, ?) as total', [0, 2, 2])
+  	->leftJoin('tblitems as item', 'item.itemid', '=', 'cart.itemid')
+  	->leftJoin('tbluom as uom', function($join) {
+  		$join->on('uom.uomid', '=', 'item.uomid');
+  		$join->on('uom.itemid', '=', 'item.itemid');
+  	})
+  	->get();
+
+  	return ['status' => true, 'msg' => 'Load Cart Success!', 'data' => $cart];
+  }
 }

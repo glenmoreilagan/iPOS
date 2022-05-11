@@ -1,112 +1,5 @@
 <head>
-	<style type="text/css">
-		.items-div {
-			/*border: 1px solid #DEDEDE;*/
-			padding: 10px;
-			overflow-y: scroll;
-			height: 420px;
-		}
-		.card-div {
-			/*border: 1px solid #DEDEDE;*/
-		}
-		.product-item {
-			border-radius: 5px;
-			background: #ffffff;
-			box-shadow:  5px 5px 15px #d9d9d9,
-			             -5px -5px 15px #ffffff;
-			height: 165px;
-			padding: 0px 10px 0px 10px
-		}
-		.product-item:hover {
-			background-color: #F7F9FC;
-		}
-		.item-img {
-	    text-align: center;
-	    /*box-shadow:  5px 5px 15px #d9d9d9,
-			             -5px -5px 15px #ffffff;*/
-		}
-
-		.item-info {
-			text-align: center;
-		}
-		.default-font-size {
-			/*font-weight: 600;*/
-	    font-size: 10px;
-		}
-		.btnAddCart {
-			position: absolute;
-	    top: 130px;
-	    width: 100px;
-		}
-		.div-btnaddcart {
-			display: flex;
-	    align-items: center;
-	    justify-content: center;
-		}
-		.filter-item {
-			/*border: 1px solid;*/
-	    padding: 0.5rem 2rem;
-			text-align: center;
-			width: 100px;
-			cursor: pointer;
-
-			border-radius: 5px;
-			background: #ffffff;
-			box-shadow:  5px 5px 15px #d9d9d9,
-			             -5px -5px 15px #ffffff;
-		}
-		.filter-item:hover {
-			background-color: #F7F9FC;
-		}
-
-		.btnAddMinus {
-			cursor: pointer;
-			font-size: 1.3rem;
-		}
-
-		.max-width {
-			width: 50%;
-		}
-
-		.min-width {
-			width: 25%;
-		}
-
-		.right-text {
-			text-align: right;
-		}
-
-		.center-text {
-			text-align: center;
-		}
-
-		.bold-text {
-			font-weight: 600;
-		}
-
-		.border-bottom {
-			border-bottom: .1px solid #DEDEDE;
-		}
-
-		.cart-item-list {
-			height: 20em; 
-			overflow-y: scroll; 
-			padding: 0px 10px 0px 0px;
-		}
-
-		.cart-itemname-td {
-			padding-bottom: 5px;
-		}
-
-		.badge {
-			font-size: 10px !important;
-		}
-		
-		.btn-action {
-			height: calc(1.51875rem + 2px);
-		}
-
-	</style>
+	<link class="js-stylesheet" href="/css/pos.css" rel="stylesheet"/>
 </head>
 
 @extends('index')
@@ -156,41 +49,24 @@
 				<div class="card-div">
 					<h3>CART <i data-feather="shopping-cart"></i></h3>
 					<div class="cart-item-list mb-3">
-						<table style="width: 100%;">
-							<tr class="border-bottom">
+						<table class="table-cart-list" style="width: 100%;">
+							{{-- <tr class="border-bottom">
 								<td class="cart-itemname-td max-width">
 									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
 									<br>
 									<span class="default-font-size">P 75.00</span>
-									<br>
+									<br> --}}
 									{{-- <span class="default-font-size bold-text">P 100.00</span> --}}
-									<span class="badge badge-info">P 100.00</span>
+									{{-- <span class="badge badge-info">P 100.00</span>
 								</td>
-								<td class="cart-qty-td" style="width: 20%;">
+								<td class="cart-qty-td">
 									<input type="text" class="form-control form-control-sm center-text qty" value="99">
 								</td>
 								<td class="cart-total-td min-width center-text">
 									<button class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
 									<button class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 								</td>
-							</tr>
-							<tr class="border-bottom">
-								<td class="cart-itemname-td max-width">
-									<span class="default-font-size">Americano Americano<sup>12oz</sup></span>
-									<br>
-									<span class="default-font-size">P 75.00</span>
-									<br>
-									{{-- <span class="default-font-size bold-text">P 100.00</span> --}}
-									<span class="badge badge-info">P 100.00</span>
-								</td>
-								<td class="cart-qty-td" style="width: 20%;">
-									<input type="text" class="form-control form-control-sm center-text qty" value="99">
-								</td>
-								<td class="cart-total-td min-width center-text">
-									<button class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
-									<button class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
-								</td>
-							</tr>
+							</tr> --}}
 						</table>
 					</div>
 					<div class="summary-bill-div">
@@ -200,7 +76,7 @@
 									<span class="default-font-size bold-text">Total Bill:</span>
 								</td>
 								<td class="min-width right-text">
-									<span class="default-font-size bold-text" id="lbltotalbill">P 999.99</span>
+									<span class="default-font-size bold-text" id="lbltotalbill"></span>
 								</td>
 							</tr>
 							<tr>
@@ -216,7 +92,7 @@
 									<span class="default-font-size bold-text">Change:</span>
 								</td>
 								<td class="min-width right-text">
-									<span class="default-font-size bold-text" id="lbltotalcredit">P 1.00</span>
+									<span class="default-font-size bold-text" id="lbltotalchange"></span>
 								</td>
 							</tr>
 							<tr>
@@ -257,13 +133,79 @@
 			duration: 300
 		});
 
+		const BASE_OBJ = {
+			totalbill : 0,
+			ADD_TO_CART : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if (res.status) {
+			  		BASE_OBJ.totalbill = 0;
+				  	BASE_OBJ.LOADCART('/POS/loadCart', {data: {}});
+			  	}
+					notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
+			},
+			LOADCART : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if(res.status) {
+				  	BASE_OBJ.DISPLAY_CART(res.data)
+			  	}
+					// notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
+			},
+			DISPLAY_CART : (data) => {
+				let str = '';
+				for(let i in data) {
+					counter = parseInt(i) + 1;
+					str += `
+						<tr class="border-bottom">
+							<td class="cart-itemname-td max-width">
+								<span class="default-font-size">${counter}. ${data[i].itemname}<sup>${data[i].uom}</sup></span>
+								<br>
+								<span class="default-font-size">₱ ${data[i].amt}</span>
+								<br>
+								<span class="badge badge-info">₱ ${data[i].total}</span>
+							</td>
+							<td class="cart-qty-td">
+								<input type="text" class="form-control form-control-sm center-text qty" value="${data[i].qty}">
+							</td>
+							<td class="cart-total-td min-width center-text">
+								<button class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-save"></i></button>
+								<button class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+							</td>
+						</tr>
+					`;
+
+					BASE_OBJ.totalbill += parseFloat(data[i].total);
+				}
+				$(".table-cart-list").html(str);
+				BASE_OBJ.DISPLAY_TOTAL_BILL(BASE_OBJ.totalbill);
+			},
+			DISPLAY_TOTAL_BILL : (total) => {
+				
+				$("#lbltotalbill").text(formatter.format(total));
+			},
+			COMPUTE_CHANGE : (cash) => {
+				let change = parseFloat(cash | 0) - BASE_OBJ.totalbill;
+				change = (change > 0) ? formatter.format(change) : "";
+				$("#lbltotalchange").text(change);
+			}
+		};
+		
+		BASE_OBJ.LOADCART('/POS/loadCart', {data:{}});
+
 		$(document).on("click", ".btnAddCart", (e) => {
+			const url = '/POS/addCart';
 			let itemid = e.currentTarget.attributes[0].nodeValue;
 			let uomid = e.currentTarget.attributes[1].nodeValue;;
 			let amt = e.currentTarget.attributes[2].nodeValue;;
 
 			let ready_to_cart_arr = [];
-
 			let ready_to_cart_obj = {
 				itemid : itemid,
 				uomid : uomid,
@@ -271,13 +213,13 @@
 			};
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
-
-			postData('/POS/addCart', {data: ready_to_cart_arr})
-		  .then(res => {
-				notify({status : res.status, message : res.msg});
-		  }).catch((error) => {
-        console.log(error);
-	    });
+			BASE_OBJ.ADD_TO_CART(url, {data: ready_to_cart_arr});
+			
 		});
-	})
+
+		$(document).on("keyup", "#txtcash", (e) => {
+			BASE_OBJ.COMPUTE_CHANGE($("#txtcash").val());
+		});
+		
+	});
 </script>

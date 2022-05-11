@@ -145,4 +145,7 @@ Route::group(['prefix' => 'POS'], function () {
   Route::post('/addCart', [
     'uses' => "$posC@addCart", 'as' => 'add.cart',
   ]);
+  Route::post('/loadCart', [
+    'uses' => "$posC@loadCart", 'as' => 'load.cart',
+  ]);
 });
