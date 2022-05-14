@@ -42,31 +42,31 @@ Route::group(['prefix' => 'items'], function () {
   });
 
   Route::get('/', [
-    'uses' => "$ItemC@itemList", 'as' => 'list.item',
+    'uses' => "$ItemC@itemList"
   ]);
 
   Route::post('getItems', [
-    'uses' => "$ItemC@getItems", 'as' => 'get.item',
+    'uses' => "$ItemC@getItems"
   ]);
 
   Route::post('getUom', [
-    'uses' => "$ItemC@getUom", 'as' => 'get.uom',
+    'uses' => "$ItemC@getUom"
   ]);
 
   Route::post('saveItem', [
-    'uses' => "$ItemC@saveItem", 'as' => 'save.item',
+    'uses' => "$ItemC@saveItem"
   ]);
 
   Route::post('saveUom', [
-    'uses' => "$ItemC@saveUom", 'as' => 'save.uom',
+    'uses' => "$ItemC@saveUom"
   ]);
 
   Route::match(['GET', 'POST'], 'item', [
-    'uses' => "$ItemC@newItem", 'as' => 'new.item',
+    'uses' => "$ItemC@newItem"
   ]);
 
   Route::get('item/{itemid}', [
-    'uses' => "$ItemC@newItem", 'as' => 'edit.item',
+    'uses' => "$ItemC@newItem"
   ]);
 });
 
@@ -75,23 +75,23 @@ Route::group(['prefix' => 'suppliers', 'middleware' => ['sampleware']], function
   $SupplierC = "SupplierController";
 
   Route::post('getSuppliers', [
-    'uses' => "$SupplierC@getSuppliers", 'as' => 'get.supplier',
+    'uses' => "$SupplierC@getSuppliers"
   ]);
 
   Route::post('saveSupplier', [
-    'uses' => "$SupplierC@saveSupplier", 'as' => 'save.supplier',
+    'uses' => "$SupplierC@saveSupplier"
   ]);
 
   Route::match(['GET', 'POST'], '/supplier', [
-    'uses' => "$SupplierC@newSupplier", 'as' => 'new.supplier',
+    'uses' => "$SupplierC@newSupplier"
   ]);
 
   Route::get('/', [
-    'uses' => "$SupplierC@supplierList", 'as' => 'list.supplier',
+    'uses' => "$SupplierC@supplierList"
   ]);
 
   Route::get('/supplier/{supplierid}', [
-    'uses' => "$SupplierC@newSupplier", 'as' => 'edit.supplier',
+    'uses' => "$SupplierC@newSupplier"
   ]);
 });
 
@@ -100,52 +100,62 @@ Route::group(['prefix' => 'IS'], function () {
   $InvetoryC = "InventoryController";
 
   Route::get('/', [
-    'uses' => "$InvetoryC@setupList", 'as' => 'list.IS',
+    'uses' => "$InvetoryC@setupList"
   ]);
 
   Route::match(['GET', 'POST'], 'setup', [
-    'uses' => "$InvetoryC@newSetup", 'as' => 'new.setup',
+    'uses' => "$InvetoryC@newSetup"
   ]);
 
   Route::get('setup/{txid}', [
-    'uses' => "$InvetoryC@newSetup", 'as' => 'edit.setup',
+    'uses' => "$InvetoryC@newSetup"
   ]);
 
   Route::post('saveSetup', [
-    'uses' => "$InvetoryC@saveSetup", 'as' => 'save.setup',
+    'uses' => "$InvetoryC@saveSetup"
   ]);
 
   Route::post('getSetup', [
-    'uses' => "$InvetoryC@getSetup", 'as' => 'get.setup',
+    'uses' => "$InvetoryC@getSetup"
   ]);
 
   Route::post('getItems', [
-    'uses' => "$InvetoryC@getItems", 'as' => 'get.item',
+    'uses' => "$InvetoryC@getItems"
   ]);
 
   Route::post('addItem', [
-    'uses' => "$InvetoryC@addItem", 'as' => 'add.stockitem',
+    'uses' => "$InvetoryC@addItem"
   ]);
 
   Route::post('loadStock', [
-    'uses' => "$InvetoryC@loadStock", 'as' => 'load.stockitem',
+    'uses' => "$InvetoryC@loadStock"
   ]);
 
   Route::post('saveStock', [
-    'uses' => "$InvetoryC@saveStock", 'as' => 'save.stock',
+    'uses' => "$InvetoryC@saveStock"
   ]);
 });
 
 Route::group(['prefix' => 'POS'], function () {
   $posC = "PosController";
   Route::get('/', [
-    'uses' => "$posC@index", 'as' => 'index.pos',
+    'uses' => "$posC@index"
   ]);
 
-  Route::post('/addCart', [
-    'uses' => "$posC@addCart", 'as' => 'add.cart',
+  Route::post('/saveCart', [
+    'uses' => "$posC@saveCart"
   ]);
   Route::post('/loadCart', [
-    'uses' => "$posC@loadCart", 'as' => 'load.cart',
+    'uses' => "$posC@loadCart"
+  ]);
+});
+
+Route::group(['prefix' => 'category'], function () {
+  $cat = "CategoryController";
+  Route::get('/', [
+    'uses' => "$cat@index"
+  ]);
+  Route::post('/getCategory', [
+    'uses' => "$cat@getCategory"
   ]);
 });

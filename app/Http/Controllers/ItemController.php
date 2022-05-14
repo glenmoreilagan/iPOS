@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Item;
 use App\Reusable;
+use Validator;
 
 class ItemController extends Controller
 {
@@ -48,6 +49,7 @@ class ItemController extends Controller
 
   public function saveItem(Request $req) {
   	$reqs = $req->all();
+
     $items = $this->item_class->setItem($reqs);
     return ['status' => $items['status'], 'msg' => $items['msg'], 'data' => $items['data']];
   }

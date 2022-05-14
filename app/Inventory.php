@@ -27,6 +27,7 @@ class Inventory extends Model
 	
 	public $line = "";
 	public $itemid = "";
+	public $uomid = 0;
 	public $qty = 0;
 	public $cost = 0;
 
@@ -148,12 +149,12 @@ class Inventory extends Model
   	}
 
   	$selectqry = [
-  		'stock.txid', 
-  		'stock.line', 
-	  	'stock.itemid',
-	  	'item.barcode',
-	  	'item.itemname',
-	  	'stock.uomid',
+  		"stock.txid", 
+  		"stock.line", 
+	  	"stock.itemid",
+	  	"item.barcode",
+	  	"item.itemname",
+	  	"stock.uomid",
 	  ];
 
   	if (!empty($filter)) {
@@ -161,17 +162,25 @@ class Inventory extends Model
 	  	->select($selectqry)
 	  	// selectRaw to set array bindings
 	  	// selectRaw as added select fields from db
-	  	->selectRaw('FORMAT(stock.qty, ?) as qty, FORMAT(stock.cost, ?) as cost', [3, 4])
-  		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
+	  	->selectRaw("FORMAT(stock.qty, ?) as qty, 
+	  		FORMAT(stock.cost, ?) as cost,
+	  		IFNULL(uom.uom, '') as uom", 
+	  		[3, 4]
+	  	)
+  		->leftJoin("tblitems as item", "item.itemid", "=", "stock.itemid")
+  		->leftJoin("tbluom as uom", "uom.uomid", "=", "stock.uomid")
   		->where($filter)
 	  	->get();
   	} else {
-  		$stock = DB::table($this->tblstock .' as stock')
+  		$stock = DB::table($this->tblstock ." as stock")
   		->select($selectqry)
   		// selectRaw to set array bindings
 	  	// selectRaw as added select fields from db
-  		->selectRaw('FORMAT(stock.qty, ?) as qty, FORMAT(stock.cost, ?) as cost', [3, 4])
-  		->leftJoin('tblitems as item', 'item.itemid', '=', 'stock.itemid')
+  		->selectRaw("FORMAT(stock.qty, ?) as qty, 
+  			FORMAT(stock.cost, ?) as cost", 
+  			[3, 4]
+  		)
+  		->leftJoin("tblitems as item", "item.itemid", "=", "stock.itemid")
   		->get();
   	}
 
@@ -180,22 +189,29 @@ class Inventory extends Model
 
   public function setItemstock($data, $action) {
   	foreach ($data['data'] as $key => $value) {
-	    if ($action == "additem") {
-	    	$items = $this->item_class->getItem($value);
-		    $itemid = !empty($items[0]->itemid) ? $items[0]->itemid : 0;
-				$this->txid = $data['txid'];
-				$this->itemid = $itemid;
-	    }
 
-	    if ($action == "saveitem") {
-	    	$qty = isset($value['qty']) ? $value['qty'] : 0;
-		    $cost = isset($value['cost']) ? $value['cost'] : 0;
-		    $txid = $value['txid'];
-				$this->line = $value['line'];
-				$this->txid = $txid;
-				$this->qty = $qty;
-				$this->cost = $cost;
-	    }
+  		switch ($action) {
+  			case 'additem':
+		    	$items = $this->item_class->getItem($value);
+			    $itemid = !empty($items[0]->itemid) ? $items[0]->itemid : 0;
+			    $uomid = !empty($items[0]->uomid) ? $items[0]->uomid : 0;
+					$this->txid = $data['txid'];
+					$this->itemid = $itemid;
+					$this->uomid = $uomid;
+				break;
+  			case 'saveitem':
+		    	$qty = isset($value['qty']) ? $value['qty'] : 0;
+			    $cost = isset($value['cost']) ? $value['cost'] : 0;
+			    $txid = $value['txid'];
+					$this->line = $value['line'];
+					$this->txid = $txid;
+					$this->qty = $qty;
+					$this->cost = $cost;
+				break;
+				default:
+					return ['status' => false, 'msg' => 'No action!', 'data' => []];
+				break;
+  		}
 
   		$item_stock = $this->saveItemstockLine();
 
@@ -217,7 +233,8 @@ class Inventory extends Model
 	  	DB::table($this->tblstock)->insert([
 	  		'txid' => $this->txid,
 	  		'line' => $newline,
-	  		'itemid' => $this->itemid
+	  		'itemid' => $this->itemid,
+	  		'uomid' => $this->uomid
 	  	]);
 	  	$msg = "Insert Success!";
 	  	$status = true;

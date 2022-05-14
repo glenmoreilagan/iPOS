@@ -191,7 +191,7 @@
 			    		</tr>`,
 			    		`<tr>
 			    			<td>
-			    				<span id="stock-uomid-row-${res[i].line}">${res[i].uomid}</span>
+			    				<span id="stock-uomid-row-${res[i].line}">${res[i].uom}</span>
 			    			</td>
 			    		</tr>`,
 			    		`<tr>

@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
 	document.addEventListener("DOMContentLoaded", function() {
-		var table = $("#items-list-table, newtable").DataTable({
+		let table = $("#items-list-table, newtable").DataTable({
 			responsive: true,
 			"dom": '<"top"f>rt<"bottom"ip><"clear">',
 			"pageLength": 10,
@@ -41,28 +41,31 @@
 			"scrollCollapse" : true,
 			"fixedHeader" : true,
 		});
+		const getItems = () => {
+			postData('/items/getItems', {})
+		  .then(data => {
+		    // console.log(data);
+		    let td = '';
+		    let ready_data = [];
+		    for(let i in data) {
+		    	ready_data.push([
+		    		`<tr>
+		    			<td>
+		    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+	    				</td>
+		    		</tr>`,
+		    		data[i].barcode, 
+		    		data[i].itemname,
+		    		data[i].uom,
+		    	]);
+		    }
+		    table.clear().rows.add(ready_data).draw();
+		  }).catch((error) => {
+		    console.log(error);
+		  });
+		}
 
-		postData('/items/getItems', {})
-	  .then(data => {
-	    // console.log(data);
-	    let td = '';
-	    let ready_data = [];
-	    for(let i in data) {
-	    	ready_data.push([
-	    		`<tr>
-	    			<td>
-	    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
-    				</td>
-	    		</tr>`,
-	    		data[i].barcode, 
-	    		data[i].itemname,
-	    		data[i].uom,
-	    	]);
-	    }
-	    table.clear().rows.add(ready_data).draw();
-	  }).catch((error) => {
-	    console.log(error);
-	  });
+		getItems();
 
 	  $(document).on("click", "#item-list .btnviewItem", (e) => {
 	  	let itemid = e.currentTarget.attributes[0].nodeValue;

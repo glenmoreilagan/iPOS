@@ -225,6 +225,14 @@
 						</ul>
 					</li>
 					<li class="sidebar-item">
+						<a href="#masters" data-toggle="collapse" class="sidebar-link collapsed">
+              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Masters</span>
+            </a>
+						<ul id="masters" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+							<li class="sidebar-item"><a class="sidebar-link" href="/category">Category</a></li>
+						</ul>
+					</li>
+					<li class="sidebar-item">
 						<a href="#cashier" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Cashier</span>
             </a>

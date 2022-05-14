@@ -52,6 +52,14 @@
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupUom" id="btnlookupUom"><i data-feather="menu"></i></button>
 	          </span>
 					</div>
+					<label>Category</label>
+					<div class="input-group">
+						<input name="catid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="0">
+						<input name="category" type="text" class="form-control txtitem_infohead" id="" placeholder="" value="" readonly>
+						<span class="input-group-append">
+            	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupCategory" id="btnlookupCategory"><i data-feather="menu"></i></button>
+	          </span>
+					</div>
 
 			  </div>
 			</div>
@@ -204,8 +212,8 @@
 				// load_uom({itemid:input_itemid});
 				uom.val(res.data[0].uom);
 		  	amt.val(res.data[0].amt);
-				notify({status : res.status, message : res.msg});
 				$(`.key-${row}`).removeClass('isedited');
+				notify({status : res.status, message : res.msg});
 		  }).catch((error) => {
         console.log(error);
 	    });

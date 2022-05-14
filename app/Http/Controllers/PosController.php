@@ -22,57 +22,77 @@ class PosController extends Controller
 
   public function index() {
   	$items = $this->reuse_class->getItemWithBal();
-  	return view('cashier.pos.pos', ['items' => $items]);
+  	$category = $this->reuse_class->getCategory();
+  	return view("cashier.pos.pos", ["items" => $items, 'category' => $category]);
   }
 
-  public function addCart(Request $req) {
+  public function saveCart(Request $req) {
   	$reqs = $req->all();
 
-  	foreach ($reqs['data'] as $key => $value) {
+  	foreach ($reqs["data"] as $key => $value) {
   		$cart = [];
-  		$default_qty = 1;
 
-  		$cart['itemid'] = $value['itemid'];
-  		$cart['uomid'] = $value['uomid'];
-  		$cart['qty'] = $default_qty;
-  		$cart['amt'] = $value['amt'];
-  		$cart['total'] = $value['amt'] * $default_qty;
-  		$cart['userid'] = 1;
-  		$cart['added_date'] = $this->reuse_class->currDateToday();
-  		$cart['ordernum'] = $this->reuse_class->getNewOrderNum();
-
-  		$insert = DB::table("tblcart")->insert($cart);
-
-  		if(!$insert) {
-  			return ['status' => false, 'msg' => 'Add to Cart Failed!'];
+  		if ($reqs["txid"] != 0) {
+	  		$cart["qty"] = $value["qty"];
+	  		$cart["amt"] = $value["amt"];
+	  		$cart["total"] = $value["amt"] * $value["qty"];
+	  		$cart["userid"] = 1;
+	  		$update = DB::table("tblcart")
+				->where([
+					["txid", "=", $reqs["txid"]],
+					["itemid", "=", $value["itemid"]],
+					["userid", "=", 1]
+				])
+	  		->update($cart);
+	  		if(!$update) {
+	  			return ["status" => false, "msg" => "Update Failed!"];
+	  		}
+	  		return ["status" => true, "msg" => "Update Success!"];
+  		} else {
+	  		$default_qty = 1;
+	  		$cart["itemid"] = $value["itemid"];
+	  		$cart["uomid"] = $value["uomid"];
+	  		$cart["qty"] = $default_qty;
+	  		$cart["amt"] = $value["amt"];
+	  		$cart["total"] = $value["amt"] * $default_qty;
+	  		$cart["userid"] = 1;
+	  		$cart["added_date"] = $this->reuse_class->currDateToday();
+	  		$cart["ordernum"] = $this->reuse_class->getNewOrderNum();
+	  		$insert = DB::table("tblcart")->insert($cart);
+	  		if(!$insert) {
+	  			return ["status" => false, "msg" => "Insert Failed!"];
+	  		}
+		  	return ["status" => true, "msg" => "Insert Success!"];
   		}
   	}
-
-  	return ['status' => true, 'msg' => 'Add to Cart Success!'];
   }
 
   public function loadCart(Request $req) {
   	$selectqry = [
-  		'cart.txid', 
-	  	'cart.ordernum', 
-	  	'cart.itemid', 
-	  	'cart.uomid', 
-	  	'cart.userid', 
-	  	'cart.added_date',
-	  	'item.itemname',
-	  	'uom.uom'
+  		"cart.txid", 
+	  	"cart.ordernum", 
+	  	"cart.itemid", 
+	  	"cart.uomid", 
+	  	"cart.userid", 
+	  	"cart.added_date",
+	  	"item.itemname",
+	  	"uom.uom"
 	  ];
 		
-		$cart = DB::table('tblcart as cart')
+		$cart = DB::table("tblcart as cart")
   	->select($selectqry)
-  	->selectRaw('FORMAT(cart.qty, ?) as qty, FORMAT(cart.amt, ?) as amt, FORMAT(cart.total, ?) as total', [0, 2, 2])
-  	->leftJoin('tblitems as item', 'item.itemid', '=', 'cart.itemid')
-  	->leftJoin('tbluom as uom', function($join) {
-  		$join->on('uom.uomid', '=', 'item.uomid');
-  		$join->on('uom.itemid', '=', 'item.itemid');
+  	->selectRaw("replace(FORMAT(cart.qty, ?), ',', '') as qty, 
+  		replace(FORMAT(cart.amt, ?), ',', '') as amt, 
+  		replace(FORMAT(cart.total, ?), ',', '') as total", 
+  		[0, 2, 2]
+  	)
+  	->leftJoin("tblitems as item", "item.itemid", "=", "cart.itemid")
+  	->leftJoin("tbluom as uom", function($join) {
+  		$join->on("uom.uomid", "=", "item.uomid");
+  		$join->on("uom.itemid", "=", "item.itemid");
   	})
   	->get();
 
-  	return ['status' => true, 'msg' => 'Load Cart Success!', 'data' => $cart];
+  	return ["status" => true, "msg" => "Load Cart Success!", "data" => $cart];
   }
 }

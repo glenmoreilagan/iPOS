@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Cart;
-class cartController extends Controller
+class CartController extends Controller
 {
 	private $cart_class;
 
