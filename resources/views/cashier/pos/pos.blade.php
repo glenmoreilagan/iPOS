@@ -2,6 +2,7 @@
 	<link class="js-stylesheet" href="/css/pos.css" rel="stylesheet"/>
 </head>
 
+@section('title', 'POS')
 @extends('index')
 
 @section('content')

@@ -6,7 +6,9 @@
 
 
 <!-- Mirrored from appstack.bootlab.io/calendar.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 04 Jan 2021 13:06:37 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<!-- Added by HTTrack -->
+{{-- <meta http-equiv="content-type" content="text/html;charset=UTF-8" /> --}}
+<!-- /Added by HTTrack -->
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -255,7 +257,7 @@
               <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Settings</span>
             </a>
 						<ul id="settings" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/useraccess">User Access</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/user">Manage User</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Roles</a></li>
 						</ul>
 					</li>

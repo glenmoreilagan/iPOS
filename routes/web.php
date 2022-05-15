@@ -18,15 +18,27 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
-
-
-Route::get('/useraccess', function () {
-  return view('settings.useraccess.useraccess');
+Route::get('/errors/404', function () {
+    return view('errors.404');
 });
+
+
+
+// Route::get('/useraccess', function () {
+//   return view('settings.useraccess.useraccess');
+// });
 
 Route::get('/roles', function () {
   return view('settings.roles.roles');
+});
+
+Route::group(['prefix' => 'login'], function () {
+  Route::get('/', [
+    'uses' => "LoginController@index"
+  ]);
+  Route::post('/login', [
+    'uses' => "LoginController@login"
+  ]);
 });
 
 
@@ -151,11 +163,18 @@ Route::group(['prefix' => 'POS'], function () {
 });
 
 Route::group(['prefix' => 'category'], function () {
-  $cat = "CategoryController";
+  $catC = "CategoryController";
   Route::get('/', [
-    'uses' => "$cat@index"
+    'uses' => "$catC@index"
   ]);
   Route::post('/getCategory', [
-    'uses' => "$cat@getCategory"
+    'uses' => "$catC@getCategory"
+  ]);
+});
+
+Route::group(['prefix' => 'user'], function () {
+  $userC = "UserController";
+  Route::get('/', [
+    'uses' => "$userC@index"
   ]);
 });
