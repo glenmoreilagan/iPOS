@@ -30,10 +30,20 @@ class Reusable extends Model
   	return $docnum;
   }
 
-  public function currDateToday() {
+  public function setDefaultTimezone() {
   	date_default_timezone_set('Asia/Manila');
+  }
+
+  public function currDateToday() {
+  	$this->setDefaultTimezone();
 
   	return date('Y-m-d');
+  }
+
+  public function currDateTimeToday() {
+  	date_default_timezone_set('Asia/Manila');
+
+  	return date('Y-m-d H:i');
   }
 
   public function newInventoryLine($txid) {

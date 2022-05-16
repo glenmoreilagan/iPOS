@@ -5,48 +5,22 @@
 <h1 class="h3 mb-3">USERS</h1>
 <div class="card">
 	<div class="card-header">
-		<button class="btn btn-primary"  data-toggle="modal" data-target="#modal-user-info" id="btnmodal-user-info"><i data-feather="file-plus"></i> New</button>
+		<button class="btn btn-primary" data-toggle="modal" data-target="#modal-user-info" id="btnmodal-user-info"><i data-feather="file-plus"></i> New</button>
 		{{-- <h5 class="card-title">USER ACCESS</h5> --}}
 		<!-- <h6 class="card-subtitle text-muted">Open source JavaScript jQuery plugin for a full-sized, drag & drop event calendar.</h6> -->
 	</div>
 	<div class="card-body">
-		<table id="datatables-reponsive" class="table table-striped" style="width:100%">
+		<table id="datatables-reponsive" class="user-list-table table table-striped" style="width:100%">
 		<thead>
 			<tr>
-				<th>Name</th>
-				<th>Position</th>
-				<th>Office</th>
-				<th>Age</th>
-				<th>Start date</th>
-				<th>Salary</th>
+				<th>Action</th>
+				<th>Email</th>
+				<th>Username</th>
+				<th>Password</th>
+				<th>Status</th>
 			</tr>
 		</thead>
-		<tbody>
-			<tr>
-				<td><button class="btn btn-primary btn-sm"><i class="far fa-eye"></i></button></td>
-				<td>System Architect</td>
-				<td>Edinburgh</td>
-				<td>61</td>
-				<td>2011/04/25</td>
-				<td>$320,800</td>
-			</tr>
-			<tr>
-				<td>Garrett Winters</td>
-				<td>Accountant</td>
-				<td>Tokyo</td>
-				<td>63</td>
-				<td>2011/07/25</td>
-				<td>$170,750</td>
-			</tr>
-			<tr>
-				<td>Ashton Cox</td>
-				<td>Junior Technical Author</td>
-				<td>San Francisco</td>
-				<td>66</td>
-				<td>2009/01/12</td>
-				<td>$86,000</td>
-			</tr>
-		</tbody>
+		<tbody class="user-list"></tbody>
 	</table>
 	</div>
 </div>
@@ -62,29 +36,30 @@
 			</div>
 			<div class="modal-body m-3">
 				<div class="row">
-				  <div class="col-md-4 mb-4">
+				  <div class="col-md-6 mb-4">
 					  <div class="mb-3">
 							<label>Name</label>
-							<input type="text" class="form-control" id="" placeholder="Input Name">
+							<input type="hidden" class="form-control txt_userinfo" id="" placeholder="Input Userid" name="userid" value="0">
+							<input type="text" class="form-control txt_userinfo" id="" placeholder="Input Name" name="name">
 					  </div>
 					  <div class="mb-3">
 							<label>Address</label>
-							<textarea class="form-control" id="" placeholder="Input Address" rows="2"></textarea>
+							<textarea class="form-control txt_userinfo" id="" placeholder="Input Address" rows="2" name="address"></textarea>
 					  </div>
 					  <div class="mb-3">
 							<label>Email</label>
-							<input type="email" class="form-control" id="" placeholder="Input Email">
+							<input type="email" class="form-control txt_userinfo" id="" placeholder="Input Email" name="email">
 					  </div>
 					</div>
 
-					<div class="col-md-4">
+					<div class="col-md-6 mb-4">
 						<div class="mb-3">
 							<label>Username</label>
-							<input type="text" class="form-control" id="" placeholder="Input Username">
+							<input type="text" class="form-control txt_userinfo" id="" placeholder="Input Username" name="username">
 					  </div>
 					  <div class="mb-3">
 							<label>Password</label>
-							<input type="password" class="form-control" id="" placeholder="Input Password">
+							<input type="password" class="form-control txt_userinfo" id="" placeholder="Input Password" name="password">
 					  </div>
 					</div>
 				</div>
@@ -97,3 +72,104 @@
 	</div>
 </div>
 @endsection
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		let table = $(".user-list-table").DataTable({
+			responsive: true,
+			"dom": '<"top"f>rt<"bottom"ip><"clear">',
+			"pageLength": 10,
+			"scrollY" : "250px",
+			"scrollX" : true,
+			"scrollCollapse" : true,
+			"fixedHeader" : true,
+		});
+
+		const USER_OBJ =  {
+			SAVE_USER : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if (res.status) {
+				  	USER_OBJ.LOAD_USER("/user/getUser", {data: {}});
+			  		$("#modal-user-info").modal('hide');
+			  	}
+	        // console.log(res);
+					notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
+			},
+			LOAD_USER : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			    // console.log(data);
+			    let td = '';
+			    let ready_data = [];
+			    for(let i in res) {
+			    	ready_data.push([
+			    		`<tr>
+			    			<td>
+			    				<button 
+				    				rowkey="${res[i].userid}" 
+				    				id="row-${res[i].userid}" 
+				    				class="btn-action btn btn-primary btn-sm btnviewUser" 
+				    				data-toggle="modal" data-target="#modal-user-info">
+				    				<i class="far fa-eye"></i>
+			    				</button>
+		    				</td>
+			    		</tr>`,
+			    		res[i].email, 
+			    		res[i].username, 
+			    		res[i].password,
+			    		res[i].status,
+			    	]);
+			    }
+			    table.clear().rows.add(ready_data).draw();
+			  }).catch((error) => {
+			    console.log(error);
+			  });
+			},
+			EDIT_USER : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	// console.log(res);
+			  	$("input[name='userid']").val(res[0].userid);
+			  	$("input[name='email']").val(res[0].email);
+			  	$("input[name='username']").val(res[0].username);
+			  	$("input[name='password']").val(res[0].password);
+			  }).catch((error) => {
+			    console.log(error);
+			  });
+			}
+		}
+
+		USER_OBJ.LOAD_USER("/user/getUser", {data: {}});
+
+		$("#btnmodal-user-info").click((e) => {
+			$(".txt_userinfo").val('');
+			$("input[name='userid']").val(0);
+		})
+
+		$(document).on("click", "#btnSaveUser", (e) => {
+			const url = "/user/setUser";
+			let user_info = $(".txt_userinfo").serializeArray();
+
+
+			$(".txt_userinfo").val('');
+			$("input[name='userid']").val(0);
+
+			let ready_data_arr = [];
+			let ready_data_obj = {};
+			for(i in user_info) {
+				ready_data_obj[user_info[i].name] = user_info[i].value;
+			}
+			ready_data_arr.push(ready_data_obj);
+
+			USER_OBJ.SAVE_USER(url, {data: ready_data_arr});
+		});
+
+		$(document).on("click", ".btnviewUser", (e) => {
+			let rowkey = e.currentTarget.attributes[0].nodeValue;
+			USER_OBJ.EDIT_USER("/user/getUser", {data: {userid: rowkey}});
+		});
+	})
+</script>

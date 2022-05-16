@@ -430,14 +430,16 @@
 			// 	"fixedHeader" : true,
 			// });
 
-			$(".select2").each(function() {
-				$(this)
-					.wrap("<div class=\"position-relative\"></div>")
-					.select2({
-						placeholder: "Select value",
-						dropdownParent: $(this).parent()
-					});
-			});
+			// $(".select2").each(function() {
+			// 	$(this)
+			// 		.wrap("<div class=\"position-relative\"></div>")
+			// 		.select2({
+			// 			placeholder: "Select value",
+			// 			dropdownParent: $(this).parent()
+			// 		});
+			// });
+
+			$("input").attr('autocomplete', 'off');
 		});
 	</script>
 </body>

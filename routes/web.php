@@ -177,4 +177,12 @@ Route::group(['prefix' => 'user'], function () {
   Route::get('/', [
     'uses' => "$userC@index"
   ]);
+
+  Route::post('/getUser', [
+    'uses' => "$userC@getUser"
+  ]);
+
+  Route::post('/setUser', [
+    'uses' => "$userC@setUser"
+  ]);
 });
