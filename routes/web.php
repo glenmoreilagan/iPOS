@@ -28,9 +28,6 @@ Route::get('/errors/404', function () {
 //   return view('settings.useraccess.useraccess');
 // });
 
-Route::get('/roles', function () {
-  return view('settings.roles.roles');
-});
 
 Route::group(['prefix' => 'login'], function () {
   Route::get('/', [
@@ -184,5 +181,20 @@ Route::group(['prefix' => 'user'], function () {
 
   Route::post('/setUser', [
     'uses' => "$userC@setUser"
+  ]);
+});
+
+Route::group(['prefix' => 'roles'], function () {
+  $roleC = "RoleController";
+  Route::get('/', [
+    'uses' => "$roleC@index"
+  ]);
+
+  Route::match(['GET', 'POST'], 'role', [
+    'uses' => "$roleC@newRole"
+  ]);
+
+  Route::get('role/{roleid}', [
+    'uses' => "$roleC@newRole"
   ]);
 });

@@ -33,6 +33,7 @@
 	<link class="js-stylesheet" href="/css/css/light.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/datatable-customize.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/all.css" rel="stylesheet"/>
+	<link class="js-stylesheet" href="/plugins/nprogress/nprogress.css" rel="stylesheet"/>
 	<style type="text/css">
 		body[data-theme=light] .sidebar-brand svg {
 		  fill: #fff !important;
@@ -78,6 +79,7 @@
 	}
 
 	const postData = async (url = '', data = {}) => {
+		NProgress.start();
 	  const response = await fetch(url, {
 	    method: 'POST',
 	    mode: 'cors',
@@ -92,6 +94,7 @@
 	    referrerPolicy: 'no-referrer',
 	    body: JSON.stringify(data)
 	  });
+	  NProgress.done();
 	  return response.json();
 	}
 
@@ -258,7 +261,7 @@
             </a>
 						<ul id="settings" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 							<li class="sidebar-item"><a class="sidebar-link" href="/user">Manage User</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Roles</a></li>
+							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Manage Role</a></li>
 						</ul>
 					</li>
 					<li class="sidebar-item">
@@ -417,6 +420,7 @@
 	</div>
 	<script src="/js/js/app.js"></script>
 	<script src="/plugins/filter-tags/autofilter.js"></script>
+	<script src="/plugins/nprogress/nprogress.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			// Datatables Responsive

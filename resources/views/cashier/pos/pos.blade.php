@@ -2,9 +2,9 @@
 	<link class="js-stylesheet" href="/css/pos.css" rel="stylesheet"/>
 </head>
 
-@section('title', 'POS')
 @extends('index')
 
+@section('title', 'POS')
 @section('content')
 <h1 class="h3 mb-3">POINT OF SALE</h1>
 <div class="card">
@@ -251,14 +251,14 @@
 			let qty = $(".table-cart-list .btnSave").closest('tr').find(`td:eq(1) .cart-row-${rowkey}`);
 			let itemid = qty.attr('itemid');
 			let amt = qty.attr('amt');
-			let bal = qty.attr("bal");
+			// let bal = qty.attr("bal");
 
 			let ready_to_cart_arr = [];
 			let ready_to_cart_obj = {
 				txid 	 : rowkey,
 				qty 	 : qty.val(),
-				itemid : amt,
-				amt 	 : balance
+				itemid : itemid,
+				amt 	 : amt
 			}
 
 			ready_to_cart_arr.push(ready_to_cart_obj);

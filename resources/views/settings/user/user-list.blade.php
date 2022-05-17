@@ -6,8 +6,6 @@
 <div class="card">
 	<div class="card-header">
 		<button class="btn btn-primary" data-toggle="modal" data-target="#modal-user-info" id="btnmodal-user-info"><i data-feather="file-plus"></i> New</button>
-		{{-- <h5 class="card-title">USER ACCESS</h5> --}}
-		<!-- <h6 class="card-subtitle text-muted">Open source JavaScript jQuery plugin for a full-sized, drag & drop event calendar.</h6> -->
 	</div>
 	<div class="card-body">
 		<table id="datatables-reponsive" class="user-list-table table table-striped" style="width:100%">

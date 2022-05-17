@@ -5,6 +5,7 @@
 		}
 	</style>
 </head>
+
 @extends('index')
 
 @section('title', 'Items')
