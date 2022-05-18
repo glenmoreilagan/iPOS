@@ -197,4 +197,8 @@ Route::group(['prefix' => 'roles'], function () {
   Route::get('role/{roleid}', [
     'uses' => "$roleC@newRole"
   ]);
+
+  Route::post('saveRole', [
+    'uses' => "$roleC@saveRole"
+  ]);
 });

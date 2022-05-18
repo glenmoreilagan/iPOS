@@ -42,14 +42,34 @@
 		  	<ul>
 		  		@foreach($parent_menus as $key => $parent)
 		  			<li>
-				  		{{ $parent->parentname }}
+	  			  	{{-- <label class="form-check"> --}}
+	  		        <input 
+	  			        rowkey = "{{ $parent->parentid }}"
+	  			        parentid = "{{ $parent->parentid }}"
+	  		        	id="parent-checkbox-{{ $parent->parentid }}" 
+	  		        	class="parent-chbox-menu form-check-input" 
+	  		        	type="hidden" 
+	  			        name="{{ strtolower(str_replace(" ", "_", $parent->parentname)) }}" 
+	  			        value="{{ $parent->parentid }}" 
+	  		        >
+	  		        <span class="form-check-label">{{ $parent->parentname }}</span>
+	  		      {{-- </label> --}}
 		  			</li>
 		  			@foreach($child_menus as $k => $child)
 			  			@if($parent->parentid == $child->parentid)
 				  			<ul>
 						  		<li>
 								  	<label class="form-check">
-							        <input class="form-check-input" type="checkbox" value="">
+							        <input 
+								        rowkey = "{{ $child->childid }}"
+								        childid = "{{ $child->childid }}"
+								        parentid = "{{ $child->parentid }}"
+							        	id="child-checkbox-{{ $child->childid }}" 
+							        	class="child-chbox-menu form-check-input set-check-{{ $parent->parentid }}" 
+							        	type="checkbox" 
+								        name="{{ strtolower(str_replace(" ", "_", $child->childname)) }}" 
+								        value="{{ $child->childid }}" 
+							        >
 							        <span class="form-check-label">{{ $child->childname }}</span>
 							      </label>
 						  		</li>
@@ -63,3 +83,42 @@
 	</div>
 </div>
 @endsection
+
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function() {
+		let access_list = [];
+		let chbox = $(".chbox-menu");
+
+		$(".child-chbox-menu").change((e) => {
+			let rowkey = e.currentTarget.attributes[0].nodeValue;
+			let parentid = $(`#child-checkbox-${rowkey}`).attr("parentid");
+			let ischecked = $(`#child-checkbox-${rowkey}`).prop("checked");
+
+			if(ischecked) {
+				access_list.push({
+						parentid : parentid, 
+						childid : rowkey
+				});
+				// console.log(access_list);
+			} else {
+				for(i = 0; i < access_list.length; i++) {
+					if(access_list[i].parentid == parentid && access_list[i].childid == rowkey) {
+						access_list.splice(i, 1);
+						// console.log(access_list);
+					}
+				}
+			}
+		});
+
+		$("#btnSave").click((e) => {
+			e.preventDefault();
+
+			postData("/roles/saveRole", {data : access_list})
+		  .then(res => {
+	  	console.log(res);
+		  }).catch((error) => {
+		    console.log(error);
+		  });
+		});
+	});
+</script>
