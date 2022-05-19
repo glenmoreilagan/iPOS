@@ -21,13 +21,19 @@
 		</div>
 	</div>
 	<div class="card-body">
+		@php
+			// print_r($data);
+			// return;
+			$roleid = isset($data->roleid) ? $data->roleid : 0;
+			$role = isset($data->role) ? $data->role : 0;
+		@endphp
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
 					<label>Category</label>
 					<div class="input-group">
-						<input name="roleid" type="hidden" class="form-control txtrole_infohead" id="" placeholder="Input ROLEID" value="0">
-						<input name="role" type="text" class="form-control txtrole_infohead" id="" placeholder="" value="">
+						<input name="roleid" type="text" class="form-control txtrole_infohead" id="" placeholder="Input ROLEID" value="{{ $roleid }}">
+						<input name="role" type="text" class="form-control txtrole_infohead" id="" placeholder="" value="{{ $role }}">
 						<span class="input-group-append">
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupRole" id="btnlookupRole"><i data-feather="menu"></i></button>
 	          </span>
@@ -69,6 +75,7 @@
 							        	type="checkbox" 
 								        name="{{ strtolower(str_replace(" ", "_", $child->childname)) }}" 
 								        value="{{ $child->childid }}" 
+								        {{ $child->isallow }}
 							        >
 							        <span class="form-check-label">{{ $child->childname }}</span>
 							      </label>
@@ -99,23 +106,46 @@
 						parentid : parentid, 
 						childid : rowkey
 				});
-				// console.log(access_list);
 			} else {
 				for(i = 0; i < access_list.length; i++) {
 					if(access_list[i].parentid == parentid && access_list[i].childid == rowkey) {
 						access_list.splice(i, 1);
-						// console.log(access_list);
 					}
 				}
+			}
+		});
+
+		$(".child-chbox-menu").each((i, e) => {
+			let childid =$(`#child-checkbox-${i+1}`).attr("rowkey");
+			let parentid = $(`#child-checkbox-${i+1}`).attr("parentid");
+			let ischecked = $(`#child-checkbox-${i+1}`).prop("checked");
+
+			if (ischecked) {
+				access_list.push({
+						parentid : parentid, 
+						childid : childid
+				});
 			}
 		});
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();
 
-			postData("/roles/saveRole", {data : access_list})
+			let roleid = $("input[name='roleid']").val();
+			let role = $("input[name='role']").val();
+
+			let role_info_arr = [];
+			let role_info_obj = {
+				roleid : roleid,
+				role : role
+			};
+
+			role_info_arr.push(role_info_obj);
+			postData("/roles/saveRole", {data : access_list, roleinfo : role_info_arr})
 		  .then(res => {
-	  	console.log(res);
+	  		$("input[name='roleid']").val(res.data.roleid);
+	  		$("input[name='role']").val(res.data.role);
+		  	notify({status : res.status, message : res.msg});
 		  }).catch((error) => {
 		    console.log(error);
 		  });

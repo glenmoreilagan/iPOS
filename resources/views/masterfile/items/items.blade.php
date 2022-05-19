@@ -192,7 +192,7 @@
 		    // console.log(itemid);
 				load_uom({itemid:data.data[0].itemid});
 
-				notify({status : data.status, message : data.msg})
+				notify({status : data.status, message : data.msg});
 		    // window.location = `/items/item/${data.data[0].itemid}`;
 		  }).catch((error) => {
         console.log(error);
