@@ -46,9 +46,9 @@ class LoginController extends Controller
 
   	$child = [
   		// masterfile
-  		['childid' => $items_childid, 'childcode' => '001-1', 'childname' => 'Items', 'parentid' => $masterfile_parentid],
-  		['childid' => $supplier_childid, 'childcode' => '001-2', 'childname' => 'Supplier', 'parentid' => $masterfile_parentid],
-
+  		['childid' => $items_childid, 'childcode' => '001-1', 'childname' => 'Items', 'parentid' => $masterfile_parentid, 'url' => '/items'],
+  		['childid' => $supplier_childid, 'childcode' => '001-2', 'childname' => 'Supplier', 'parentid' => $masterfile_parentid, 'url' => '/suppliers'],
+  		
   		// masters
   		['childid' => $category_childid, 'childcode' => '002-1', 'childname' => 'Category', 'parentid' => $masters_parentid],
 

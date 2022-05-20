@@ -5,7 +5,7 @@
 
 @extends('index')
 
-@section('title', 'Role')
+@section('title', 'Roles')
 @section('content')
 
 <h1 class="h3 mb-3">MANAGE ROLE AND ACCESS</h1>
@@ -25,18 +25,18 @@
 			// print_r($data);
 			// return;
 			$roleid = isset($data->roleid) ? $data->roleid : 0;
-			$role = isset($data->role) ? $data->role : 0;
+			$role = isset($data->role) ? $data->role : "";
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
 				<div class="mb-3">
-					<label>Category</label>
+					<label>Role</label>
 					<div class="input-group">
-						<input name="roleid" type="text" class="form-control txtrole_infohead" id="" placeholder="Input ROLEID" value="{{ $roleid }}">
+						<input name="roleid" type="hidden" class="form-control txtrole_infohead" id="" placeholder="Input ROLEID" value="{{ $roleid }}">
 						<input name="role" type="text" class="form-control txtrole_infohead" id="" placeholder="" value="{{ $role }}">
-						<span class="input-group-append">
+						{{-- <span class="input-group-append">
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupRole" id="btnlookupRole"><i data-feather="menu"></i></button>
-	          </span>
+	          </span> --}}
 					</div>
 			  </div>
 			</div>
@@ -127,6 +127,8 @@
 				});
 			}
 		});
+
+		$("input[name='role']").focus();
 
 		$("#btnSave").click((e) => {
 			e.preventDefault();

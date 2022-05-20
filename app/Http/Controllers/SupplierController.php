@@ -17,7 +17,9 @@ class SupplierController extends Controller
 
   public function supplierList() {
     // setcookie("GLEN-KEY", md5(123), time() + 2 * 24 * 60 * 60);
-  	return view('masterfile.suppliers.suppliers-list');
+    $nav = NavController::getNav();
+    $navs = ['parent' => $nav['parent'], 'child' => $nav['child']];
+  	return view('masterfile.suppliers.suppliers-list', $navs);
 	}
 
 	public function newSupplier(Request $req, $id = 0) {

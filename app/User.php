@@ -11,6 +11,7 @@ class User extends Authenticatable
 {
   protected $tblusers = "tblusers";
   public $userid = 0; 
+  public $name = ""; 
   public $username = ""; 
   public $email = "";
   public $password = ""; 
@@ -18,6 +19,7 @@ class User extends Authenticatable
   public $userrole = ""; 
   public $status = 0; 
   public $date_created = null; 
+  public $roleid = 0; 
 
   private $reusable_class;
 
@@ -30,10 +32,12 @@ class User extends Authenticatable
       $this->userid = $value['userid'];
       if ($this->userid == 0) {
         $this->username = $value['username'];
+        $this->name = $value['name'];
         $this->email = $value['email'];
         $this->password = $value['password'];
         $this->password_hash = md5($value['password']);
         $this->date_created = $this->reusable_class->currDateTimeToday();
+        $this->roleid = $value['roleid'];
       } else {
 
       }
@@ -55,12 +59,15 @@ class User extends Authenticatable
     if($this->userid == 0) {
       $this->userid = DB::table($this->tblusers)
       ->insertGetId([
+        'name' => $this->name, 
         'username' => $this->username, 
         'email' => $this->email,
         'password' => $this->password,
         'password_hash' => $this->password_hash,
         'date_created' => $this->date_created,
+        'roleid' => $this->roleid,
       ]);
+
       $status = true;
       $msg = "Saving Success!";
     } else {
@@ -77,16 +84,20 @@ class User extends Authenticatable
       $filter = ['user.userid', '=', $this->userid];
     }
 
-    $selectqry = ['user.userid', 'user.username', 'user.email', 'user.password_hash as password', 'user.status'];
+    $selectqry = ['user.userid', 'user.username', 'user.email', 'user.password', 'user.status', 'user.name',
+      "user.roleid", "role.role"
+    ];
 
     if (!empty($filter)) {
       $users = DB::table($this->tblusers . " as user")
       ->select($selectqry)
+      ->leftJoin("tblroles as role", "role.roleid", "=", "user.roleid")
       ->where([$filter])
       ->get();
     } else {
       $users = DB::table($this->tblusers . " as user")
       ->select($selectqry)
+      ->leftJoin("tblroles as role", "role.roleid", "=", "user.roleid")
       ->get();
     }
 

@@ -104,8 +104,13 @@ class Role extends Model
 		}
 	}
 
-	public function getRole($roleid) {
-		$rolesinfo = DB::table("tblroles")->select("roleid", "role")->where("roleid", "=", $roleid)->first();
+	public function getRole($roleid = 0) {
+		$selectqry = ["roleid", "role", "status"];
+		if ($roleid == 0) {
+			$rolesinfo = DB::table("tblroles")->select($selectqry)->get();
+		} else {
+			$rolesinfo = DB::table("tblroles")->select($selectqry)->where("roleid", "=", $roleid)->first();
+		}
 
 		return $rolesinfo;
 	}

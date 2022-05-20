@@ -39,10 +39,6 @@ Route::group(['prefix' => 'login'], function () {
 });
 
 
-
-
-
-
 Route::group(['prefix' => 'items'], function () {
   $ItemC = "ItemController";
 
@@ -182,12 +178,20 @@ Route::group(['prefix' => 'user'], function () {
   Route::post('/setUser', [
     'uses' => "$userC@setUser"
   ]);
+
+  Route::post('/getRole', [
+    'uses' => "$userC@getRole"
+  ]);
 });
 
 Route::group(['prefix' => 'roles'], function () {
   $roleC = "RoleController";
   Route::get('/', [
     'uses' => "$roleC@index"
+  ]);
+
+  Route::post('/getRoles', [
+    'uses' => "$roleC@getRoles"
   ]);
 
   Route::match(['GET', 'POST'], 'role', [

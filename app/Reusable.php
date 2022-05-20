@@ -6,12 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 use App\Category;
+use App\Role;
 class Reusable extends Model
 {
 	private $category_class;
+	private $role_class;
 
 	public function __construct() {
 		$this->category_class = new Category;
+		$this->role_class = new Role;
 	}
 
 
@@ -138,5 +141,9 @@ class Reusable extends Model
 
 	public function getCategory() {
 		return $this->category_class->getCategory();
+	}
+
+	public function getRole() {
+		return $this->role_class->getRole();
 	}
 }

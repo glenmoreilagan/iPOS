@@ -220,7 +220,23 @@
 						</ul>
 					</li> --}}
 
-					<li class="sidebar-item">
+					@foreach($parent as $key => $p)
+						<li class="sidebar-item">
+							<a href="#{{ strtolower(str_replace(" ", "", $p->parentname)) }}" data-toggle="collapse" class="sidebar-link collapsed">
+	              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">{{ $p->parentname }}</span>
+	            </a>
+							<ul id="{{ strtolower(str_replace(" ", "", $p->parentname)) }}" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
+	            @foreach($child as $k => $c)
+	            	@if($p->parentid == $c->parentid)
+										<li class="sidebar-item"><a class="sidebar-link" href="{{ $c->url }}">{{ $c->childname }}</a></li>
+										{{-- <li class="sidebar-item"><a class="sidebar-link" href="/suppliers">Suppliers</a></li> --}}
+	            	@endif
+	            @endforeach
+							</ul>
+						</li>
+					@endforeach
+
+{{-- 					<li class="sidebar-item">
 						<a href="#masterfile" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Masterfile</span>
             </a>
@@ -263,7 +279,7 @@
 							<li class="sidebar-item"><a class="sidebar-link" href="/user">Manage User</a></li>
 							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Manage Role</a></li>
 						</ul>
-					</li>
+					</li> --}}
 					<li class="sidebar-item">
 						<a href="#multi" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Multi Level</span>

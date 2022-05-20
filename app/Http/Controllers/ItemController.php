@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NavController;
 
 use App\Item;
 use App\Reusable;
-use Validator;
 
 class ItemController extends Controller
 {
@@ -20,7 +20,9 @@ class ItemController extends Controller
 	}
 
 	public function itemList() {
-  	return view('masterfile.items.items-list');
+    $nav = NavController::getNav();
+    $navs = ['parent' => $nav['parent'], 'child' => $nav['child']];
+  	return view('masterfile.items.items-list', $navs);
 	}
 
   public function newItem(Request $req, $id = 0) {
