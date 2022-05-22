@@ -152,6 +152,11 @@ Route::group(['middleware' => 'sampleware'], function () {
     Route::post('/saveCart', [
       'uses' => "$posC@saveCart"
     ]);
+
+    Route::post('/deleteCart', [
+      'uses' => "$posC@deleteCart"
+    ]);
+    
     Route::post('/loadCart', [
       'uses' => "$posC@loadCart"
     ]);

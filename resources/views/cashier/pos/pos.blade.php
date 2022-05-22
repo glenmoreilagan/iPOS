@@ -1,5 +1,10 @@
 <head>
 	<link class="js-stylesheet" href="/css/pos.css" rel="stylesheet"/>
+	<style type="text/css">
+		.table-cart-list .txtrow-cart-qty.isedited {
+			background-color: #C7E8CE;
+		}
+	</style>
 </head>
 
 @extends('index')
@@ -167,8 +172,10 @@
 								<span class="badge badge-info">${formatter.format(total)}</span>
 							</td>
 							<td class="cart-qty-td">
-								<input type="text" 
-								class="cart-row-${txid} form-control form-control-sm center-text qty" 
+								<input 
+								id="cart-row-${txid}"
+								class="cart-row-${txid} form-control form-control-sm center-text qty txtrow-cart-qty" 
+								type="text" 
 								value="${qty}" 
 								itemid="${itemid}" 
 								amt="${amt}" 
@@ -196,6 +203,18 @@
 				$("#lbltotalchange").text(change);
 			},
 			SAVECART : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if (res.status) {
+			  		BASE_OBJ.totalbill = 0;
+				  	BASE_OBJ.LOADCART('/POS/loadCart', {data: {}});
+			  	}
+					notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
+			},
+			DELETECART : (url, data) => {
 				postData(url, data)
 			  .then(res => {
 			  	if (res.status) {
@@ -263,6 +282,33 @@
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
 			BASE_OBJ.SAVECART(url, {data: ready_to_cart_arr, txid: rowkey});
+		});
+
+		$(document).on("click", ".table-cart-list .btnDelete", (e) => {
+			const url = '/POS/deleteCart';
+			// let attr_name = e.currentTarget.attributes[0].nodeName;
+			let rowkey = e.currentTarget.attributes[0].nodeValue;
+			let qty = $(".table-cart-list .btnDelete").closest('tr').find(`td:eq(1) .cart-row-${rowkey}`);
+			let itemid = qty.attr('itemid');
+			let amt = qty.attr('amt');
+			// let bal = qty.attr("bal");
+
+			let ready_to_cart_arr = [];
+			let ready_to_cart_obj = {
+				txid 	 : rowkey,
+				qty 	 : qty.val(),
+				itemid : itemid,
+				amt 	 : amt
+			}
+
+			ready_to_cart_arr.push(ready_to_cart_obj);
+			BASE_OBJ.DELETECART(url, {data: ready_to_cart_arr, txid: rowkey});
+		});
+
+		$(document).on("change", ".table-cart-list .txtrow-cart-qty", (e) => {
+			let row = e.currentTarget.id;
+
+			$(`.${row}`).addClass('isedited');
 		});
 		
 	});

@@ -146,8 +146,8 @@
               c0.2,0.5,0,1.1-0.5,1.3l-9,4C10.3,20,10.1,20,10,20z"/>
           </svg> --}}
 
-          <i class="align-middle" data-feather="coffee"></i>
-          <span class="align-middle mr-3">Cafè Rueda</span>
+          <i class="align-middle" data-feather="zap"></i>
+          <span class="align-middle mr-3">PASTPODS</span>
         </a>
 
 				<ul class="sidebar-nav">

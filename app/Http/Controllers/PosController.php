@@ -71,6 +71,17 @@ class PosController extends Controller
   	}
   }
 
+  public function deleteCart(Request $req) {
+  	$reqs = $req->all();
+
+  	$delete_cart = DB::table("tblcart")->where("txid", $reqs['txid'])->delete();
+
+  	if (!$delete_cart) {
+  		return ["status" => false, "msg" => "Delete Failed!"];
+  	}
+  	return ["status" => true, "msg" => "Delete Success!"];
+  }
+
   public function loadCart(Request $req) {
   	$selectqry = [
   		"cart.txid", 
