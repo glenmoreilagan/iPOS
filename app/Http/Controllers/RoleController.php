@@ -5,18 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NavController;
 
 use App\Role;
 class RoleController extends Controller
 {
 	public $role_class;
+  public $navs = [];
 
 	public function __construct() {
 		$this->role_class = new Role;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
 	}
 
 	public function index() {
-		return view("settings.roles.roles-list");
+		return view("settings.roles.roles-list", ['navs' => $this->navs]);
 	}
 
 	public function newRole(Request $req, $id = 0) {
@@ -25,7 +29,7 @@ class RoleController extends Controller
 		$child_menus = $this->role_class->childMenu($id);
 		$role_info = $this->role_class->getRole($id);
 
-		return view("settings.roles.roles", ["parent_menus" => $parent_menus, "child_menus" => $child_menus, 'data' => $role_info]);
+		return view("settings.roles.roles", ["parent_menus" => $parent_menus, "child_menus" => $child_menus, 'data' => $role_info, 'navs' => $this->navs]);
 	}
 
 	public function saveRole(Request $req) {

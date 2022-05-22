@@ -32,7 +32,7 @@
             }
 
             .title {
-                font-size: 72px;
+                font-size: 28px;
                 margin-bottom: 40px;
             }
         </style>
@@ -40,7 +40,7 @@
     <body>
         <div class="container">
             <div class="content">
-                <div class="title">404 | Not Found.</div>
+                <div class="title">404 | Page Not Found</div>
             </div>
         </div>
     </body>

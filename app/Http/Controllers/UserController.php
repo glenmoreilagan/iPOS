@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\NavController;
 
 use App\User;
 use App\Reusable;
@@ -11,14 +12,17 @@ class UserController extends Controller
 {
 	private $user_class;
 	private $reuse_class;
+  public $navs = [];
 
 	public function __construct() {
 		$this->user_class = new User;
 		$this->reuse_class = new Reusable;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
 	}
 
   public function index() {
-  	return view('settings.user.user-list', ['nav'=>'123']);
+  	return view('settings.user.user-list', ['navs' => $this->navs]);
   }
 
   public function setUser(Request $req) {

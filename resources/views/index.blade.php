@@ -220,13 +220,13 @@
 						</ul>
 					</li> --}}
 
-					@foreach($parent as $key => $p)
+					@foreach($navs['parent'] as $key => $p)
 						<li class="sidebar-item">
 							<a href="#{{ strtolower(str_replace(" ", "", $p->parentname)) }}" data-toggle="collapse" class="sidebar-link collapsed">
 	              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">{{ $p->parentname }}</span>
 	            </a>
 							<ul id="{{ strtolower(str_replace(" ", "", $p->parentname)) }}" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-	            @foreach($child as $k => $c)
+	            @foreach($navs['child'] as $k => $c)
 	            	@if($p->parentid == $c->parentid)
 										<li class="sidebar-item"><a class="sidebar-link" href="{{ $c->url }}">{{ $c->childname }}</a></li>
 										{{-- <li class="sidebar-item"><a class="sidebar-link" href="/suppliers">Suppliers</a></li> --}}
@@ -419,7 +419,7 @@
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item" href="pages-settings.html">Settings & Privacy</a>
 								<a class="dropdown-item" href="#">Help</a>
-								<a class="dropdown-item" href="#">Sign out</a>
+								<a class="dropdown-item" href="/logout">Sign out</a>
 							</div>
 						</li>
 					</ul>

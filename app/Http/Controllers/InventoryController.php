@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NavController;
 
 use App\Inventory;
 use App\Reusable;
@@ -14,15 +15,18 @@ class InventoryController extends Controller
 	private $inventory_class;
 	private $reuse_class;
 	private $item_class;
+  public $navs = [];
 
 	public function __construct() {
     $this->inventory_class = new Inventory;
     $this->reuse_class = new Reusable;
     $this->item_class = new Item;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
   }
 
   public function setupList() {
-  	return view('inventory.inventory_setup.is-list');
+  	return view('inventory.inventory_setup.is-list', ['navs' => $this->navs]);
 	}
 
 	public function newSetup(Request $req, $id = 0) {
@@ -45,7 +49,7 @@ class InventoryController extends Controller
 			array_push($data, ['docnum' => $docnum, 'dateid' => $dateid]);
 		}
 
-  	return view('inventory.inventory_setup.setup', ['head' => $data]);
+  	return view('inventory.inventory_setup.setup', ['head' => $data, 'navs' => $this->navs]);
 	}
 
 	public function getSetup(Request $req) {

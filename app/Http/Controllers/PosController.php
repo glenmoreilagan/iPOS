@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NavController;
 
 
 use App\Reusable;
@@ -14,16 +15,19 @@ class PosController extends Controller
 {
 	private $reuse_class;
 	private $cart_class;
+  public $navs = [];
 
 	public function __construct() {
     $this->reuse_class = new Reusable;
     $this->cart_class = new Cart;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
   }
 
   public function index() {
   	$items = $this->reuse_class->getItemWithBal();
   	$category = $this->reuse_class->getCategory();
-  	return view("cashier.pos.pos", ["items" => $items, 'category' => $category]);
+  	return view("cashier.pos.pos", ["items" => $items, 'category' => $category, 'navs' => $this->navs]);
   }
 
   public function saveCart(Request $req) {

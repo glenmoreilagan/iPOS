@@ -4,22 +4,24 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\NavController;
 
 use App\Supplier;
 
 class SupplierController extends Controller
 {
   public $supplier_class;
+  public $navs = [];
 
   public function __construct() {
     $this->supplier_class = new Supplier;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
   }
 
   public function supplierList() {
     // setcookie("GLEN-KEY", md5(123), time() + 2 * 24 * 60 * 60);
-    $nav = NavController::getNav();
-    $navs = ['parent' => $nav['parent'], 'child' => $nav['child']];
-  	return view('masterfile.suppliers.suppliers-list', $navs);
+  	return view('masterfile.suppliers.suppliers-list', ['navs' => $this->navs]);
 	}
 
 	public function newSupplier(Request $req, $id = 0) {
@@ -34,7 +36,7 @@ class SupplierController extends Controller
 			$supplier["name"] = $raw_supplier[0]->name;
 			$supplier["address"] = $raw_supplier[0]->address;
   	}
-  	return view('masterfile.suppliers.suppliers', ['supplier'=>[$supplier]]);
+  	return view('masterfile.suppliers.suppliers', ['supplier'=>[$supplier], 'navs' => $this->navs]);
   }
 
   public function getSuppliers(Request $req) {

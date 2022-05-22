@@ -2,8 +2,11 @@
 
 namespace App\Http\Middleware;
 
+// use Illuminate\Support\Str;
+
 use Closure;
 use Response;
+use Session;
 
 class SampleWare
 {
@@ -16,6 +19,19 @@ class SampleWare
      */
     public function handle($request, Closure $next)
     {
+
+      if(!Session::has('userinfo')) {
+        // $random = Str::random(50);
+        return redirect("/login");
+      }
+      
+      $response = $next($request);
+
+      return $response
+        ->header('Cache-Control','nocache, no-store, max-age=0, must-revalidate')
+        ->header('Pragma','no-cache')
+        ->header('Expires','Fri, 01 Jan 1990 00:00:00 GMT');
+      
       // if (!isset($_SERVER["HTTP_GLEN_KEY"])) {
       //   return Response::json(['status'=>'invalid', 'msg'=>'Invalid credentials']);
       // } else {
@@ -25,6 +41,6 @@ class SampleWare
       //     return Response::json(['status'=>'invalid', 'msg'=>'Invalid credentials']);
       //   }
       // }
-      return $next($request);
+      // return $next($request);
     }
 }

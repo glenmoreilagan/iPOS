@@ -13,16 +13,18 @@ class ItemController extends Controller
 {
 	public $item_class;
   public $reuse_class;
+  public $navs = [];
 
 	public function __construct() {
 		$this->item_class = new Item;
     $this->reuse_class = new Reusable;
+    $this->navs['parent'] = NavController::getNav()['parent'];
+    $this->navs['child'] = NavController::getNav()['child'];
 	}
 
 	public function itemList() {
-    $nav = NavController::getNav();
-    $navs = ['parent' => $nav['parent'], 'child' => $nav['child']];
-  	return view('masterfile.items.items-list', $navs);
+    // dd(session('userinfo'));
+  	return view('masterfile.items.items-list', ['navs' => $this->navs]);
 	}
 
   public function newItem(Request $req, $id = 0) {
@@ -40,7 +42,7 @@ class ItemController extends Controller
   	} else {
       $items['barcode'] = $this->reuse_class->newBarcode();
     }
-  	return view('masterfile.items.items', ['items'=>[$items]]);
+  	return view('masterfile.items.items', ['items'=>[$items], 'navs' => $this->navs]);
   }
 
   public function getItems(Request $req) {

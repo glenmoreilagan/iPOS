@@ -17,9 +17,6 @@
 </head>
 <body>
 	<div class="content">
-		@if(session()->has('menu'))
-			{{ session()->get('menu') }}
-		@endif
 		<form method="POST" action="/login/login">
 			<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 
@@ -32,11 +29,12 @@
 			<div class="input-group">
 				<input name="password" type="text" class="form-control form-control-sm" id="" placeholder="Input password" autocomplete="off">
 			</div>
-
+			@if(session()->has('error'))
+				<span class="text-danger">{{ session()->get('error') }}</span>
+			@endif
 			<div class="mt-3">
 				<button type="submit" class="btn btn-primary btn-sm">Login</button>
 			</div>
-
 		</form>
 	</div>
 </body>
