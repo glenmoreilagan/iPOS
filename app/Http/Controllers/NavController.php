@@ -32,7 +32,7 @@ class NavController extends Controller
 			inner join tblchild_menu as c on c.childid = ac.childid
 			where u.userid = '".$userid."'
 			group by u.userid, u.userid, u.username, u.roleid, r.role, c.parentid, c.childname, c.url
-			order by c.parentid
+			order by c.childid
 		");
 		// dd(session('userinfo'));
 		return ['parent' => $parent, 'child' => $child];

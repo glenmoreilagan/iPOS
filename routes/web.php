@@ -32,7 +32,6 @@ Route::group(['prefix' => 'login'], function () {
   Route::post('/login', [
     'uses' => "LoginController@login"
   ]);
-
 });
 
 Route::get('/logout', [
@@ -42,10 +41,6 @@ Route::get('/logout', [
 Route::group(['middleware' => 'sampleware'], function () {
   Route::group(['prefix' => 'items'], function () {
     $ItemC = "ItemController";
-
-    Route::post('/getPic', function() {
-      
-    });
 
     Route::get('/', [
       'uses' => "$ItemC@itemList"

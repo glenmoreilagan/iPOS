@@ -16,7 +16,10 @@ class LoginController extends Controller
   public function index() {
     if (session::has('userinfo')) {
       if (!empty(session()->get('userinfo'))) {
-        return redirect("/items");
+        $roleid = session()->get('userinfo')['roleid'];
+        $redirect_url = $this->redirectUrl($roleid);
+
+        return redirect($redirect_url);
       }
     }
 
@@ -43,7 +46,10 @@ class LoginController extends Controller
           'roleid' => $users->roleid,
         ]
       ]);
-      return redirect('/items');
+
+      $redirect_url = $this->redirectUrl($users->roleid);
+      
+      return redirect($redirect_url);
     }
 
 	  return redirect()->back()->with('error', "Please check username and password!");
@@ -117,5 +123,16 @@ class LoginController extends Controller
   	foreach ($child as $key => $mloop) {
   		DB::table('tblchild_menu')->insert($mloop);
   	}
+  }
+
+  private function redirectUrl($roleid) {
+    $redirect_url = DB::table("tblaccess as acc")
+    ->where([ ["acc.roleid", $roleid] ])
+    ->select(["child.url"])
+    ->join("tblchild_menu as child", "child.childid", "=", "acc.childid")
+    ->orderBy("child.childid", "ASC")
+    ->first();
+
+    return $redirect_url->url;
   }
 }

@@ -39,7 +39,13 @@ class User extends Authenticatable
         $this->date_created = $this->reusable_class->currDateTimeToday();
         $this->roleid = $value['roleid'];
       } else {
-
+        $this->username = $value['username'];
+        $this->name = $value['name'];
+        $this->email = $value['email'];
+        $this->password = $value['password'];
+        $this->password_hash = md5($value['password']);
+        $this->date_created = $this->reusable_class->currDateTimeToday();
+        $this->roleid = $value['roleid'];
       }
     }
 
@@ -71,7 +77,19 @@ class User extends Authenticatable
       $status = true;
       $msg = "Saving Success!";
     } else {
-
+      DB::table($this->tblusers)
+      ->where([
+        ["userid", $this->userid]
+      ])
+      ->update([
+        'name' => $this->name, 
+        'username' => $this->username, 
+        'email' => $this->email,
+        'password' => $this->password,
+        'password_hash' => $this->password_hash,
+        'date_created' => $this->date_created,
+        'roleid' => $this->roleid,
+      ]);
     }
 
     return ['status' => $status, 'msg' => $msg, 'data' => []];
