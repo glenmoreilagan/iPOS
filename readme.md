@@ -1,4 +1,4 @@
-<a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/5.6.28/?fbclid=IwAR1e3_3WewTL6WMSUQz0A13D95QJW9SWcUv1C3vOFlN7qdBBGpMFF9R9rAs">COMPATIBLE WITH THIS XAMPP VERSION</a>
+<a href="https://sourceforge.net/projects/xampp/files/XAMPP%20Windows/5.6.28/?fbclid=IwAR1e3_3WewTL6WMSUQz0A13D95QJW9SWcUv1C3vOFlN7qdBBGpMFF9R9rAs">COMPATIBLE WITH THIS XAMPP VERSION 5.6.28</a>
 
 <a href="https://laravel.com/docs/5.3">COMPATIBLE WITH THIS LARAVEL VERSION 5.3</a>
 
