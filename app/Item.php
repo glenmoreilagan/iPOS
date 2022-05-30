@@ -14,18 +14,29 @@ class Item extends Model
   public $itemname = "";
   public $uomid = 0;
   public $uom = "";
+  public $catid = 0;
+  public $category = "";
 
   public function setItem($data) {
   	foreach ($data["data"] as $key => $value) {
 	  	$this->itemid = $value['itemid'];
+      $this->barcode = $value['barcode'];
+      $this->itemname = $value['itemname'];
+      $this->catid = $value['catid'];
+      $this->category = $value['category'];
+
   		if($this->itemid == 0) {
-  			$this->barcode = $value['barcode'];
-  			$this->itemname = $value['itemname'];
-  			$this->uom = $value['uom'];
+  			// $this->barcode = $value['barcode'];
+  			// $this->itemname = $value['itemname'];
+  			// $this->uom = $value['uom'];
+        // $this->catid = $value['catid'];
+        // $this->category = $value['category'];
   		} else {
-  			$this->itemid = $value['itemid'];
-  			$this->barcode = $value['barcode'];
-  			$this->itemname = $value['itemname'];
+  			// $this->itemid = $value['itemid'];
+  			// $this->barcode = $value['barcode'];
+  			// $this->itemname = $value['itemname'];
+        // $this->catid = $value['catid'];
+        // $this->category = $value['category'];
   		}
 
   		$save_item = $this->saveItem();
@@ -45,17 +56,28 @@ class Item extends Model
   		$filter = ['tblitems.itemid', '=', $this->itemid];
   	}
 
+    $select_qry = [
+      'tblitems.itemid', 
+      'tblitems.itemname', 
+      'tblitems.barcode', 
+      'tblitems.uomid', 
+      'tbluom.uom',
+      'tblcategory.catid',
+      'tblcategory.category',
+    ];
+
   	if (!empty($filter)) {
 	  	$items = DB::table('tblitems')
-	  	->select('tblitems.itemid', 'tblitems.itemname', 'tblitems.barcode', 'tblitems.uomid', 'tbluom.uom')
+	  	->select($select_qry)
   		->leftJoin('tbluom', 'tbluom.uomid', '=', 'tblitems.uomid')
+      ->leftJoin('tblcategory', 'tblcategory.catid', '=', 'tblitems.catid')
   		->where([$filter])
 	  	->get();
   	} else {
   		$items = DB::table('tblitems')
-  		->select('tblitems.itemid', 'tblitems.itemname', 'tblitems.barcode', 'tblitems.uomid',
-  		'tbluom.uom')
+  		->select($select_qry)
   		->leftJoin('tbluom', 'tbluom.uomid', '=', 'tblitems.uomid')
+      ->leftJoin('tblcategory', 'tblcategory.catid', '=', 'tblitems.catid')
   		->get();
   	}
 
@@ -67,7 +89,11 @@ class Item extends Model
   	$status = false;
   	if($this->itemid == 0) {
   		$this->itemid = DB::table($this->tblitems)
-  		->insertGetId(['barcode' => $this->barcode, 'itemname' => $this->itemname]);
+  		->insertGetId([
+        'barcode' => $this->barcode, 
+        'itemname' => $this->itemname,
+        'catid' => $this->catid
+      ]);
 
 		  $this->uomid = DB::table('tbluom')->insertGetId(['itemid' => $this->itemid, 'uom' => $this->uom]);
       DB::table($this->tblitems)->where('itemid', $this->itemid)->update(['uomid' => $this->uomid]);
@@ -77,7 +103,11 @@ class Item extends Model
   	} else {
   		DB::table($this->tblitems)
 			->where('itemid', $this->itemid)
-      ->update(['barcode' => $this->barcode,'itemname' => $this->itemname]);
+      ->update([
+        'barcode' => $this->barcode, 
+        'itemname' => $this->itemname,
+        'catid' => $this->catid,
+      ]);
 
       $msg = "Update Success!";
 	    $status = true;

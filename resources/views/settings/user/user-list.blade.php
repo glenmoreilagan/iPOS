@@ -140,7 +140,7 @@
 				    				id="row-${res[i].userid}" 
 				    				class="btn-action btn btn-primary btn-sm btnviewUser" 
 				    				data-toggle="modal" data-target="#modal-user-info">
-				    				<i class="far fa-eye"></i>
+					    				<i class="far fa-eye"></i>
 			    				</button>
 		    				</td>
 			    		</tr>`,

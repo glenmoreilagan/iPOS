@@ -67,23 +67,27 @@ class Reusable extends Model
 
   public function getItemWithBal() {
   	$items = DB::select("
-  		select item.itemid, item.itemname, item.uomid, uom.uom, FORMAT(sum(stock.qty), 0) as bal,
-  		ROUND(uom.amt, 2) as amt,
-  		cat.category
-  		from tblitems as item
-  		left join tbluom as uom on uom.uomid = item.itemid
-  		left join tbl_inv_stock as stock on stock.itemid = item.itemid
-  		left join tblcategory as cat on cat.catid = item.catid
-  		group by item.itemid, item.itemname, item.uomid, uom.uom, uom.amt,
-  		cat.category
-  		having sum(stock.qty) > 0
+  		select itemid, itemname, uomid, uom, FORMAT(sum(bal), 0) as bal, amt, category
+      from (
+        select stock.itemid, item.itemname, stock.uomid, uom.uom, 
+        FORMAT(sum(stock.qty), 0) as bal, cat.category, ROUND(uom.amt, 2) as amt
+        from tblitems as item
+        inner join tbl_inv_stock as stock on stock.itemid = item.itemid
+        inner join tbluom as uom on uom.uomid = stock.uomid
+        left join tblcategory as cat on cat.catid = item.catid
+        group by stock.itemid, item.itemname, stock.uomid, uom.uom, uom.amt, cat.category
+        having sum(stock.qty) > 0
+        union all
+        select cart.itemid, item.itemname, cart.uomid, uom.uom, 
+        FORMAT(sum(cart.qty * -1), 0) as bal, cat.category, ROUND(uom.amt, 2) as amt
+        from tblitems as item
+        inner join tblcart as cart on cart.itemid = item.itemid
+        inner join tbluom as uom on uom.uomid = cart.uomid
+        left join tblcategory as cat on cat.catid = item.catid
+        group by cart.itemid, item.itemname, cart.uomid, uom.uom, uom.amt, cat.category
+      ) as t
+      group by itemid, itemname, uomid, uom, amt, category
   	");
-
-  	// $category = ["coffee", "frappe", "cookies"];
-  	// foreach ($items as $key => $value) {
-  	// 	$rand_cat = array_rand($category);
-  	// 	$value->category = $category[$rand_cat];
-  	// }
 
   	return $items;
   }

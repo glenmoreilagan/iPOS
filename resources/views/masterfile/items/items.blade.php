@@ -32,6 +32,8 @@
 			$barcode = isset($items[0]["barcode"]) ? $items[0]["barcode"] : '';
 			$uomid = isset($items[0]["uomid"]) ? $items[0]["uomid"] : 0;
 			$uom = isset($items[0]["uom"]) ? $items[0]["uom"] : 'PCS';
+			$catid = isset($items[0]["catid"]) ? $items[0]["catid"] : 0;
+			$category = isset($items[0]["category"]) ? $items[0]["category"] : '';
 		@endphp
 		<div class="row">
 			<div class="col-md-3">
@@ -55,8 +57,8 @@
 					</div>
 					<label>Category</label>
 					<div class="input-group">
-						<input name="catid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="0">
-						<input name="category" type="text" class="form-control txtitem_infohead" id="" placeholder="" value="" readonly>
+						<input name="catid" type="hidden" class="form-control txtitem_infohead" id="" placeholder="Input UOMID" value="{{ $catid }}">
+						<input name="category" type="text" class="form-control txtitem_infohead" id="" placeholder="" value="{{ $category }}" readonly>
 						<span class="input-group-append">
             	<button class="btn btn-primary"  data-toggle="modal" data-target="#lookupCategory" id="btnlookupCategory"><i data-feather="menu"></i></button>
 	          </span>
@@ -112,6 +114,7 @@
 </div>
 
 @include('../lookups/uom-lookup')
+@include('../lookups/category-lookup')
 @endsection
 
 
@@ -138,8 +141,8 @@
 	    		ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-primary btnSaveUom"><i class="far fa-eye"></i></button>
-		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-danger btnDeleteUom"><i class="far fa-trash-alt"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-primary btn-sm btnSaveUom"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${res[i].uomid}" id="row-${res[i].uomid}" class="btn-action btn btn-danger btn-sm btnDeleteUom"><i class="far fa-trash-alt"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		`<tr>
