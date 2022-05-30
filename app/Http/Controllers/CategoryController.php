@@ -27,8 +27,21 @@ class CategoryController extends Controller
  	public function getCategory(Request $req) {
  		$reqs = $req->all();
 
- 		$category = $this->category_class->getCategory();
+ 		$category = $this->category_class->getCategory($reqs['data']);
 
  		return $category;
+ 	}
+
+ 	public function setCategory(Request $req) {
+ 		$reqs = $req->all();
+
+ 		$this->category_class->setCategory($reqs);
+ 		$save_status = $this->category_class->saveCategory();
+
+ 		if (!$save_status) {
+	 		return ["status" => false, "msg" => "Saving Failed!"];
+ 		}
+
+ 		return ["status" => true, "msg" => "Saving Success!"];
  	}
 }

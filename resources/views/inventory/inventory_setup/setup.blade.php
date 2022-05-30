@@ -4,8 +4,8 @@
 			width: 15px;
 		}
 
-		.stock-row-class.isedited {
-			background-color: #C7E8CE;
+		.isedited {
+			background-color: #C7E8CE !important;
 		}
 	</style>
 </head>
@@ -175,8 +175,8 @@
 		    		ready_data.push([
 			    		`<tr>
 			    			<td>
-			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-primary btnSaveStockItem"><i class="far fa-save"></i></button>
-			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn btn-danger btnDeleteStockItem"><i class="far fa-trash-alt"></i></button>
+			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn-action btn btn-primary btn-sm btnSaveStockItem"><i class="far fa-save"></i></button>
+			    				<button rowkey="${res[i].line}" id="row-${res[i].line}" class="btn-action btn btn-danger btn-sm btnDeleteStockItem"><i class="far fa-trash-alt"></i></button>
 		    				</td>
 			    		</tr>`,
 			    		`<tr>
@@ -196,12 +196,12 @@
 			    		</tr>`,
 			    		`<tr>
 			    			<td>
-				    			<input type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
+				    			<input rowkey="${res[i].line}" type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
 			    			</td>
 			    		</tr>`,
 			    		`<tr>
 			    			<td>
-				    			<input type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
+				    			<input rowkey="${res[i].line}" type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
 			    			</td>
 			    		</tr>`
 			    	]);
@@ -313,8 +313,10 @@
 
 	  	stockdata_obj['txid'] = txid;
 	  	stockdata_obj['line'] = row;
-	  	qty.hasClass('isedited') ? stockdata_obj['qty'] = qty.val() : false;
-	  	cost.hasClass('isedited') ? stockdata_obj['cost'] = cost.val() : false;
+	  	stockdata_obj['qty'] = qty.val();
+			stockdata_obj['cost'] = cost.val();
+	  	// qty.hasClass('isedited') ? stockdata_obj['qty'] = qty.val() : false;
+	  	// cost.hasClass('isedited') ? stockdata_obj['cost'] = cost.val() : false;
 
 	  	stockdata_arr.push(stockdata_obj);
 
@@ -323,15 +325,17 @@
 		  	qty.val(res.data.data[0].qty);
 		  	cost.val(res.data.data[0].cost);
 				notify({status : res.status, message : res.msg});
-				$(`.key-${row}`).removeClass('isedited');
+				$(`.key-${row}`).closest('tr').removeClass('isedited');
 		  }).catch((error) => {
         console.log(error);
 	    });
 	  });
 
 	  $(document).on("change", ".stock-row-class", (e) => {
-	  	let row = e.currentTarget.id;
-	  	$(`#${row}`).addClass('isedited');
+	  	let row = e.currentTarget.attributes[0].nodeValue;
+	  	// let row = e.currentTarget.id;
+	  	// $(`#${row}`).addClass('isedited');
+	  	$(`.key-${row}`).closest('tr').addClass('isedited');
 	  });
 	});
 </script>

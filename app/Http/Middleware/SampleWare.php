@@ -22,7 +22,7 @@ class SampleWare
 
       if(!Session::has('userinfo')) {
         // $random = Str::random(50);
-        return redirect("/login");
+        return redirect("/login?err='nosession'");
       }
       
       $response = $next($request);

@@ -43,25 +43,6 @@
 		}
 	</style>
 	<!-- END SETTINGS -->
-{{-- <script>
-    (function(h,o,t,j,a,r){
-        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-        h._hjSettings={hjid:2120269,hjsv:6};
-        a=o.getElementsByTagName('head')[0];
-        r=o.createElement('script');r.async=1;
-        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-        a.appendChild(r);
-    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-</script> --}}
-{{-- <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3ZYEKLQ68"></script> --}}
-{{-- <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-Q3ZYEKLQ68');
-</script> --}}
-
 <script type="text/javascript">
 	const getCookie = (cname) => {
 	  let name = cname + "=";
@@ -76,26 +57,6 @@
 	    }
 	  }
 	  return "";
-	}
-
-	const postData = async (url = '', data = {}) => {
-		NProgress.start();
-	  const response = await fetch(url, {
-	    method: 'POST',
-	    mode: 'cors',
-	    cache: 'no-cache',
-	    credentials: 'same-origin',
-	    headers: {
-	      'Content-Type': 'application/json',
-	      'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
-	      // 'GLEN-KEY' : getCookie('GLEN-KEY')
-	    },
-	    redirect: 'follow',
-	    referrerPolicy: 'no-referrer',
-	    body: JSON.stringify(data)
-	  });
-	  NProgress.done();
-	  return response.json();
 	}
 
 	const notify = (data) => {
@@ -136,90 +97,11 @@
 		<nav id="sidebar" class="sidebar">
 			<div class="sidebar-content js-simplebar">
 				<a class="sidebar-brand" href="index.html">
-          {{-- <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-            width="20px" height="20px" viewBox="0 0 20 20" enable-background="new 0 0 20 20" xml:space="preserve">
-            <path d="M19.4,4.1l-9-4C10.1,0,9.9,0,9.6,0.1l-9,4C0.2,4.2,0,4.6,0,5s0.2,0.8,0.6,0.9l9,4C9.7,10,9.9,10,10,10s0.3,0,0.4-0.1l9-4
-              C19.8,5.8,20,5.4,20,5S19.8,4.2,19.4,4.1z"/>
-            <path d="M10,15c-0.1,0-0.3,0-0.4-0.1l-9-4c-0.5-0.2-0.7-0.8-0.5-1.3c0.2-0.5,0.8-0.7,1.3-0.5l8.6,3.8l8.6-3.8c0.5-0.2,1.1,0,1.3,0.5
-              c0.2,0.5,0,1.1-0.5,1.3l-9,4C10.3,15,10.1,15,10,15z"/>
-            <path d="M10,20c-0.1,0-0.3,0-0.4-0.1l-9-4c-0.5-0.2-0.7-0.8-0.5-1.3c0.2-0.5,0.8-0.7,1.3-0.5l8.6,3.8l8.6-3.8c0.5-0.2,1.1,0,1.3,0.5
-              c0.2,0.5,0,1.1-0.5,1.3l-9,4C10.3,20,10.1,20,10,20z"/>
-          </svg> --}}
-
           <i class="align-middle" data-feather="zap"></i>
           <span class="align-middle mr-3">PASTPODS</span>
         </a>
 
 				<ul class="sidebar-nav">
-					{{-- <li class="sidebar-item">
-						<a href="#dashboards" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboards</span>
-            </a>
-						<ul id="dashboards" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="dashboard-default.html">Default</a></li>
-						</ul>
-					</li> --}}
-
-					{{-- <li class="sidebar-item">
-						<a href="#ui" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="grid"></i> <span class="align-middle">UI Elements</span>
-            </a>
-						<ul id="ui" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-alerts.html">Alerts</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-buttons.html">Buttons</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-cards.html">Cards</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-carousel.html">Carousel</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-embed-video.html">Embed Video</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-general.html">General <span class="badge badge-sidebar-primary">10+</span></a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-grid.html">Grid</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-modals.html">Modals</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-tabs.html">Tabs</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="ui-typography.html">Typography</a></li>
-						</ul>
-					</li> --}}
-
-					{{-- <li class="sidebar-item">
-						<a href="#forms" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
-            </a>
-						<ul id="forms" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-layouts.html">Layouts</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-basic-inputs.html">Basic Inputs</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-input-groups.html">Input Groups</a></li>
-						</ul>
-					</li> --}}
-
-					{{-- <li class="sidebar-item">
-						<a class="sidebar-link" href="tables-bootstrap.html">
-              <i class="align-middle" data-feather="list"></i> <span class="align-middle">Tables</span>
-            </a>
-					</li> --}}
-
-					{{-- <li class="sidebar-item">
-						<a href="#form-plugins" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Form Plugins</span>
-            </a>
-						<ul id="form-plugins" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-advanced-inputs.html">Advanced Inputs</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-editors.html">Editors</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-validation.html">Validation</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="forms-wizard.html">Wizard</a></li>
-						</ul>
-					</li> --}}
-
-					{{-- <li class="sidebar-item">
-						<a href="#datatables" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="list"></i> <span class="align-middle">DataTables</span>
-            </a>
-						<ul id="datatables" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-responsive.html">Responsive Table</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-buttons.html">Table with Buttons</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-column-search.html">Column Search</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-multi.html">Multi Selection</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="tables-datatables-ajax.html">Ajax Sourced Data</a></li>
-						</ul>
-					</li> --}}
-
 					@foreach($navs['parent'] as $key => $p)
 						<li class="sidebar-item">
 							<a href="#{{ strtolower(str_replace(" ", "", $p->parentname)) }}" data-toggle="collapse" class="sidebar-link collapsed">
@@ -235,51 +117,6 @@
 							</ul>
 						</li>
 					@endforeach
-
-{{-- 					<li class="sidebar-item">
-						<a href="#masterfile" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Masterfile</span>
-            </a>
-						<ul id="masterfile" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/items">Items</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/suppliers">Suppliers</a></li>
-						</ul>
-					</li>
-					<li class="sidebar-item">
-						<a href="#masters" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Masters</span>
-            </a>
-						<ul id="masters" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/category">Category</a></li>
-						</ul>
-					</li>
-					<li class="sidebar-item">
-						<a href="#cashier" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Cashier</span>
-            </a>
-						<ul id="cashier" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/POS">POS</a></li>
-						</ul>
-					</li>
-					<li class="sidebar-item">
-						<a href="#inventory" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Inventory</span>
-            </a>
-						<ul id="inventory" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/IS">Inventory Setup</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/IR">Inventory Receiving</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/AJ">Inventory Adjustment</a></li>
-						</ul>
-					</li>
-					<li class="sidebar-item">
-						<a href="#settings" data-toggle="collapse" class="sidebar-link collapsed">
-              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Settings</span>
-            </a>
-						<ul id="settings" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
-							<li class="sidebar-item"><a class="sidebar-link" href="/user">Manage User</a></li>
-							<li class="sidebar-item"><a class="sidebar-link" href="/roles">Manage Role</a></li>
-						</ul>
-					</li> --}}
 					<li class="sidebar-item">
 						<a href="#multi" data-toggle="collapse" class="sidebar-link collapsed">
               <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">Multi Level</span>
@@ -437,33 +274,12 @@
 	<script src="/js/js/app.js"></script>
 	<script src="/plugins/filter-tags/autofilter.js"></script>
 	<script src="/plugins/nprogress/nprogress.js"></script>
+	{{-- https://www.uglifyjs.net/ --}}
+	<script type="text/javascript" src="/js/post_request.js"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
-			// Datatables Responsive
-			// var table = $("#datatables-reponsive").DataTable({
-			// 	responsive: true,
-			// 	"dom": '<"top"f>rt<"bottom"ip><"clear">',
-			// 	"pageLength": 10,
-			// 	"scrollY" : "250px",
-			// 	"scrollX" : true,
-			// 	"scrollCollapse" : true,
-			// 	"fixedHeader" : true,
-			// });
-
-			// $(".select2").each(function() {
-			// 	$(this)
-			// 		.wrap("<div class=\"position-relative\"></div>")
-			// 		.select2({
-			// 			placeholder: "Select value",
-			// 			dropdownParent: $(this).parent()
-			// 		});
-			// });
-
 			$("input").attr('autocomplete', 'off');
 		});
 	</script>
 </body>
-
-
-<!-- Mirrored from appstack.bootlab.io/calendar.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 04 Jan 2021 13:06:37 GMT -->
 </html>

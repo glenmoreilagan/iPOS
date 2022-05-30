@@ -11,9 +11,9 @@
 |
 */
 
-// header('Access-Control-Allow-Origin: *');
-// header('Access-Control-Allow-Methods: POST, GET');
-// header('Access-Control-Allow-Headers: glen-key, Authorization, Content-Type');
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET');
+header('Access-Control-Allow-Headers: glen-key, Authorization, Content-Type');
 
 Route::get('/', function () {
     return view('welcome');
@@ -32,7 +32,6 @@ Route::group(['prefix' => 'login'], function () {
   Route::post('/login', [
     'uses' => "LoginController@login"
   ]);
-
 });
 
 Route::get('/logout', [
@@ -42,10 +41,6 @@ Route::get('/logout', [
 Route::group(['middleware' => 'sampleware'], function () {
   Route::group(['prefix' => 'items'], function () {
     $ItemC = "ItemController";
-
-    Route::post('/getPic', function() {
-      
-    });
 
     Route::get('/', [
       'uses' => "$ItemC@itemList"
@@ -73,6 +68,10 @@ Route::group(['middleware' => 'sampleware'], function () {
 
     Route::get('item/{itemid}', [
       'uses' => "$ItemC@newItem"
+    ]);
+
+    Route::post('getCategory', [
+      'uses' => "$ItemC@getCategory"
     ]);
   });
 
@@ -168,8 +167,13 @@ Route::group(['middleware' => 'sampleware'], function () {
     Route::get('/', [
       'uses' => "$catC@index"
     ]);
+    
     Route::post('/getCategory', [
       'uses' => "$catC@getCategory"
+    ]);
+
+    Route::post('/setCategory', [
+      'uses' => "$catC@setCategory"
     ]);
   });
 

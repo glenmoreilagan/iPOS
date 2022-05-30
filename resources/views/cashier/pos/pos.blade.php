@@ -57,7 +57,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="card-div">
-					<h3>CART <i data-feather="shopping-cart"></i></h3>
+					<h3>CART <i data-feather="shopping-cart"></i> <span id="lbltxid">0</span></h3>
 					<div class="cart-item-list mb-3">
 						<table class="table-cart-list" style="width: 100%;"></table>
 					</div>
@@ -125,6 +125,20 @@
 			duration: 300
 		});
 
+		const debounce = (func, wait, immediate) => {
+	    var timeout;
+	    return function() {
+        var context = this, args = arguments;
+        var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+        };
+        var callNow = immediate && !timeout;
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+        if (callNow) func.apply(context, args);
+	    };
+		};
 		const BASE_OBJ = {
 			totalbill : 0,
 			ADD_TO_CART : (url, data) => {
@@ -143,6 +157,9 @@
 				postData(url, data)
 			  .then(res => {
 			  	if(res.status) {
+			  		let txid = res.data.length > 0 ? res.data[0].txid : 0;
+				  		$("#lbltxid").text(txid);
+			  		// console.log(res);
 				  	BASE_OBJ.DISPLAY_CART(res.data)
 			  	}
 					// notify({status : res.status, message : res.msg});
@@ -155,7 +172,7 @@
 				for(let i in data) {
 					counter = parseInt(i) + 1;
 
-					let txid = data[i].txid;
+					let line = data[i].line;
 					let itemid = data[i].itemid;
 					let itemname = data[i].itemname;
 					let uom = data[i].uom;
@@ -163,7 +180,7 @@
 					let qty = data[i].qty;
 					let total = data[i].total;
 					str += `
-						<tr class="cart-row-${txid} border-bottom">
+						<tr class="cart-row-${line} border-bottom">
 							<td class="cart-itemname-td max-width">
 								<span class="default-font-size">${counter}. ${itemname}<sup>${uom}</sup></span>
 								<br>
@@ -173,17 +190,18 @@
 							</td>
 							<td class="cart-qty-td">
 								<input 
-								id="cart-row-${txid}"
-								class="cart-row-${txid} form-control form-control-sm center-text qty txtrow-cart-qty" 
+								id="cart-row-${line}"
+								class="cart-row-${line} form-control form-control-sm center-text qty txtrow-cart-qty" 
 								type="text" 
 								value="${qty}" 
 								itemid="${itemid}" 
-								amt="${amt}" 
+								amt="${amt}",
+								line="${line}"
 							>
 							</td>
 							<td class="cart-total-td min-width center-text">
-								<button rowkey="${txid}" id="${txid}" class="action-btn-row-${txid} btn-action btn btn-primary btn-sm btnSave"><i class="far fa-save"></i></button>
-								<button rowkey="${txid}" id="${txid}" class="action-btn-row-${txid} btn-action btn btn-danger btn-sm btnDelete"><i class="far fa-trash-alt"></i></button>
+								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-primary btn-sm btnSave"><i class="far fa-save"></i></button>
+								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-danger btn-sm btnDelete"><i class="far fa-trash-alt"></i></button>
 							</td>
 						</tr>
 					`;
@@ -230,14 +248,17 @@
 		
 		BASE_OBJ.LOADCART('/POS/loadCart', {data:{}});
 
-		$(document).on("click", ".btnAddCart", (e) => {
+		$(document).on("click", ".btnAddCart", debounce((e) => {
+			let btnobj = $(this);
 			const url = '/POS/saveCart';
-			let itemid = e.currentTarget.attributes[0].nodeValue;
+			let itemid = btnobj[0].activeElement.attributes[0].nodeValue;
+			// let itemid = e.currentTarget.attributes[0].nodeValue;
 			let btnAdd = $(".product-item").find(`.div-btnaddcart #item-row-${itemid}`);
 			let uomid = btnAdd.attr('uomid');
 			let amt = btnAdd.attr('amt');
 			let bal = btnAdd.attr('bal');
 			let new_bal = 0;
+			let txid = parseFloat($("#lbltxid").text());
 
 			if (parseFloat(bal) == 0) {
 				notify({status : false, message : "No Available Balance!"});
@@ -252,12 +273,12 @@
 			};
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
-			BASE_OBJ.ADD_TO_CART(url, {data: ready_to_cart_arr, txid : 0});
+			BASE_OBJ.ADD_TO_CART(url, {data: ready_to_cart_arr, txid : txid, line : 0});
 
 			new_bal = bal - 1;
 			btnAdd.attr('bal', new_bal);
 			$(`.lblitembal-${itemid}`).text(new_bal);
-		});
+		}, 300));
 
 		$(document).on("keyup", "#txtcash", (e) => {
 			BASE_OBJ.COMPUTE_CHANGE($("#txtcash").val());
@@ -270,18 +291,21 @@
 			let qty = $(".table-cart-list .btnSave").closest('tr').find(`td:eq(1) .cart-row-${rowkey}`);
 			let itemid = qty.attr('itemid');
 			let amt = qty.attr('amt');
+			let line = qty.attr('line');
+			let txid = parseFloat($("#lbltxid").text());
 			// let bal = qty.attr("bal");
 
 			let ready_to_cart_arr = [];
 			let ready_to_cart_obj = {
-				txid 	 : rowkey,
+				line 	 : rowkey,
 				qty 	 : qty.val(),
 				itemid : itemid,
-				amt 	 : amt
+				amt 	 : amt,
+				line 	 : line,
 			}
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
-			BASE_OBJ.SAVECART(url, {data: ready_to_cart_arr, txid: rowkey});
+			BASE_OBJ.SAVECART(url, {data: ready_to_cart_arr, txid: txid});
 		});
 
 		$(document).on("click", ".table-cart-list .btnDelete", (e) => {
@@ -295,14 +319,14 @@
 
 			let ready_to_cart_arr = [];
 			let ready_to_cart_obj = {
-				txid 	 : rowkey,
+				line 	 : rowkey,
 				qty 	 : qty.val(),
 				itemid : itemid,
 				amt 	 : amt
 			}
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
-			BASE_OBJ.DELETECART(url, {data: ready_to_cart_arr, txid: rowkey});
+			BASE_OBJ.DELETECART(url, {data: ready_to_cart_arr, line: rowkey});
 		});
 
 		$(document).on("change", ".table-cart-list .txtrow-cart-qty", (e) => {

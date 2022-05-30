@@ -39,6 +39,8 @@ class ItemController extends Controller
       $items["itemname"] = $raw_items[0]->itemname;
       $items["uomid"] = $raw_items[0]->uomid;
       $items["uom"] = $raw_items[0]->uom;
+      $items["catid"] = $raw_items[0]->catid;
+      $items["category"] = $raw_items[0]->category;
   	} else {
       $items['barcode'] = $this->reuse_class->newBarcode();
     }
@@ -119,4 +121,10 @@ class ItemController extends Controller
 	    return ['status' => $status, 'msg' => $msg, 'data' => $uom];
 	  }
 	}
+
+  public function getCategory(Request $req) {
+    $category = $this->reuse_class->getCategory();
+
+    return $category;
+  }
 }

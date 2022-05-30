@@ -116,6 +116,8 @@
 			  	if (res.status) {
 				  	USER_OBJ.LOAD_USER("/user/getUser", {data: {}});
 			  		$("#modal-user-info").modal('hide');
+			  		$(".txt_userinfo").val('');
+						$("input[name='userid']").val(0);
 			  	}
 	        // console.log(res);
 					notify({status : res.status, message : res.msg});
@@ -138,7 +140,7 @@
 				    				id="row-${res[i].userid}" 
 				    				class="btn-action btn btn-primary btn-sm btnviewUser" 
 				    				data-toggle="modal" data-target="#modal-user-info">
-				    				<i class="far fa-eye"></i>
+					    				<i class="far fa-eye"></i>
 			    				</button>
 		    				</td>
 			    		</tr>`,
@@ -236,15 +238,9 @@
 			$("input[name='userid']").val(0);
 		});
 
-
-
 		$(document).on("click", "#btnSaveUser", (e) => {
 			const url = "/user/setUser";
 			let user_info = $(".txt_userinfo").serializeArray();
-
-
-			$(".txt_userinfo").val('');
-			$("input[name='userid']").val(0);
 
 			let ready_data_arr = [];
 			let ready_data_obj = {};

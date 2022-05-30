@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 // use Illuminate\Support\Str;
 
 use Session;
-use Auth;
+// use Auth;
 use App\User;
 
 class LoginController extends Controller
@@ -16,9 +16,38 @@ class LoginController extends Controller
   public function index() {
     if (session::has('userinfo')) {
       if (!empty(session()->get('userinfo'))) {
-        return redirect("/items");
+        $roleid = session()->get('userinfo')['roleid'];
+        $redirect_url = $this->redirectUrl($roleid);
+
+        return redirect($redirect_url);
       }
     }
+
+    // $curl = curl_init();
+    // curl_setopt_array($curl, array(
+    //   CURLOPT_URL => 'https://yts.mx/api/v2/list_movies.json',
+    //   CURLOPT_RETURNTRANSFER => true,
+    //   CURLOPT_ENCODING => '',
+    //   CURLOPT_MAXREDIRS => 10,
+    //   CURLOPT_TIMEOUT => 0,
+    //   CURLOPT_FOLLOWLOCATION => true,
+    //   CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //   CURLOPT_CUSTOMREQUEST => 'GET',
+    //   CURLOPT_HTTPHEADER => [
+    //     'Content-Type: application/json'
+    //   ]
+    // ));
+    // $response = curl_exec($curl);
+    // if (curl_errno($curl)) {     
+    //    $error_msg = curl_error($curl); 
+    //    echo $error_msg; 
+    //    return;
+    // } 
+    // curl_close($curl);
+    // $decode_response = json_decode($response);
+    // dd($decode_response);
+
+    // dd($req->headers);
 
   	return view('login.login.login');
   }
@@ -26,6 +55,13 @@ class LoginController extends Controller
   public function login(Request $req) {
   	$username = $req->username;
   	$password = $req->password;
+
+    // dd($req->header('authorrr'));
+    // return;
+    $auth_key = $req->header('yut');
+    if (!isset($auth_key) || $auth_key != md5("test")) {
+      return ["status" => false, "msg" => "Please check credentials!", "path" => ""];
+    }
 
     $users = DB::table("tblusers")
     ->where([ ["username", $username], ["password_hash", md5($password)] ])
@@ -43,10 +79,12 @@ class LoginController extends Controller
           'roleid' => $users->roleid,
         ]
       ]);
-      return redirect('/items');
+
+      $redirect_url = $this->redirectUrl($users->roleid);
+      return ["status" => true, "msg" => "Login Success!", "path" => $redirect_url];
     }
 
-	  return redirect()->back()->with('error', "Please check username and password!");
+	  return ["status" => false, "msg" => "Please check username and password!", "path" => ""];
   }
 
   public function logout(Request $req) {
@@ -117,5 +155,16 @@ class LoginController extends Controller
   	foreach ($child as $key => $mloop) {
   		DB::table('tblchild_menu')->insert($mloop);
   	}
+  }
+
+  private function redirectUrl($roleid) {
+    $redirect_url = DB::table("tblaccess as acc")
+    ->where([ ["acc.roleid", $roleid] ])
+    ->select(["child.url"])
+    ->join("tblchild_menu as child", "child.childid", "=", "acc.childid")
+    ->orderBy("child.childid", "ASC")
+    ->first();
+
+    return $redirect_url->url;
   }
 }
