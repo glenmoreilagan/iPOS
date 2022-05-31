@@ -70,12 +70,10 @@ class Cart extends Model
   }
 
   public function saveCart() {
-    $where_items = ["txid" => $this->txid, "itemid" => $this->itemid, "userid" => $this->userid];
 
   	if ($this->line != 0 && $this->txid != 0) {
-      $where_items["line"] = $this->line;
+      $where_items = ["line" => $this->line, "txid" => $this->txid, "itemid" => $this->itemid, "userid" => $this->userid];
       $update = DB::table($this->tblcart)
-
       ->where($where_items)
       ->update([
         "qty" => $this->qty,
@@ -85,20 +83,27 @@ class Cart extends Model
 
   		return $update;
   	} else {
-      if ($this->txid != 0) {
-        $insert = DB::table($this->tblcart)
+      $checking = DB::table($this->tblcart)->select(["txid"])->orderBy('txid', 'desc')->first();
+      if ($this->txid == 0) {
+        $this->txid = (!empty($checking)) ? $checking->txid + 1 : 1;
+      }
+
+      $item_exist_checking = DB::table($this->tblcart)
+      ->where(["txid" => $this->txid, "itemid" => $this->itemid])
+      ->select(["itemid"])
+      ->first();
+
+      if (!empty($item_exist_checking)) {
+        $where_items = ["txid" => $this->txid, "itemid" => $this->itemid, "userid" => $this->userid];
+        $update = DB::table($this->tblcart)
         ->where($where_items)
         ->update([
           "qty" => DB::raw("qty + ".$this->qty.""),
           "amt" => DB::raw("amt + ".$this->amt.""),
           "total" => DB::raw("total + ".$this->total.""),
         ]);
+        return $update;
       } else {
-        $checking = DB::table($this->tblcart)->select(["txid"])->orderBy('txid', 'desc')->first();
-        if ($this->txid == 0) {
-          $this->txid = (!empty($checking)) ? $checking->txid + 1 : 1;
-        }
-
     		$insert = DB::table($this->tblcart)->insert([
     			"txid" => $this->txid,
           "itemid" => $this->itemid,
@@ -110,8 +115,8 @@ class Cart extends Model
     			"added_date" => $this->added_date,
     			"ordernum" => $this->ordernum,
     		]);
+    		return $insert;
       }
-  		return $insert;
   	}
   }
 }

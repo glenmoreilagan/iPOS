@@ -34,44 +34,6 @@ class PosController extends Controller
   	$reqs = $req->all();
 
     $save_cart = $this->cart_class->setCart($reqs);
-  	// foreach ($reqs["data"] as $key => $value) {
-  	// 	$cart = [];
-   //    $userid = session('userinfo')['userid'];
-
-  	// 	if ($reqs["txid"] != 0) {
-	  // 		$cart["qty"] = $value["qty"];
-	  // 		$cart["amt"] = $value["amt"];
-	  // 		$cart["total"] = $value["amt"] * $value["qty"];
-	  // 		// $cart["userid"] = $userid;
-	  // 		$update = DB::table("tblcart")
-			// 	->where([
-			// 		["txid", "=", $reqs["txid"]],
-			// 		["itemid", "=", $value["itemid"]],
-			// 		["userid", "=", $userid]
-			// 	])
-	  // 		->update($cart);
-	  // 		if(!$update) {
-	  // 			return ["status" => false, "msg" => "Update Failed!"];
-	  // 		}
-	  // 		return ["status" => true, "msg" => "Update Success!"];
-  	// 	} else {
-	  // 		$default_qty = 1;
-	  // 		$cart["itemid"] = $value["itemid"];
-	  // 		$cart["uomid"] = $value["uomid"];
-	  // 		$cart["qty"] = $default_qty;
-	  // 		$cart["amt"] = $value["amt"];
-	  // 		$cart["total"] = $value["amt"] * $default_qty;
-	  // 		$cart["userid"] = $userid;
-	  // 		$cart["added_date"] = $this->reuse_class->currDateToday();
-	  // 		$cart["ordernum"] = $this->reuse_class->getNewOrderNum();
-	  // 		$insert = DB::table("tblcart")->insert($cart);
-	  // 		if(!$insert) {
-	  // 			return ["status" => false, "msg" => "Insert Failed!"];
-	  // 		}
-		 //  	return ["status" => true, "msg" => "Insert Success!"];
-  	// 	}
-  	// }
-
     return ["status" => $save_cart["status"], "msg" => $save_cart["msg"]];
   }
 
@@ -102,7 +64,7 @@ class PosController extends Controller
 		$cart = DB::table("tblcart as cart")
   	->select($selectqry)
   	->selectRaw("replace(FORMAT(cart.qty, ?), ',', '') as qty, 
-  		replace(FORMAT(cart.amt, ?), ',', '') as amt, 
+  		replace(FORMAT(uom.amt, ?), ',', '') as amt, 
   		replace(FORMAT(cart.total, ?), ',', '') as total", 
   		[0, 2, 2]
   	)

@@ -15,25 +15,94 @@
 	<link class="js-stylesheet" href="/css/css/light.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/all.css" rel="stylesheet"/>
 	<meta name="csrf-token" content="{{ csrf_token() }}">
+
+	<style type="text/css">
+		body {
+			padding: 0;
+			margin: 0;
+			overflow: hidden;
+		}
+		.main-div-login {
+			display: flex;
+			justify-content: center;
+		}
+		.login-div {
+			display: flex;
+			justify-content: center;
+			/*gap: 1em;*/
+			background: #fff;
+			box-shadow: 0 0 0.875rem 0 rgb(41 48 66 / 5%);
+			border-radius: 1em;
+		}
+
+		.child-img-div {
+			padding: 2em 0em 0em 0em;
+			/*border: 1px solid;*/
+			width: 30em;
+			height: 350px;
+			/*background: #fff;*/
+			/*border-radius: 1em;*/
+	    /*box-shadow: 0 0 0.875rem 0 rgb(41 48 66 / 5%);*/
+		}
+
+		.child-login-div {
+			padding: 2em 5em 0em 0em;
+			/*border: 1px solid;*/
+			width: 30em;
+			height: 350px;
+			/*background: #fff;*/
+			/*border-radius: 1em;*/
+	    /*box-shadow: 0 0 0.875rem 0 rgb(41 48 66 / 5%);*/
+		}
+
+		.login-img {
+			width: 100%;
+	    height: 100%;
+		}
+
+		.action-buttons {
+			/*position: absolute;*/
+			/*top: 15em;*/
+		}
+
+		.btnLogin {
+			width: 100px;
+		}
+	</style>
 </head>
 <body>
 	<div class="content">
 		{{-- <form method="POST" action="/login/login"> --}}
-			<label>username</label>
-			<div class="input-group">
-				<input name="username" type="text" class="form-control form-control-sm" id="" placeholder="Input username" autocomplete="off">
-			</div>
+			<div class="main-div-login">
+				<div class="login-div mt-6">
+					<div class="child-img-div">
+						<img class="login-img" src="/img/login-img.svg" width="100%;">
+					</div>
+					<div class="child-login-div">
+						<h4>SIGN IN</h4>
+						<div class="mt-3">
+							<label>Username</label>
+							<div class="input-group">
+								<input name="username" type="text" class="form-control form-control-sm" id="" placeholder="Input username" autocomplete="off">
+							</div>
 
-			<label>password</label>
-			<div class="input-group">
-				<input name="password" type="text" class="form-control form-control-sm" id="" placeholder="Input password" autocomplete="off">
-			</div>
-			<span class="text-danger lblerror"></span>
-			<div class="mt-3">
-				<button class="btn btn-primary btn-sm btnLogin">Login</button>
+							<label>Password</label>
+							<div class="input-group">
+								<input name="password" type="text" class="form-control form-control-sm" id="" placeholder="Input password" autocomplete="off">
+							</div>
+							<span class="text-danger lblerror"></span>
+							<div class="mt-3 action-buttons">
+								<button class="btn btn-primary btn-sm btnLogin">Login</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		{{-- </form> --}}
 	</div>
+	{{-- <div style="margin-top: -40px;">
+		<img src="/img/wave2.svg">
+	</div> --}}
 </body>
 </html>
 
