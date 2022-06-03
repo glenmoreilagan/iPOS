@@ -79,7 +79,10 @@
 						<img class="login-img" src="/img/login-img.svg" width="100%;">
 					</div>
 					<div class="child-login-div">
-						<h4>SIGN IN</h4>
+						<div class="company-name-div text-center">
+							<h4 style="text-transform: uppercase;">PASTPODS</h4>
+						</div>
+						<h6>SIGN IN</h6>
 						<div class="mt-3">
 							<label>Username</label>
 							<div class="input-group">
@@ -88,7 +91,7 @@
 
 							<label>Password</label>
 							<div class="input-group">
-								<input name="password" type="text" class="form-control form-control-sm" id="" placeholder="Input password" autocomplete="off">
+								<input name="password" type="password" class="form-control form-control-sm" id="" placeholder="Input password" autocomplete="off">
 							</div>
 							<span class="text-danger lblerror"></span>
 							<div class="mt-3 action-buttons">

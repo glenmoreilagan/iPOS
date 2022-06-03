@@ -28,9 +28,9 @@
 					@foreach($items as $key => $item)
 						<div data-tags="{{ $item->category }}" class="col-md-3 mb-3 main-wrapper-product-div">
 							<div class="product-item">
-								<div class="div-lblitembal">
+								{{-- <div class="div-lblitembal">
 									<span class="lblitembal-{{ $item->itemid }} default-font-size right-text">{{ $item->bal }}</span>
-								</div>
+								</div> --}}
 								<div class="item-img">
 									<img class="mt-3" src="/img/favicon.ico">
 								</div>
@@ -89,7 +89,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" style="text-align: center;">
-									<button class="btn btn-primary btn-sm max-width">CHECKOUT</button>
+									<button class="btn btn-primary btn-sm max-width btn-checkout">CHECKOUT</button>
 								</td>
 							</tr>
 						</table>
@@ -158,7 +158,7 @@
 			  .then(res => {
 			  	if(res.status) {
 			  		let txid = res.data.length > 0 ? res.data[0].txid : 0;
-				  		$("#lbltxid").text(txid);
+				  		// $("#lbltxid").text(txid);
 				  		GLOBAL_TXID = txid;
 			  		// console.log(res);
 				  	BASE_OBJ.DISPLAY_CART(res.data)
@@ -177,6 +177,7 @@
 					let itemid = data[i].itemid;
 					let itemname = data[i].itemname;
 					let uom = data[i].uom;
+					let uomid = data[i].uomid;
 					let amt = data[i].amt;
 					let qty = data[i].qty;
 					let total = data[i].total;
@@ -197,7 +198,8 @@
 									value="${qty}" 
 									itemid="${itemid}" 
 									amt="${amt}" 
-									line="${line}"
+									line="${line}" 
+									uomid="${uomid}" 
 								>
 							</td>
 							<td class="cart-total-td min-width center-text">
@@ -247,6 +249,18 @@
 			  }).catch((error) => {
 	        console.log(error);
 		    });
+			},
+			CHECKOUT : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if (res.status) {
+			  		BASE_OBJ.totalbill = 0;
+				  	BASE_OBJ.LOADCART('/POS/loadCart', {data: {}});
+			  	}
+					notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
 			}
 		};
 		
@@ -281,7 +295,7 @@
 
 			new_bal = bal - 1;
 			btnAdd.attr('bal', new_bal);
-			$(`.lblitembal-${itemid}`).text(new_bal);
+			// $(`.lblitembal-${itemid}`).text(new_bal);
 		}, 300));
 
 		$(document).on("keyup", "#txtcash", (e) => {
@@ -296,6 +310,7 @@
 			let itemid = qty.attr('itemid');
 			let amt = qty.attr('amt');
 			let line = qty.attr('line');
+			let uomid = qty.attr('uomid');
 			let txid = parseFloat(GLOBAL_TXID);
 			// let bal = qty.attr("bal");
 
@@ -306,6 +321,7 @@
 				itemid : itemid,
 				amt 	 : amt,
 				line 	 : line,
+				uomid 	 : uomid,
 			}
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
@@ -338,6 +354,11 @@
 
 			$(`.${row}`).addClass('isedited');
 		});
+
+		$(document).on("click", ".btn-checkout", debounce((e) => {
+			const url = '/POS/checkOut';
+			BASE_OBJ.CHECKOUT(url, {data: {}, txid : GLOBAL_TXID});
+		}, 300));
 		
 	});
 </script>

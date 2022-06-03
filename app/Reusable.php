@@ -94,8 +94,9 @@ class Reusable extends Model
 
   public function getNewOrderNum() {
   	$prefix = "OR00000";
+    $userid = session('userinfo')['userid'];
   	$curr_date_today = $this->currDateToday();
-  	$order_num = $this->getfieldvalue("tblordernum", "orid", "userid=1 and added_date='$curr_date_today'");
+  	$order_num = $this->getfieldvalue("tblhcart", "txid", "added_date='$curr_date_today'");
 
   	if($order_num == "") {
   		$order_num = 1;
@@ -125,22 +126,26 @@ class Reusable extends Model
 		}
 	} //end
 
-	public function checkingItemBalance() {
-		// select itemid, uomid, sum(inv-cart) as bal 
-		// from (
-		// 	select s.itemid, item.itemname, s.uomid, uom.uom, sum(s.qty) as inv, 0 as cart
-		// 	from tbl_inv_stock as s
-		// 	left join tblitems as item on item.itemid = s.itemid
-		// 	left join tbluom as uom on uom.uomid = s.uomid
-		// 	group by s.itemid, item.itemname, s.uomid, uom.uom
-		// 	union all
-		// 	select c.itemid, item.itemname, c.uomid, uom.uom, 0 as inv, sum(c.qty) as cart
-		// 	from tblcart as c
-		// 	left join tblitems as item on item.itemid = c.itemid
-		// 	left join tbluom as uom on uom.uomid = c.uomid
-		// 	group by c.itemid, item.itemname, c.uomid, uom.uom
-		// ) as t
-		// group by itemid, uomid;
+	public function checkingItemBalance($itemid, $uomid) {
+    $items_bal = DB::select("select itemid, uomid, sum(inv-cart) as bal 
+    from (
+      select s.itemid, item.itemname, s.uomid, uom.uom, sum(s.qty) as inv, 0 as cart
+      from tbl_inv_stock as s
+      left join tblitems as item on item.itemid = s.itemid
+      left join tbluom as uom on uom.uomid = s.uomid
+      where item.itemid = ? and uom.uomid = ?
+      group by s.itemid, item.itemname, s.uomid, uom.uom
+      union all
+      select c.itemid, item.itemname, c.uomid, uom.uom, 0 as inv, sum(c.qty) as cart
+      from tblcart as c
+      left join tblitems as item on item.itemid = c.itemid
+      left join tbluom as uom on uom.uomid = c.uomid
+      where item.itemid = ? and uom.uomid = ?
+      group by c.itemid, item.itemname, c.uomid, uom.uom
+    ) as t
+    group by itemid, uomid", [$itemid, $uomid, $itemid, $uomid]);
+
+		return $items_bal;
 	}
 
 	public function getCategory() {

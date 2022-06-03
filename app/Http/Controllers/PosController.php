@@ -33,8 +33,17 @@ class PosController extends Controller
   public function saveCart(Request $req) {
   	$reqs = $req->all();
 
-    $save_cart = $this->cart_class->setCart($reqs);
-    return ["status" => $save_cart["status"], "msg" => $save_cart["msg"]];
+    foreach ($reqs["data"] as $key => $value) {
+      $set_cart = $this->cart_class->setCart($value, $reqs['txid']);
+      if(!$set_cart["status"]) {
+       return ["status" => false, "msg" => $set_cart["msg"]]; 
+      }
+      $save_cart = $this->cart_class->saveCart();
+      if(!$save_cart) {
+       return ["status" => false, "msg" => "Saving Failed!"]; 
+      }
+    }
+    return ["status" => true, "msg" => "Saving Success!"];
   }
 
   public function deleteCart(Request $req) {
@@ -49,32 +58,21 @@ class PosController extends Controller
   }
 
   public function loadCart(Request $req) {
-  	$selectqry = [
-  		"cart.line", 
-      "cart.txid", 
-	  	"cart.ordernum", 
-	  	"cart.itemid", 
-	  	"cart.uomid", 
-	  	"cart.userid", 
-	  	"cart.added_date",
-	  	"item.itemname",
-	  	"uom.uom"
-	  ];
-		
-		$cart = DB::table("tblcart as cart")
-  	->select($selectqry)
-  	->selectRaw("replace(FORMAT(cart.qty, ?), ',', '') as qty, 
-  		replace(FORMAT(uom.amt, ?), ',', '') as amt, 
-  		replace(FORMAT(cart.total, ?), ',', '') as total", 
-  		[0, 2, 2]
-  	)
-  	->leftJoin("tblitems as item", "item.itemid", "=", "cart.itemid")
-  	->leftJoin("tbluom as uom", function($join) {
-  		$join->on("uom.uomid", "=", "item.uomid");
-  		$join->on("uom.itemid", "=", "item.itemid");
-  	})
-  	->get();
+    $reqs = $req->all();
+  	$cart = $this->cart_class->loadCart($reqs);
 
   	return ["status" => true, "msg" => "Load Cart Success!", "data" => $cart];
+  }
+
+  public function checkOut(Request $req) {
+    $reqs = $req->all();
+
+    $set_cart = $this->cart_class->setCart([], $reqs['txid']);
+    $check_out = $this->cart_class->checkOut($reqs);
+
+    if (!$check_out) {
+      return ["status" => false, "msg" => "Checout Failed!"];
+    }
+    return ["status" => true, "msg" => "Checout Success!"];
   }
 }
