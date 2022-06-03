@@ -22,6 +22,7 @@
 					<th>Barcode</th>
 					<th>Itemname</th>
 					<th>UOM</th>
+					<th>Category</th>
 				</tr>
 			</thead>
 			<tbody id="item-list"></tbody>
@@ -57,6 +58,7 @@
 		    		data[i].barcode, 
 		    		data[i].itemname,
 		    		data[i].uom,
+		    		data[i].category,
 		    	]);
 		    }
 		    table.clear().rows.add(ready_data).draw();

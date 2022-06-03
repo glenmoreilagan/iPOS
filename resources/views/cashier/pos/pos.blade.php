@@ -28,9 +28,9 @@
 					@foreach($items as $key => $item)
 						<div data-tags="{{ $item->category }}" class="col-md-3 mb-3 main-wrapper-product-div">
 							<div class="product-item">
-								<div class="div-lblitembal">
+								{{-- <div class="div-lblitembal">
 									<span class="lblitembal-{{ $item->itemid }} default-font-size right-text">{{ $item->bal }}</span>
-								</div>
+								</div> --}}
 								<div class="item-img">
 									<img class="mt-3" src="/img/favicon.ico">
 								</div>
@@ -57,7 +57,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="card-div">
-					<h3>CART <i data-feather="shopping-cart"></i> <span id="lbltxid">0</span></h3>
+					<h3>CART <i data-feather="shopping-cart"></i></h3>
 					<div class="cart-item-list mb-3">
 						<table class="table-cart-list" style="width: 100%;"></table>
 					</div>
@@ -89,7 +89,7 @@
 							</tr>
 							<tr>
 								<td colspan="2" style="text-align: center;">
-									<button class="btn btn-primary btn-sm max-width">CHECKOUT</button>
+									<button class="btn btn-primary btn-sm max-width btn-checkout">CHECKOUT</button>
 								</td>
 							</tr>
 						</table>
@@ -124,7 +124,7 @@
 			// duration in ms
 			duration: 300
 		});
-
+		let GLOBAL_TXID = 0;
 		const debounce = (func, wait, immediate) => {
 	    var timeout;
 	    return function() {
@@ -158,7 +158,8 @@
 			  .then(res => {
 			  	if(res.status) {
 			  		let txid = res.data.length > 0 ? res.data[0].txid : 0;
-				  		$("#lbltxid").text(txid);
+				  		// $("#lbltxid").text(txid);
+				  		GLOBAL_TXID = txid;
 			  		// console.log(res);
 				  	BASE_OBJ.DISPLAY_CART(res.data)
 			  	}
@@ -176,6 +177,7 @@
 					let itemid = data[i].itemid;
 					let itemname = data[i].itemname;
 					let uom = data[i].uom;
+					let uomid = data[i].uomid;
 					let amt = data[i].amt;
 					let qty = data[i].qty;
 					let total = data[i].total;
@@ -190,21 +192,25 @@
 							</td>
 							<td class="cart-qty-td">
 								<input 
-								id="cart-row-${line}"
-								class="cart-row-${line} form-control form-control-sm center-text qty txtrow-cart-qty" 
-								type="text" 
-								value="${qty}" 
-								itemid="${itemid}" 
-								amt="${amt}",
-								line="${line}"
-							>
+									id="cart-row-${line}"
+									class="cart-row-${line} form-control form-control-sm center-text qty txtrow-cart-qty" 
+									type="text" 
+									value="${qty}" 
+									itemid="${itemid}" 
+									amt="${amt}" 
+									line="${line}" 
+									uomid="${uomid}" 
+								>
 							</td>
 							<td class="cart-total-td min-width center-text">
-								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-primary btn-sm btnSave"><i class="far fa-save"></i></button>
-								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-danger btn-sm btnDelete"><i class="far fa-trash-alt"></i></button>
+								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-primary btn-sm btnSave">
+									<i class="far fa-save"></i>
+								</button>
+								<button rowkey="${line}" id="${line}" class="action-btn-row-${line} btn-action btn btn-danger btn-sm btnDelete">
+									<i class="far fa-trash-alt"></i>
+								</button>
 							</td>
-						</tr>
-					`;
+						</tr>`;
 
 					BASE_OBJ.totalbill += parseFloat(data[i].total);
 				}
@@ -243,6 +249,18 @@
 			  }).catch((error) => {
 	        console.log(error);
 		    });
+			},
+			CHECKOUT : (url, data) => {
+				postData(url, data)
+			  .then(res => {
+			  	if (res.status) {
+			  		BASE_OBJ.totalbill = 0;
+				  	BASE_OBJ.LOADCART('/POS/loadCart', {data: {}});
+			  	}
+					notify({status : res.status, message : res.msg});
+			  }).catch((error) => {
+	        console.log(error);
+		    });
 			}
 		};
 		
@@ -258,7 +276,7 @@
 			let amt = btnAdd.attr('amt');
 			let bal = btnAdd.attr('bal');
 			let new_bal = 0;
-			let txid = parseFloat($("#lbltxid").text());
+			let txid = parseFloat(GLOBAL_TXID);
 
 			if (parseFloat(bal) == 0) {
 				notify({status : false, message : "No Available Balance!"});
@@ -277,7 +295,7 @@
 
 			new_bal = bal - 1;
 			btnAdd.attr('bal', new_bal);
-			$(`.lblitembal-${itemid}`).text(new_bal);
+			// $(`.lblitembal-${itemid}`).text(new_bal);
 		}, 300));
 
 		$(document).on("keyup", "#txtcash", (e) => {
@@ -292,7 +310,8 @@
 			let itemid = qty.attr('itemid');
 			let amt = qty.attr('amt');
 			let line = qty.attr('line');
-			let txid = parseFloat($("#lbltxid").text());
+			let uomid = qty.attr('uomid');
+			let txid = parseFloat(GLOBAL_TXID);
 			// let bal = qty.attr("bal");
 
 			let ready_to_cart_arr = [];
@@ -302,6 +321,7 @@
 				itemid : itemid,
 				amt 	 : amt,
 				line 	 : line,
+				uomid 	 : uomid,
 			}
 
 			ready_to_cart_arr.push(ready_to_cart_obj);
@@ -334,6 +354,11 @@
 
 			$(`.${row}`).addClass('isedited');
 		});
+
+		$(document).on("click", ".btn-checkout", debounce((e) => {
+			const url = '/POS/checkOut';
+			BASE_OBJ.CHECKOUT(url, {data: {}, txid : GLOBAL_TXID});
+		}, 300));
 		
 	});
 </script>
