@@ -42,17 +42,41 @@ class Cart extends Model
   		$this->added_date = $this->reuse_class->currDateToday();
   		$this->ordernum = $this->reuse_class->getNewOrderNum();	  
 
-      $checking_item_bal = $this->reuse_class->checkingItemBalance($this->itemid, $this->uomid);
+      // $checking_item_bal = $this->reuse_class->checkingItemBalance($this->itemid, $this->uomid);
+      // $item_exist_checking = $this->itemCartChecking();
 
-      if ($this->qty > $checking_item_bal[0]->bal) {
-        return ["status" => false, "msg" => "Out of stock!"]; 
-      }
+      // if (!empty($item_exist_checking)) {
+      //   $new_qty = 0;
+      //   if (floatval($this->qty) > floatval($item_exist_checking->qty)) {
+      //     $new_qty = floatval($this->qty) - floatval($item_exist_checking->qty);
+      //   }
+      //   if ($new_qty > $checking_item_bal[0]->bal) {
+      //     return ["status" => false, "msg" => "Out of stock!"]; 
+      //   }
+      //   $this->qty = floatval($new_qty) + floatval($item_exist_checking->qty);
+      //   $this->total = floatval($data["amt"]) * floatval($this->qty);
+      // }
     }
   	return ["status" => true, "msg" => "Set Props Success!"];
   }
 
   public function saveCart() {
   	if ($this->line != 0 && $this->txid != 0) {
+      $checking_item_bal = $this->reuse_class->checkingItemBalance($this->itemid, $this->uomid);
+      $item_exist_checking = $this->itemCartChecking();
+
+      if (!empty($item_exist_checking)) {
+        $new_qty = 0;
+        if ($this->qty > $item_exist_checking->qty) {
+          $new_qty = $this->qty - $item_exist_checking->qty;
+          $this->qty = $new_qty + $item_exist_checking->qty;
+          $this->total = $this->amt * $this->qty;
+        }
+        if ($new_qty > $checking_item_bal[0]->bal) {
+          return ["status" => false, "msg" => "Out of stock!"]; 
+        }
+      }
+
       $where_items = ["line" => $this->line, "txid" => $this->txid, "itemid" => $this->itemid, "userid" => $this->userid];
       $update = DB::table($this->tblcart)
       ->where($where_items)
@@ -62,28 +86,44 @@ class Cart extends Model
         "total" => $this->total,
       ]);
 
-  		return $update;
+  		$status = true;
+      $msg = "Saving cart Success!";
+
+      if (!$update) {
+        $status = false;
+        $msg = "Saving cart Failed!";
+      }
+
+      return ["status" => $status, "msg" => $msg];
   	} else {
       $get_new_txid = DB::table($this->tblcart)->select(["txid"])->orderBy('txid', 'desc')->first();
       if ($this->txid == 0) {
         $this->txid = (!empty($get_new_txid)) ? $get_new_txid->txid + 1 : 1;
       }
 
-      $item_exist_checking = DB::table($this->tblcart)
-      ->where(["txid" => $this->txid, "itemid" => $this->itemid])
-      ->select(["itemid"])
-      ->first();
+      $item_exist_checking = $this->itemCartChecking();
 
       if (!empty($item_exist_checking)) {
+        $this->qty = $item_exist_checking->qty + $this->qty;
+        $this->total = $this->qty * $this->amt;
+
         $where_items = ["txid" => $this->txid, "itemid" => $this->itemid, "userid" => $this->userid];
         $update = DB::table($this->tblcart)
         ->where($where_items)
         ->update([
-          "qty" => DB::raw("qty + ".$this->qty.""),
-          "amt" => DB::raw("amt + ".$this->amt.""),
-          "total" => DB::raw("total + ".$this->total.""),
+          "qty" => $this->qty,
+          "amt" => $this->amt,
+          "total" => $this->total,
         ]);
-        return $update;
+        $status = true;
+        $msg = "Saving cart Success!";
+
+        if (!$update) {
+          $status = false;
+          $msg = "Saving cart Failed!";
+        }
+
+        return ["status" => $status, "msg" => $msg];
       } else {
     		$insert = DB::table($this->tblcart)->insert([
     			"txid" => $this->txid,
@@ -96,9 +136,26 @@ class Cart extends Model
     			"added_date" => $this->added_date,
     			"ordernum" => $this->ordernum,
     		]);
-    		return $insert;
+        $status = true;
+        $msg = "Add to cart Success!";
+
+        if (!$insert) {
+          $status = false;
+          $msg = "Add to cart Failed!";
+        }
+
+    		return ["status" => $status, "msg" => $msg];
       }
   	}
+  }
+
+  public function itemCartChecking() {
+    $item_exist_checking = DB::table($this->tblcart)
+      ->where(["txid" => $this->txid, "itemid" => $this->itemid])
+      ->select(["itemid", "qty"])
+      ->first();
+
+    return $item_exist_checking;
   }
 
   public function loadCart($data) {

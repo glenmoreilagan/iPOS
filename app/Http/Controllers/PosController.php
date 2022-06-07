@@ -39,8 +39,8 @@ class PosController extends Controller
        return ["status" => false, "msg" => $set_cart["msg"]]; 
       }
       $save_cart = $this->cart_class->saveCart();
-      if(!$save_cart) {
-       return ["status" => false, "msg" => "Saving Failed!"]; 
+      if(!$save_cart['status']) {
+       return ["status" => $save_cart["status"], "msg" => $save_cart["msg"]]; 
       }
     }
     return ["status" => true, "msg" => "Saving Success!"];
@@ -71,8 +71,8 @@ class PosController extends Controller
     $check_out = $this->cart_class->checkOut($reqs);
 
     if (!$check_out) {
-      return ["status" => false, "msg" => "Checout Failed!"];
+      return ["status" => false, "msg" => "Checkout Failed!"];
     }
-    return ["status" => true, "msg" => "Checout Success!"];
+    return ["status" => true, "msg" => "Checkout Success!"];
   }
 }

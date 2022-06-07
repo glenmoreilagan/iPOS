@@ -17,6 +17,6 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:api');
 
-Route::get('/exapi', function (Request $request) {
-    return 2;
-});
+Route::get('/v1/testapi', [
+	'uses' => "ItemController@getItems"
+]);
