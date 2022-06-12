@@ -23,6 +23,7 @@
 				<button class="btn btn-primary" id="btnSave"><i data-feather="save"></i> Save</button>
 				<button class="btn btn-primary" id="btnDelete"><i data-feather="trash"></i> Delete</button>
 				<button class="btn btn-primary" id="btnPost"><i data-feather="send"></i> Post</button>
+
 			</form>
 		</div>
 	</div>

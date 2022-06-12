@@ -115,9 +115,9 @@ document.addEventListener("DOMContentLoaded", function() {
 		  .then(res => {
 		  	if (res.status) {
 			  	load_stock(txid);
-			  	notify({status : res.status, message : res.msg});
 			  	$("#lookupItem").modal('hide');
 		  	}
+		  	notify({status : res.status, message : res.msg});
 		  }).catch((error) => {
 		    console.log(error);
 		  });
@@ -147,11 +147,13 @@ document.addEventListener("DOMContentLoaded", function() {
 		  .then(data => {
 		  	console.log(data);
 		    // for (let i = 0; i < data.data.length; i++) {
-		    	$("#lbltxid").text(data.data[0].txid);
-		    	$("input[name='txid']").val(data.data[0].txid);
-		    	$("input[name='docnum']").val(data.data[0].docnum);
-		    	$("input[name='supplier']").attr('supplierid', data.data[0].clientid);
-		    	$("input[name='supplier']").val(data.data[0].supplier);
+		    	if (data.status) {
+			    	$("#lbltxid").text(data.data[0].txid);
+			    	$("input[name='txid']").val(data.data[0].txid);
+			    	$("input[name='docnum']").val(data.data[0].docnum);
+			    	$("input[name='supplier']").attr('supplierid', data.data[0].clientid);
+			    	$("input[name='supplier']").val(data.data[0].supplier);
+		    	}
 		    // }
 		    // console.log(clientid);
 				notify({status : data.status, message : data.msg});
@@ -219,10 +221,12 @@ document.addEventListener("DOMContentLoaded", function() {
 
 			postData('/IS/saveStock', {data: stockdata_arr})
 		  .then(res => {
-		  	qty.val(res.data.data[0].qty);
-		  	cost.val(res.data.data[0].cost);
+		  	if (res.status) {
+			  	qty.val(res.data.data[0].qty);
+			  	cost.val(res.data.data[0].cost);
+					$(`.key-${row}`).closest('tr').removeClass('isedited');
+		  	}
 				notify({status : res.status, message : res.msg});
-				$(`.key-${row}`).closest('tr').removeClass('isedited');
 		  }).catch((error) => {
         console.log(error);
 	    });
@@ -233,5 +237,18 @@ document.addEventListener("DOMContentLoaded", function() {
 	  	// let row = e.currentTarget.id;
 	  	// $(`#${row}`).addClass('isedited');
 	  	$(`.key-${row}`).closest('tr').addClass('isedited');
+	  });
+
+	  $("#btnPost").click((e) => {
+	  	e.preventDefault();
+	  	let txtid = $("input[name='txid']");
+
+	  	postData('/IS/post', {txid: txtid.val()})
+		  .then(data => {
+		  	console.log(data);
+				notify({status : data.status, message : data.msg});
+		  }).catch((error) => {
+        console.log(error);
+	    });
 	  });
 	});

@@ -39,7 +39,8 @@ class InventoryController extends Controller
 					"docnum" => $is_data[0]->docnum,
 					"supplierid" => $is_data[0]->clientid,
 					"supplier" => $is_data[0]->supplier,
-					"dateid" => $is_data[0]->dateid
+					"dateid" => $is_data[0]->dateid,
+          "isposted" => $is_data[0]->isposted
 				]);
 			}
 		} else {
@@ -61,6 +62,11 @@ class InventoryController extends Controller
 
 	public function saveSetup(Request $req) {
   	$reqs = $req->all();
+
+    if ($this->inventory_class->isPosted($reqs["data"][0]["txid"])) {
+      return ["status" => false, "msg" => "Already Posted!"];
+    }
+
   	$setHead = $this->inventory_class->setHead($reqs);
 
   	return $setHead;
@@ -75,6 +81,11 @@ class InventoryController extends Controller
 
   public function addItem(Request $req) {
   	$reqs = $req->all();
+
+    if ($this->inventory_class->isPosted($reqs["txid"])) {
+      return ["status" => false, "msg" => "Already Posted!", 'data' => []];
+    }
+
   	$stock = $this->inventory_class->setItemstock($reqs, 'additem');
 
     return ['status' => true, 'msg' => 'Add Item Success!', 'data' => $stock];
@@ -89,8 +100,26 @@ class InventoryController extends Controller
 
   public function saveStock(Request $req) {
   	$reqs = $req->all();
+
+    if ($this->inventory_class->isPosted($reqs["data"][0]["txid"])) {
+      return ["status" => false, "msg" => "Already Posted!", 'data' => []];
+    }
+
   	$stock = $this->inventory_class->setItemstock($reqs, 'saveitem');
 
   	return ['status' => true, 'msg' => 'Saving Success!', 'data' => $stock];
+  }
+
+  public function post(Request $req) {
+    $reqs = $req->only(["txid"]);
+
+    $setHead = $this->inventory_class->setTXID($reqs);
+    $post = $this->inventory_class->post();
+
+    if (!$post) {
+      return ["status" => false, "msg" => "Posting failed!", "data" => []];
+    }
+
+    return ["status" => true, "msg" => "Posting Success!"];
   }
 }

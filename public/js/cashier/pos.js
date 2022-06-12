@@ -153,6 +153,8 @@ document.addEventListener("DOMContentLoaded", function() {
 		  	if (res.status) {
 		  		BASE_OBJ.totalbill = 0;
 			  	BASE_OBJ.LOADCART('/POS/loadCart', {data: {}});
+			  	$("#txtcash").val('');
+			  	BASE_OBJ.COMPUTE_CHANGE(0);
 		  	}
 				notify({status : res.status, message : res.msg});
 		  }).catch((error) => {
