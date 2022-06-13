@@ -73,8 +73,10 @@ class Reusable extends Model
         FORMAT(sum(stock.qty), 0) as bal, cat.category, ROUND(uom.amt, 2) as amt
         from tblitems as item
         inner join tbl_inv_stock as stock on stock.itemid = item.itemid
+        inner join tbl_inv_head as head on head.txid = stock.txid
         inner join tbluom as uom on uom.uomid = stock.uomid
         left join tblcategory as cat on cat.catid = item.catid
+        where head.isposted = 1
         group by stock.itemid, item.itemname, stock.uomid, uom.uom, uom.amt, cat.category
         having sum(stock.qty) > 0
         union all

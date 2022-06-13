@@ -30,6 +30,7 @@ class Inventory extends Model
 	public $uomid = 0;
 	public $qty = 0;
 	public $cost = 0;
+  public $isposted = 0;
 
 	public function __construct() {
     $this->reuse_class = new Reusable;
@@ -52,8 +53,8 @@ class Inventory extends Model
 
   		$save_head = $this->saveHead();
 
-  		if (!$save_head) {
-		    return ['status' => false, 'msg' => "Error!", 'data' => []];
+  		if (!$save_head["status"]) {
+		    return ['status' => false, 'msg' => $save_head["msg"], 'data' => []];
   		}
 
 	    $head = $this->getHead($this->txid);
@@ -75,7 +76,8 @@ class Inventory extends Model
 	  	'head.docnum', 
 	  	'head.clientid', 
 	  	'supp.name as supplier', 
-	  	'head.dateid'
+	  	'head.dateid',
+      'head.isposted'
 	  ];
 
   	if (!empty($filter)) {
@@ -97,6 +99,11 @@ class Inventory extends Model
 	private function saveHead() {
   	$msg = "";
   	$status = false;
+
+    // if ($this->isPosted($this->txid)) {
+    //   return ["status" => false, "msg" => "Already Posted!"];
+    // }
+
   	if($this->txid == 0) {
   		$this->txid = DB::table($this->tblhead)
   		->insertGetId([
@@ -129,7 +136,7 @@ class Inventory extends Model
 	    $status = true;
   	}
 
-  	return $status;
+  	return ["status" => $status, "msg" => $msg];
 	}
 
 	public function getStock($txid = 0, $line = 0) {
@@ -255,5 +262,28 @@ class Inventory extends Model
       $status = true;
   	}
 		return $status;
+  }
+
+  public function setTXID($data) {
+    $this->txid = $data["txid"];
+    // $this->isposted = $data["isposted"];
+  }
+
+  public function post() {
+    if ($this->txid != 0) {
+      $post = DB::table($this->tblhead)->where(["txid" => $this->txid])->update(["isposted" => 1]);
+
+      return $post;
+    }
+  }  
+
+  public function isPosted($txid) {
+    $check_isposted =  DB::table($this->tblhead)->where(["txid" => $txid])->value("isposted");
+
+    if ($check_isposted != 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

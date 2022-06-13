@@ -39,6 +39,16 @@ Route::get('/logout', [
 ]);
 
 Route::group(['middleware' => 'sampleware'], function () {
+  Route::group(['prefix' => 'dashboard'], function () {
+    Route::get('/', [
+      'uses' => "DashboardController@dashboard"
+    ]);
+
+    Route::post('/annualChart', [
+      'uses' => "DashboardController@annualChart"
+    ]);
+  });
+
   Route::group(['prefix' => 'items'], function () {
     $ItemC = "ItemController";
 
@@ -74,7 +84,6 @@ Route::group(['middleware' => 'sampleware'], function () {
       'uses' => "$ItemC@getCategory"
     ]);
   });
-
 
   Route::group(['prefix' => 'suppliers'], function () {
     $SupplierC = "SupplierController";
@@ -138,6 +147,10 @@ Route::group(['middleware' => 'sampleware'], function () {
 
     Route::post('saveStock', [
       'uses' => "$InvetoryC@saveStock"
+    ]);
+
+    Route::post('post', [
+      'uses' => "$InvetoryC@post"
     ]);
   });
 

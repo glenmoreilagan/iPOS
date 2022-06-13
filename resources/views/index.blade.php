@@ -34,6 +34,7 @@
 	<link class="js-stylesheet" href="/css/datatable-customize.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/all.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/plugins/nprogress/nprogress.css" rel="stylesheet"/>
+
 	<style type="text/css">
 		body[data-theme=light] .sidebar-brand svg {
 		  fill: #fff !important;
@@ -96,16 +97,21 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">
 			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
+				<a class="sidebar-brand" href="/dashboard">
           <i class="align-middle" data-feather="zap"></i>
-          <span class="align-middle mr-3">PASTPODS</span>
+          <span class="align-middle mr-3">iPOS</span>
         </a>
 
 				<ul class="sidebar-nav">
+					<li class="sidebar-item">
+						<a href="dashboard" class="sidebar-link">
+              <i class="align-middle"></i> <span class="align-middle">Dashboard</span>
+            </a>
+					</li>
 					@foreach($navs['parent'] as $key => $p)
 						<li class="sidebar-item">
 							<a href="#{{ strtolower(str_replace(" ", "", $p->parentname)) }}" data-toggle="collapse" class="sidebar-link collapsed">
-	              <i class="align-middle" data-feather="share-2"></i> <span class="align-middle">{{ $p->parentname }}</span>
+	              <i class="align-middle"></i> <span class="align-middle">{{ $p->parentname }}</span>
 	            </a>
 							<ul id="{{ strtolower(str_replace(" ", "", $p->parentname)) }}" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 	            @foreach($navs['child'] as $k => $c)
@@ -276,10 +282,15 @@
 	<script src="/plugins/nprogress/nprogress.js"></script>
 	{{-- https://www.uglifyjs.net/ --}}
 	<script type="text/javascript" src="/js/post_request.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js" integrity="sha512-5m2r+g00HDHnhXQDbRLAfZBwPpPCaK+wPLV6lm8VQ+09ilGdHfXV7IVyKPkLOTfi4vTTUVJnz7ELs7cA87/GMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			$("input").attr('autocomplete', 'off');
 		});
 	</script>
+
+
+	
 </body>
 </html>
