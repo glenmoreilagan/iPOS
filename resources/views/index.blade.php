@@ -34,6 +34,7 @@
 	<link class="js-stylesheet" href="/css/datatable-customize.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/css/all.css" rel="stylesheet"/>
 	<link class="js-stylesheet" href="/plugins/nprogress/nprogress.css" rel="stylesheet"/>
+
 	<style type="text/css">
 		body[data-theme=light] .sidebar-brand svg {
 		  fill: #fff !important;
@@ -96,21 +97,21 @@
 	<div class="wrapper">
 		<nav id="sidebar" class="sidebar">
 			<div class="sidebar-content js-simplebar">
-				<a class="sidebar-brand" href="index.html">
+				<a class="sidebar-brand" href="/dashboard">
           <i class="align-middle" data-feather="zap"></i>
-          <span class="align-middle mr-3">PASTPODS</span>
+          <span class="align-middle mr-3">iPOS</span>
         </a>
 
 				<ul class="sidebar-nav">
 					<li class="sidebar-item">
 						<a href="dashboard" class="sidebar-link">
-              <i class="align-middle" data-feather=""></i> <span class="align-middle">Dashboard</span>
+              <i class="align-middle"></i> <span class="align-middle">Dashboard</span>
             </a>
 					</li>
 					@foreach($navs['parent'] as $key => $p)
 						<li class="sidebar-item">
 							<a href="#{{ strtolower(str_replace(" ", "", $p->parentname)) }}" data-toggle="collapse" class="sidebar-link collapsed">
-	              <i class="align-middle" data-feather=""></i> <span class="align-middle">{{ $p->parentname }}</span>
+	              <i class="align-middle"></i> <span class="align-middle">{{ $p->parentname }}</span>
 	            </a>
 							<ul id="{{ strtolower(str_replace(" ", "", $p->parentname)) }}" class="sidebar-dropdown list-unstyled collapse " data-parent="#sidebar">
 	            @foreach($navs['child'] as $k => $c)
@@ -281,133 +282,15 @@
 	<script src="/plugins/nprogress/nprogress.js"></script>
 	{{-- https://www.uglifyjs.net/ --}}
 	<script type="text/javascript" src="/js/post_request.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js" integrity="sha512-5m2r+g00HDHnhXQDbRLAfZBwPpPCaK+wPLV6lm8VQ+09ilGdHfXV7IVyKPkLOTfi4vTTUVJnz7ELs7cA87/GMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script>
 		document.addEventListener("DOMContentLoaded", function() {
 			$("input").attr('autocomplete', 'off');
 		});
 	</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.js" integrity="sha512-5m2r+g00HDHnhXQDbRLAfZBwPpPCaK+wPLV6lm8VQ+09ilGdHfXV7IVyKPkLOTfi4vTTUVJnz7ELs7cA87/GMA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.8.0/chart.min.js" integrity="sha512-sW/w8s4RWTdFFSduOTGtk4isV1+190E/GghVffMA9XczdJ2MDzSzLEubKAs5h0wzgSJOQTRYyaz73L3d6RtJSg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-	<script>
-		const setChart = (labelss, monthss, datass) => {
-			const annual_ctx = document.getElementById('annual-chart').getContext('2d');
-			const annual_chart = new Chart(annual_ctx, {
-		    type: 'bar',
-		    data: {
-	        labels: monthss,
-	        datasets: [{
-	          label: `${labelss[0]} Sales`,
-	          data: datass[0],
-	          backgroundColor: [
-	              'rgba(255, 99, 132, 0.4)',
-	              'rgba(54, 162, 235, 0.4)',
-	              'rgba(255, 206, 86, 0.4)',
-	              'rgba(75, 192, 192, 0.4)',
-	              'rgba(153, 102, 255, 0.4)',
-	              'rgba(255, 159, 64, 0.4)'
-	          ],
-	          borderColor: [
-	              'rgba(255, 99, 132, 1)',
-	              'rgba(54, 162, 235, 1)',
-	              'rgba(255, 206, 86, 1)',
-	              'rgba(75, 192, 192, 1)',
-	              'rgba(153, 102, 255, 1)',
-	              'rgba(255, 159, 64, 1)'
-	          ],
-	          // borderWidth: 1,
-	          // hoverBorderWidth : 3
-	        },{
-	          label: `${labelss[1]} Sales`,
-	          data: datass[1],
-	          backgroundColor: [
-	              'rgba(255, 99, 132, 0.8)',
-	              'rgba(54, 162, 235, 0.8)',
-	              'rgba(255, 206, 86, 0.8)',
-	              'rgba(75, 192, 192, 0.8)',
-	              'rgba(153, 102, 255, 0.8)',
-	              'rgba(255, 159, 64, 0.8)'
-	          ],
-	          borderColor: [
-	              'rgba(255, 99, 132, 1)',
-	              'rgba(54, 162, 235, 1)',
-	              'rgba(255, 206, 86, 1)',
-	              'rgba(75, 192, 192, 1)',
-	              'rgba(153, 102, 255, 1)',
-	              'rgba(255, 159, 64, 1)'
-	          ],
-	          // borderWidth: 1,
-	          // hoverBorderWidth : 3
-	        }]
-		    },
-		    options : {
-	        scales : {
-	          y: {
-	            beginAtZero:true
-	          }
-	        },
-	        responsive : true,
-	        maintainAspectRatio: false,
-	        plugins : {
-	        	legend : {
-	        		display : false
-	        	},
-	        	layout : {
-	        		padding : {
-	        			left : 50,
-	        			right : 50,
-	        			bottom : 50,
-	        			top : 50
-	        		}
-	        	},
-	      		tooltip: {
-	      			// enabled : false
-	      		}
-	        }
-		    }
-			});
-		}
 
-		const get_annualchart = async (url = "/dashboard/annualChart", data = {}) => {
-			let labelss = [];
-			let datass = [];
-			let monthss = [
-				'January', 'February', 
-				'March', 'April', 
-				'May', 'June', 
-				'July', 'August', 
-				'September', 'October', 
-				'November', 'December'
-			];
-			await postData(url, data)
-		  .then(res => {
-		  	for(let i in res) {
-		  		labelss.push(res[i].year);
-		  		datass.push([
-		  			res[i].january,
-		  			res[i].february,
-		  			res[i].march,
-		  			res[i].april,
-		  			res[i].may,
-		  			res[i].june,
-		  			res[i].july,
-		  			res[i].august,
-		  			res[i].september,
-		  			res[i].october,
-		  			res[i].november,
-		  			res[i].december
-		  		]);
-		  	}
-		  	// console.log(monthss);
-		  	// console.log(datass[0]);
-		  	setChart(labelss, monthss, datass);
-		  }).catch((error) => {
-		    console.log(error);
-		  });
-		}
-		get_annualchart();
-
-		
-	</script>
+	
 </body>
 </html>
