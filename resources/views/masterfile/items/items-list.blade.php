@@ -52,7 +52,8 @@
 		    	ready_data.push([
 		    		`<tr>
 		    			<td>
-		    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn-action btn btn-primary btn-sm btnviewItem"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${data[i].itemid}" id="row-${data[i].itemid}" class="btn-action btn btn-primary btn-sm btnviewItem" title="View Item"><i class="far fa-eye"></i></button>
+		    				<button rowkey="${data[i].itemid}" id="rowbal-${data[i].itemid}" class="btn-action btn btn-warning btn-sm btnviewBal" title="View Balance"><i class="fas fa-box-open"></i></button>
 	    				</td>
 		    		</tr>`,
 		    		data[i].barcode, 

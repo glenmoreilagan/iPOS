@@ -133,9 +133,10 @@ class Reusable extends Model
     from (
       select s.itemid, item.itemname, s.uomid, uom.uom, sum(s.qty) as inv, 0 as cart
       from tbl_inv_stock as s
+      left join tbl_inv_head as head on head.txid = s.txid
       left join tblitems as item on item.itemid = s.itemid
       left join tbluom as uom on uom.uomid = s.uomid
-      where item.itemid = ? and uom.uomid = ?
+      where item.itemid = ? and uom.uomid = ? and head.isposted = 1
       group by s.itemid, item.itemname, s.uomid, uom.uom
       union all
       select c.itemid, item.itemname, c.uomid, uom.uom, 0 as inv, sum(c.qty) as cart

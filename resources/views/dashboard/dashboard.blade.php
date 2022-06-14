@@ -46,6 +46,10 @@
 		font-size: 32px;
 		align-self: center;
 	}
+
+	.chart-label {
+		font-weight: normal;
+	}
 </style>
 @extends('index')
 
@@ -55,48 +59,55 @@
 <div class="dash-sum mb-3">
 	<div class="child-dash-sum daily-sales">
 		<div class="d-sales money">
-			<h4>1,000.00</h4>
+			<h4>1,000</h4>
 			<small>Daily Sales</small>
 		</div>
 		<div class="d-sales money-icon"><i class="fas fa-dollar-sign"></i></div>
 	</div>
 	<div class="child-dash-sum daily-sales">
 		<div class="d-sales money">
-			<h4>1,000.00</h4>
+			<h4>100,000</h4>
 			<small>Annual Sales</small>
 		</div>
 		<div class="d-sales money-icon"><i class="fas fa-dollar-sign"></i></div>
 	</div>
 	<div class="child-dash-sum daily-sales">
 		<div class="d-sales money">
-			<h4>1,000.00</h4>
+			<h4>800.00</h4>
 			<small>Total Transaction</small>
 		</div>
 		<div class="d-sales money-icon"><i class="fas fa-archive"></i></div>
 	</div>
 	<div class="child-dash-sum daily-sales">
 		<div class="d-sales money">
-			<h4>1,000.00</h4>
+			<h4>10</h4>
 			<small>Users</small>
 		</div>
 		<div class="d-sales money-icon"><i class="fas fa-users"></i></div>
 	</div>
 </div>
+
 <div class="card">
 	<div class="card-header">
+		<div class="row">
+			<div class="col-md-8">
+				<h4 class="chart-label">PREVIOUS YEAR VS CURRENT YEAR CHART</h4>
+			</div>
+			<div class="col-md-4">
+				<h4 class="chart-label">LAST 7 DAYS CHART</h4>
+			</div>
+		</div>
 	</div>
 	<div class="card-body">
 		<div class="row">
 			<div class="col-md-8">
-				<h4>PREVIOUS YEAR VS CURRENT YEAR CHART</h4>
 				<div id="annual-chart-div">
 				  <canvas id="annual-chart"></canvas>
 				</div>
 			</div>
 			<div class="col-md-4">
-				<h4>WEEKLY CHART</h4>
 				<div id="annual-chart-div">
-				  <canvas id="daily_ctx-chart"></canvas>
+				  <canvas id="weekly_ctx-chart"></canvas>
 				</div>
 			</div>
 		</div>
@@ -105,7 +116,7 @@
 @endsection
 <script>
 	document.addEventListener("DOMContentLoaded", function() {
-		const daily_ctx = document.getElementById('daily_ctx-chart').getContext('2d');
+		const weekly_ctx = document.getElementById('weekly_ctx-chart').getContext('2d');
 		const annual_ctx = document.getElementById('annual-chart').getContext('2d');
 		const setChart = (labelss, monthss, datass, chart_display, chart_type) => {
 			const annual_chart = new Chart(chart_display, {
@@ -140,8 +151,16 @@
 		    },
 		    options : {
 	        scales : {
+	        	x: {
+        	    grid: {
+        	      display: false
+        	    }
+        	  },
 	          y: {
-	            beginAtZero:true
+	            beginAtZero : true,
+	            grid: {
+                // display: false
+              }
 	          }
 	        },
 	        responsive : true,
@@ -166,7 +185,7 @@
 			});
 		}
 
-		const get_annualchart = async (url = "/dashboard/annualChart", data = {}) => {
+		const get_chart = async (url = "/dashboard/annualChart", data = {}) => {
 			let labelss = [];
 			let datass = [];
 			let monthss = [
@@ -177,37 +196,53 @@
 				'Sep', 'Oct', 
 				'Nov', 'Dec'
 			];
+			let weeks = [
+				'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
+			];
 			await postData(url, data)
 		  .then(res => {
-		  	for(let i in res) {
-		  		labelss.push(res[i].year);
+		  	for(let i in res.annual) {
+		  		labelss.push(res.annual[i].year);
 		  		datass.push([
-		  			res[i].january,
-		  			res[i].february,
-		  			res[i].march,
-		  			res[i].april,
-		  			res[i].may,
-		  			res[i].june,
-		  			res[i].july,
-		  			res[i].august,
-		  			res[i].september,
-		  			res[i].october,
-		  			res[i].november,
-		  			res[i].december
+		  			res.annual[i].january,
+		  			res.annual[i].february,
+		  			res.annual[i].march,
+		  			res.annual[i].april,
+		  			res.annual[i].may,
+		  			res.annual[i].june,
+		  			res.annual[i].july,
+		  			res.annual[i].august,
+		  			res.annual[i].september,
+		  			res.annual[i].october,
+		  			res.annual[i].november,
+		  			res.annual[i].december
 		  		]);
 		  	}
 		  	// console.log(monthss);
 		  	// console.log(datass[0]);
 		  	setChart(labelss, monthss, datass, annual_ctx, 'bar');
-		  	let weeks = [
-					'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'
-				];
-		  	setChart(labelss, weeks, datass, daily_ctx, 'line');
+		  	labelss = [];
+		  	monthss = [];
+		  	datass = [];
+
+		  	for(let i in res.weekly) {
+		  		labelss.push(res.weekly[i].year);
+		  		datass.push([
+		  			res.weekly[i].mon,
+		  			res.weekly[i].tue,
+		  			res.weekly[i].wed,
+		  			res.weekly[i].thu,
+		  			res.weekly[i].fri,
+		  			res.weekly[i].sat,
+		  			res.weekly[i].sun
+		  		]);
+		  	}
+		  	setChart(labelss, weeks, datass, weekly_ctx, 'line');
 		  }).catch((error) => {
 		    console.log(error);
 		  });
 		}
-		get_annualchart();
+		get_chart();
 
 	});
 </script>

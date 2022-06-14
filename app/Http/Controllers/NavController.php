@@ -26,7 +26,10 @@ class NavController extends Controller
 
 		$select_parent = ["u.userid", "u.username", "u.roleid", "r.role", "p.parentid", "p.parentname"];
 		$parent = DB::table("tblusers as u")
-		->where(["u.userid" => $userid])
+		->where([
+			["u.userid", "=", $userid],
+			["p.parentid", "<>", 1],
+		])
 		->select($select_parent)
 		->join("tblroles as r", "r.roleid", "=", "u.roleid")
 		->join("tblaccess as ac", "ac.roleid", "=", "u.roleid")
@@ -49,7 +52,10 @@ class NavController extends Controller
 
 		$select_child = ["u.userid", "u.username", "u.roleid", "r.role", "c.parentid", "c.childname", "c.url"];
 		$child = DB::table("tblusers as u")
-		->where(["u.userid" => $userid])
+		->where([
+			["u.userid", "=", $userid],
+			["c.childid", "<>", 1],
+		])
 		->select($select_child)
 		->join("tblroles as r", "r.roleid", "=", "u.roleid")
 		->join("tblaccess as ac", "ac.roleid", "=", "u.roleid")

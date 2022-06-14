@@ -93,29 +93,36 @@ class LoginController extends Controller
   }
 
   private function setMenu() {
-  	$masterfile_parentid = 1;
-  	$masters_parentid = 2;
-  	$cashier_parentid = 3;
-  	$inventory_parentid = 4;
-  	$settings_parentid = 5;
+  	$dashboard_parentid = 1;
+    $masterfile_parentid = 2;
+  	$masters_parentid = 3;
+  	$cashier_parentid = 4;
+  	$inventory_parentid = 5;
+  	$settings_parentid = 6;
 
   	$parent = [
-  		['parentid' => $masterfile_parentid, 'parentcode' => '001', 'parentname' => 'Masterfile'],
+  		['parentid' => $dashboard_parentid, 'parentcode' => '01', 'parentname' => 'Dashboard'],
+      ['parentid' => $masterfile_parentid, 'parentcode' => '001', 'parentname' => 'Masterfile'],
   		['parentid' => $masters_parentid, 'parentcode' => '002', 'parentname' => 'Masters'],
   		['parentid' => $cashier_parentid, 'parentcode' => '003', 'parentname' => 'Cashier'],
   		['parentid' => $inventory_parentid, 'parentcode' => '004', 'parentname' => 'Inventory'],
   		['parentid' => $settings_parentid, 'parentcode' => '005', 'parentname' => 'Settings'],
   	];
 
-  	$items_childid = 1;
-  	$supplier_childid = 2;
-  	$category_childid = 3;
-  	$pos_childid = 4;
-  	$is_childid = 5;
-  	$manageuser_childid = 6;
-  	$managerole_childid = 7;
+  	$dashboard_childid = 1;
+    $items_childid = 2;
+  	$supplier_childid = 3;
+  	$category_childid = 4;
+  	$pos_childid = 5;
+  	$is_childid = 6;
+  	$manageuser_childid = 7;
+  	$managerole_childid = 8;
 
   	$child = [
+      // dashboard
+      ['childid' => $dashboard_childid, 'childcode' => '01-1', 'childname' => 'Dashboard', 'parentid' => $dashboard_parentid, 
+      'url' => '/dashboard'],
+
   		// masterfile
   		['childid' => $items_childid, 'childcode' => '001-1', 'childname' => 'Items', 'parentid' => $masterfile_parentid, 
       'url' => '/items'],
