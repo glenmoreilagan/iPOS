@@ -101,3 +101,4 @@
 </div>
 @endsection
 <script type="text/javascript" src="/js/cashier/pos.js"></script>
+<script type="text/javascript" src="/js/input_validation.js"></script>

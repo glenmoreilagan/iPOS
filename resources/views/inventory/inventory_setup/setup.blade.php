@@ -103,3 +103,4 @@
 @endsection
 
 <script type="text/javascript" src="/js/inventory/IS.js"></script>
+<script type="text/javascript" src="/js/input_validation.js"></script>

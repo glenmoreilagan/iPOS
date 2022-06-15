@@ -94,7 +94,7 @@
 				<h4 class="chart-label">PREVIOUS YEAR VS CURRENT YEAR CHART</h4>
 			</div>
 			<div class="col-md-4">
-				<h4 class="chart-label">LAST 7 DAYS CHART</h4>
+				<h4 class="chart-label">WEEKLY CHART</h4>
 			</div>
 		</div>
 	</div>
@@ -123,31 +123,7 @@
 		    type: chart_type,
 		    data: {
 	        labels: monthss,
-	        datasets: [{
-	          label: `${labelss[0]} Sales`,
-	          data: datass[0],
-	          backgroundColor: [
-              'rgba(63, 128, 234, .5)',
-	          ],
-	          borderColor: [
-	            'rgba(63, 128, 234, .5)',
-	          ],
-	          // borderWidth: 1,
-	          // hoverBorderWidth : 3
-	          // borderRadius: 0,
-	        },{
-	          label: `${labelss[1]} Sales`,
-	          data: datass[1],
-	          backgroundColor: [
-	            'rgba(63, 128, 234, .8)',
-	          ],
-	          borderColor: [
-	            'rgba(63, 128, 234, .8)',
-	          ],
-	          // borderWidth: 1,
-	          // hoverBorderWidth : 3
-	          // borderRadius: 0,
-	        }]
+	        datasets: datass
 		    },
 		    options : {
 	        scales : {
@@ -220,7 +196,47 @@
 		  	}
 		  	// console.log(monthss);
 		  	// console.log(datass[0]);
-		  	setChart(labelss, monthss, datass, annual_ctx, 'bar');
+
+		  	let ann_data = [
+		  		{
+	          label: `${labelss[0]} Sales`,
+	          data: datass[0],
+	          backgroundColor: [
+              'rgba(63, 128, 234, .5)',
+	          ],
+	          borderColor: [
+	            'rgba(63, 128, 234, .5)',
+	          ],
+	          // borderWidth: 1,
+	          // hoverBorderWidth : 3
+	          // borderRadius: 0,
+	        },{
+	          label: `${labelss[1]} Sales`,
+	          data: datass[1],
+	          backgroundColor: [
+	            'rgba(63, 128, 234, .8)',
+	          ],
+	          borderColor: [
+	            'rgba(63, 128, 234, .8)',
+	          ],
+	          // borderWidth: 1,
+	          // hoverBorderWidth : 3
+	          // borderRadius: 0,
+	        },{
+	          label: `${labelss[2]} Sales`,
+	          data: datass[2],
+	          backgroundColor: [
+	            'rgba(64, 90, 144, .8)',
+	          ],
+	          borderColor: [
+	            'rgba(64, 90, 144, .8)',
+	          ],
+	          // borderWidth: 1,
+	          // hoverBorderWidth : 3
+	          // borderRadius: 0,
+	        }
+	      ];
+		  	setChart(labelss, monthss, ann_data, annual_ctx, 'bar');
 		  	labelss = [];
 		  	monthss = [];
 		  	datass = [];
@@ -237,7 +253,23 @@
 		  			res.weekly[i].sun
 		  		]);
 		  	}
-		  	setChart(labelss, weeks, datass, weekly_ctx, 'line');
+
+		  	let week_data = [
+		  		{
+	          label: `${labelss[0]} Sales`,
+	          data: datass[0],
+	          backgroundColor: [
+              'rgba(63, 128, 234, .5)',
+	          ],
+	          borderColor: [
+	            'rgba(63, 128, 234, .5)',
+	          ],
+	          // borderWidth: 1,
+	          // hoverBorderWidth : 3
+	          // borderRadius: 0,
+	        }
+	      ];
+		  	setChart(labelss, weeks, week_data, weekly_ctx, 'line');
 		  }).catch((error) => {
 		    console.log(error);
 		  });
