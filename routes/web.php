@@ -47,6 +47,14 @@ Route::group(['middleware' => 'sampleware'], function () {
     Route::post('/annualChart', [
       'uses' => "DashboardController@annualChart"
     ]);
+
+    Route::post('/summarydata', [
+      'uses' => "DashboardController@summarydata"
+    ]);
+
+    Route::post('/highLowStocks', [
+      'uses' => "DashboardController@highLowStocks"
+    ]);
   });
 
   Route::group(['prefix' => 'items'], function () {

@@ -7,9 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\NavController;
 use Illuminate\Support\Facades\DB;
 
+use App\Reusable;
+
 class DashboardController extends Controller
 {
+	public $reuse_class;
+
 	public function __construct() {
+    $this->reuse_class = new Reusable;
     $this->navs['parent'] = NavController::getNav()['parent'];
     $this->navs['child'] = NavController::getNav()['child'];
   }
@@ -18,7 +23,7 @@ class DashboardController extends Controller
   	return view('dashboard.dashboard', ['navs' => $this->navs]);
 	}
 
-	public function annualChart() {
+	public function annualChart(Request $req) {
 		$annual = DB::select("
 			select year,
 			sum(january) as january, 
@@ -83,5 +88,44 @@ class DashboardController extends Controller
 		");
 
 		return json_encode(["annual" => $annual, "weekly" => $weekly]);
+	}
+
+	public function summarydata(Request $req) {
+		$date_now = $this->reuse_class->currDateToday();
+		$year_now = date('Y', strtotime($this->reuse_class->currDateToday()));
+
+		$daily_sale = DB::table("tblcart")
+		->where(["added_date" => $date_now, "ispaid" => 1])
+		->select(DB::raw("FORMAT(sum(total), 0) as total_sales"))
+		->first();
+
+		$annual_sale = DB::table("tblcart")
+		->whereYear("added_date", "=", $year_now)
+		->select(DB::raw("FORMAT(sum(total), 0) as total_sales"))
+		->first();
+
+		$total_trans = DB::table("tblcart")->count('txid');
+		$total_users = DB::table("tblusers")->count('userid');
+
+		$data = [
+			'daily_sale' => $daily_sale->total_sales != 0 ? $daily_sale->total_sales : 0,
+			'annual_sale' => $annual_sale->total_sales != 0 ? $annual_sale->total_sales : 0,
+			'total_trans' => $total_trans != 0 ? $total_trans : 0,
+			'total_users' => $total_users != 0 ? $total_users : 0,
+		];
+
+		return json_encode(['status' => true, 'msg' => 'Fetch Success!', 'data' => $data]);
+	}
+
+	public function highLowStocks(Request $req) {
+		$high_stocks =  $this->reuse_class->getItemWithBal("DESC", 10);
+		$low_stocks =  $this->reuse_class->getItemWithBal("ASC", 10);
+
+		$data = [
+			'high_stocks' => $high_stocks,
+			'low_stocks' => $low_stocks,
+		];
+
+		return json_encode(['status' => true, 'msg' => 'Fetch Success!', 'data' => $data]);
 	}
 }

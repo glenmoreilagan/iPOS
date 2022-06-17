@@ -65,11 +65,16 @@ class Reusable extends Model
   	return empty($itemid) ? $barcode."1" : $barcode.($itemid->itemid + 1);
   }
 
-  public function getItemWithBal() {
+  public function getItemWithBal($sort = "ASC", $limit = 0) {
+    $added_limit = "";
+    if ($limit != 0) {
+      $added_limit = " LIMIT $limit";
+    }
+
   	$items = DB::select("
-  		select itemid, itemname, uomid, uom, FORMAT(sum(bal), 0) as bal, amt, category
+  		select itemid, barcode, itemname, uomid, uom, FORMAT(sum(bal), 0) as bal, amt, category
       from (
-        select stock.itemid, item.itemname, stock.uomid, uom.uom, 
+        select stock.itemid, item.barcode, item.itemname, stock.uomid, uom.uom, 
         FORMAT(sum(stock.qty), 0) as bal, cat.category, ROUND(uom.amt, 2) as amt
         from tblitems as item
         inner join tbl_inv_stock as stock on stock.itemid = item.itemid
@@ -77,18 +82,20 @@ class Reusable extends Model
         inner join tbluom as uom on uom.uomid = stock.uomid
         left join tblcategory as cat on cat.catid = item.catid
         where head.isposted = 1
-        group by stock.itemid, item.itemname, stock.uomid, uom.uom, uom.amt, cat.category
+        group by stock.itemid, item.barcode, item.itemname, stock.uomid, uom.uom, uom.amt, cat.category
         having sum(stock.qty) > 0
         union all
-        select cart.itemid, item.itemname, cart.uomid, uom.uom, 
+        select cart.itemid, item.barcode, item.itemname, cart.uomid, uom.uom, 
         FORMAT(sum(cart.qty * -1), 0) as bal, cat.category, ROUND(uom.amt, 2) as amt
         from tblitems as item
         inner join tblcart as cart on cart.itemid = item.itemid
         inner join tbluom as uom on uom.uomid = cart.uomid
         left join tblcategory as cat on cat.catid = item.catid
-        group by cart.itemid, item.itemname, cart.uomid, uom.uom, uom.amt, cat.category
+        group by cart.itemid, item.barcode, item.itemname, cart.uomid, uom.uom, uom.amt, cat.category
       ) as t
-      group by itemid, itemname, uomid, uom, amt, category
+      group by itemid, barcode, itemname, uomid, uom, amt, category
+      order by bal $sort
+      $added_limit
   	");
 
   	return $items;

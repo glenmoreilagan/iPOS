@@ -34,7 +34,7 @@
 		width: 100% !important;
 	}
 
-	table.table.table-striped.dataTable.no-footer {
+	table.table.table-striped.dataTable.no-footer, table.table {
     font-size: 12px !important;
 	}
 	
@@ -58,4 +58,8 @@
 	}
 	.hide-me {
 		display: none;
+	}
+
+	.stock-level-table.table td, .table th, .stock-level-table.table thead th {
+		border: none;
 	}
