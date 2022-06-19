@@ -178,10 +178,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		let new_bal = 0;
 		let txid = parseFloat(GLOBAL_TXID);
 
-		if (parseFloat(bal) == 0) {
-			notify({status : false, message : "No Available Balance!"});
-			return;
-		}
+		// if (parseFloat(bal) == 0) {
+		// 	notify({status : false, message : "No Available Balance!"});
+		// 	return;
+		// }
 
 		let ready_to_cart_arr = [];
 		let ready_to_cart_obj = {

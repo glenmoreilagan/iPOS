@@ -96,22 +96,22 @@ class DashboardController extends Controller
 
 		$daily_sale = DB::table("tblcart")
 		->where(["added_date" => $date_now, "ispaid" => 1])
-		->select(DB::raw("FORMAT(sum(total), 0) as total_sales"))
+		->select(DB::raw("sum(total) as total_sales"))
 		->first();
 
 		$annual_sale = DB::table("tblcart")
 		->whereYear("added_date", "=", $year_now)
-		->select(DB::raw("FORMAT(sum(total), 0) as total_sales"))
+		->select(DB::raw("sum(total) as total_sales"))
 		->first();
 
 		$total_trans = DB::table("tblcart")->count('txid');
 		$total_users = DB::table("tblusers")->count('userid');
 
 		$data = [
-			'daily_sale' => $daily_sale->total_sales != 0 ? $daily_sale->total_sales : 0,
-			'annual_sale' => $annual_sale->total_sales != 0 ? $annual_sale->total_sales : 0,
-			'total_trans' => $total_trans != 0 ? $total_trans : 0,
-			'total_users' => $total_users != 0 ? $total_users : 0,
+			'daily_sale' => $daily_sale->total_sales != 0 ? number_format($daily_sale->total_sales, 0) : 0,
+			'annual_sale' => $annual_sale->total_sales != 0 ? number_format($annual_sale->total_sales, 0) : 0,
+			'total_trans' => $total_trans != 0 ? number_format($total_trans, 0) : 0,
+			'total_users' => $total_users != 0 ? number_format($total_users, 0) : 0,
 		];
 
 		return json_encode(['status' => true, 'msg' => 'Fetch Success!', 'data' => $data]);
