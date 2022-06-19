@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", function() {
 								amt="${amt}" 
 								line="${line}" 
 								uomid="${uomid}" 
+								onkeypress='numberOnly(event)'
 							>
 						</td>
 						<td class="cart-total-td min-width center-text">
@@ -177,10 +178,10 @@ document.addEventListener("DOMContentLoaded", function() {
 		let new_bal = 0;
 		let txid = parseFloat(GLOBAL_TXID);
 
-		if (parseFloat(bal) == 0) {
-			notify({status : false, message : "No Available Balance!"});
-			return;
-		}
+		// if (parseFloat(bal) == 0) {
+		// 	notify({status : false, message : "No Available Balance!"});
+		// 	return;
+		// }
 
 		let ready_to_cart_arr = [];
 		let ready_to_cart_obj = {
@@ -258,5 +259,4 @@ document.addEventListener("DOMContentLoaded", function() {
 		const url = '/POS/checkOut';
 		BASE_OBJ.CHECKOUT(url, {data: {}, txid : GLOBAL_TXID});
 	}, 300));
-	
 });

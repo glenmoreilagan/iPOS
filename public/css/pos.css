@@ -123,3 +123,11 @@
 .cart-qty-td {
 	width: 20%;
 }
+
+.filtering-div {
+  line-height: 3;
+}
+
+.table-cart-list .txtrow-cart-qty.isedited {
+	background-color: #C7E8CE;
+}

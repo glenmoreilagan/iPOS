@@ -1,10 +1,5 @@
 <head>
 	<link class="js-stylesheet" href="/css/pos.css" rel="stylesheet"/>
-	<style type="text/css">
-		.table-cart-list .txtrow-cart-qty.isedited {
-			background-color: #C7E8CE;
-		}
-	</style>
 </head>
 
 @extends('index')
@@ -101,3 +96,4 @@
 </div>
 @endsection
 <script type="text/javascript" src="/js/cashier/pos.js"></script>
+<script type="text/javascript" src="/js/input_validation.js"></script>

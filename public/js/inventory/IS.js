@@ -93,12 +93,28 @@ document.addEventListener("DOMContentLoaded", function() {
 			    		</tr>`,
 			    		`<tr>
 			    			<td>
-				    			<input rowkey="${res[i].line}" type="text" name="qty" id="stock-qty-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].qty}"">
+				    			<input 
+				    				rowkey="${res[i].line}" 
+				    				type="text" 
+				    				name="qty" 
+				    				id="stock-qty-row-${res[i].line}" 
+				    				class="key-${res[i].line} stock-row-class form-control text-right" 
+				    				value="${res[i].qty}"
+				    				onkeypress='numberOnly(event)'
+				    			>
 			    			</td>
 			    		</tr>`,
 			    		`<tr>
 			    			<td>
-				    			<input rowkey="${res[i].line}" type="text" name="cost" id="stock-cost-row-${res[i].line}" class="key-${res[i].line} stock-row-class form-control text-right" value="${res[i].cost}"">
+				    			<input 
+				    				rowkey="${res[i].line}"
+				    				type="text" 
+				    				name="cost" 
+				    				id="stock-cost-row-${res[i].line}" 
+				    				class="key-${res[i].line} stock-row-class form-control text-right" 
+				    				value="${res[i].cost}"
+				    				onkeypress='numberOnly(event)'
+				    			>
 			    			</td>
 			    		</tr>`
 			    	]);

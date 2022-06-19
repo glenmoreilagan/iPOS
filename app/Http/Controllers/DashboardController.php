@@ -7,9 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\NavController;
 use Illuminate\Support\Facades\DB;
 
+use App\Reusable;
+
 class DashboardController extends Controller
 {
+	public $reuse_class;
+
 	public function __construct() {
+    $this->reuse_class = new Reusable;
     $this->navs['parent'] = NavController::getNav()['parent'];
     $this->navs['child'] = NavController::getNav()['child'];
   }
@@ -18,8 +23,8 @@ class DashboardController extends Controller
   	return view('dashboard.dashboard', ['navs' => $this->navs]);
 	}
 
-	public function annualChart() {
-		$data = DB::select("
+	public function annualChart(Request $req) {
+		$annual = DB::select("
 			select year,
 			sum(january) as january, 
 			sum(february) as february, 
@@ -55,8 +60,72 @@ class DashboardController extends Controller
 			order by year, month_num
 		");
 
-		$result = [];
+		$weekly = DB::select("
+			select year,
+			sum(mon) as mon,
+      sum(tue) as tue,
+      sum(wed) as wed,
+      sum(thu) as thu,
+      sum(fri) as fri,
+      sum(sat) as sat,
+      sum(sun) as sun
+			from (
+			select year(added_date) as year,
+			if(DAYNAME(added_date) = 'Monday', sum(total), 0) as mon,
+      if(DAYNAME(added_date) = 'Tuesday', sum(total), 0) as tue,
+      if(DAYNAME(added_date) = 'Wednesday', sum(total), 0) as wed,
+      if(DAYNAME(added_date) = 'Thursday', sum(total), 0) as thu,
+      if(DAYNAME(added_date) = 'Friday', sum(total), 0) as fri,
+      if(DAYNAME(added_date) = 'Saturday', sum(total), 0) as sat,
+      if(DAYNAME(added_date) = 'Sunday', sum(total), 0) as sun
+			from tblcart
+			where
+      year(added_date) = year(now()) and
+      DAY(added_date) between DAY(DATE_SUB(now(), INTERVAL 7 DAY)) and DAY(now())
+			group by added_date ) as t
+			group by year
+			order by year
+		");
 
-		return json_encode($data);
+		return json_encode(["annual" => $annual, "weekly" => $weekly]);
+	}
+
+	public function summarydata(Request $req) {
+		$date_now = $this->reuse_class->currDateToday();
+		$year_now = date('Y', strtotime($this->reuse_class->currDateToday()));
+
+		$daily_sale = DB::table("tblcart")
+		->where(["added_date" => $date_now, "ispaid" => 1])
+		->select(DB::raw("sum(total) as total_sales"))
+		->first();
+
+		$annual_sale = DB::table("tblcart")
+		->whereYear("added_date", "=", $year_now)
+		->select(DB::raw("sum(total) as total_sales"))
+		->first();
+
+		$total_trans = DB::table("tblcart")->count('txid');
+		$total_users = DB::table("tblusers")->count('userid');
+
+		$data = [
+			'daily_sale' => $daily_sale->total_sales != 0 ? number_format($daily_sale->total_sales, 0) : 0,
+			'annual_sale' => $annual_sale->total_sales != 0 ? number_format($annual_sale->total_sales, 0) : 0,
+			'total_trans' => $total_trans != 0 ? number_format($total_trans, 0) : 0,
+			'total_users' => $total_users != 0 ? number_format($total_users, 0) : 0,
+		];
+
+		return json_encode(['status' => true, 'msg' => 'Fetch Success!', 'data' => $data]);
+	}
+
+	public function highLowStocks(Request $req) {
+		$high_stocks =  $this->reuse_class->getItemWithBal("DESC", 10);
+		$low_stocks =  $this->reuse_class->getItemWithBal("ASC", 10);
+
+		$data = [
+			'high_stocks' => $high_stocks,
+			'low_stocks' => $low_stocks,
+		];
+
+		return json_encode(['status' => true, 'msg' => 'Fetch Success!', 'data' => $data]);
 	}
 }

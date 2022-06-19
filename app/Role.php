@@ -18,6 +18,9 @@ class Role extends Model
 			"p.parentid", "p.parentcode", "p.parentname"
 		];
 		$parent_menus = DB::table("tblparent_menu as p")
+		->where([
+			["p.parentid", "<>", 1]
+		])
     ->select($selectqry)
 		->orderBy("p.parentid", "ASC")
     ->get();
@@ -30,6 +33,9 @@ class Role extends Model
 			"c.childid", "c.parentid", "c.childcode", "c.childname"
 		];
     $child_menus = DB::table("tblchild_menu as c")
+    ->where([
+			["c.childid", "<>", 1]
+		])
     ->select($selectqry)
     ->selectRaw("'' as isallow")
 		->orderBy("c.childid", "ASC")

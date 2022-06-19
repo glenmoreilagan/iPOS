@@ -125,6 +125,19 @@ class Cart extends Model
 
         return ["status" => $status, "msg" => $msg];
       } else {
+        $item_exist_checking = $this->itemCartChecking();
+
+        if (!empty($item_exist_checking)) {
+          $new_qty = 0;
+          if ($this->qty > $item_exist_checking->qty) {
+            $new_qty = $this->qty - $item_exist_checking->qty;
+          }
+          if ($new_qty > $checking_item_bal[0]->bal) {
+            return ["status" => false, "msg" => "Out of stock!"]; 
+          }
+
+          return $new_qty > $checking_item_bal[0]->bal ?: ["status" => false, "msg" => "Out of stock!"]; 
+        }
     		$insert = DB::table($this->tblcart)->insert([
     			"txid" => $this->txid,
           "itemid" => $this->itemid,
